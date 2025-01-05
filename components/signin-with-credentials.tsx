@@ -1,6 +1,8 @@
 'use client'
 
+import * as React from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -18,61 +20,71 @@ import {
 } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+const FormSchema = z.object({
+  email: z.string().max(255).email(),
+  password: z.string().min(6).max(72),
 })
 
-export function SignInWithCredentials() {
+type FormValues = z.infer<typeof FormSchema>
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+export function SignInWithCredentials() {
+  const router = useRouter()
+  const form = useForm<FormValues>({
+    resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
+      email: "",
+      password: "",
     },
   })
-
-  // const credentialsAction = (formData: any) => {
-  //   console.log(formData)
-  //   // const signed = signIn("credentials", formData)
-  //   // console.log(signed)
-  // }
   
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: FormValues) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    //   // const signed = signIn("credentials", formData)
+    //   // console.log(signed)
     console.log(values)
+    router.push('/dashboard')
   }
 
   return (
     <Form {...form}>
-      <div className="grid gap-4">
-        <div className="grid gap-2">
-          <Label htmlFor="credentials-email">Email</Label>
-          <Input
-            id="credentials-email"
-            name="email"
-            type="email"
-            placeholder="m@example.com"
-            required
-          />
-        </div>
-        <div className="grid gap-2">
-          <div className="flex items-center">
-            <Label htmlFor="credentials-password">Password</Label>
-            <Link href="/auth/forgot-password" className="ml-auto inline-block text-sm underline">
-              Forgot your password?
-            </Link>
-          </div>
-          <Input id="credentials-password" name="password" type="password" placeholder="************" required />
-        </div>
-        <Button type="submit" className="w-full">
-          Login
-        </Button>
-      </div>
+      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" autoCapitalize="none" autoComplete="email" autoCorrect="off" placeholder="me@example.com" {...field} />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <div className="mt-4 flex justify-between items-center">
+              <FormLabel>Password</FormLabel>
+              <Link href="/auth/forgot-password" className="ml-auto inline-block text-sm underline">
+                Forgot your password?
+              </Link>
+              </div>
+              <FormControl>
+                <Input type="password" autoCapitalize="none" autoComplete="current-password" autoCorrect="off" placeholder="************" {...field} />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="w-full">Sign In</Button>
+      </form>
     </Form>
   )
 }
