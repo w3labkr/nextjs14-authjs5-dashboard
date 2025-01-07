@@ -79,6 +79,12 @@ Apply Schema
 npm exec prisma migrate dev
 ```
 
+The easiest way to explore and manipulate your data in all of your Prisma projects.
+
+```shell
+npx prisma studio
+```
+
 ## Zustand
 
 Bear necessities for state management in React
@@ -115,4 +121,21 @@ Run the script
 
 ```shell
 npm run serve
+```
+
+## Nodemailer
+
+Send e-mails with Node.JS.
+
+```shell
+npm install nodemailer
+npm install --save-dev @types/nodemailer
+```
+
+## Day.js
+
+Day.js 2kB immutable date-time library alternative to Moment.js with the same modern API.
+
+```shell
+npm i dayjs
 ```

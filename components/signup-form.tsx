@@ -1,6 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from "next/navigation"
+import { toast } from 'sonner'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -18,6 +20,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
+import { fetcher } from "@/lib/utils"
+import type { SignUpAPI } from '@/types/api'
+
 const FormSchema = z
   .object({
     email: z.string().min(4).max(255).email(),
@@ -31,7 +36,7 @@ const FormSchema = z
 
 type FormValues = z.infer<typeof FormSchema>
 
-export function SignupForm() {
+export function SignUpForm() {
   const router = useRouter()
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -42,9 +47,35 @@ export function SignupForm() {
     },
   })
 
-  function onSubmit(data: FormValues) {
-    console.log(data)
-    router.push('/dashboard')
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
+  async function onSubmit(values: FormValues) {
+    try {
+      setIsSubmitting(true)
+
+      const { success, message, data } = await fetcher<SignUpAPI>('/api/v1/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: values?.email,
+          password: values?.newPassword
+        }),
+      })
+
+      if (!success) throw new Error(message)
+      else if (!data?.user) throw new Error(message)
+
+      toast.success('You have successfully registered as a member.')
+
+      router.refresh()
+      router.push('/auth/signin')
+    } catch (e: unknown) {
+      const message = (e as Error)?.message
+      if (message.includes('registered')) form.setError('email', { message })
+      else toast.error(message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -92,7 +123,7 @@ export function SignupForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Sign Up</Button>
+        <Button type="submit" className="w-full" disabled={isSubmitting}>Sign Up</Button>
       </form>
     </Form>
   )

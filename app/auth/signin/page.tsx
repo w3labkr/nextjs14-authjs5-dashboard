@@ -7,11 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
+import { SignInForm } from "@/components/signin-form"
 import { SignInWithGoogle } from "@/components/signin-with-google"
-import { SignInWithCredentials } from "@/components/signin-with-credentials"
 
-export default function Page() {
+export default function SignInPage() {
   return (
     <div className="flex h-screen w-full items-center justify-center px-4">
       <Card className="mx-auto max-w-sm">
@@ -22,7 +21,7 @@ export default function Page() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <SignInWithCredentials />
+          <SignInForm />
           <SignInWithGoogle />
           <div className="mt-4 text-sm">
             Don&apos;t have an account?{" "}

@@ -28,7 +28,7 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>
 
-export function SignInWithCredentials() {
+export function SignInForm() {
   const router = useRouter()
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -37,13 +37,11 @@ export function SignInWithCredentials() {
       password: "",
     },
   })
-  
-  function onSubmit(values: FormValues) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    //   // const signed = signIn("credentials", formData)
-    //   // console.log(signed)
-    console.log(values)
+
+  async function onSubmit(values: FormValues) {
+    const signed = await signIn("credentials", values)
+    console.log(signed)
+    // console.log(values)
     router.push('/dashboard')
   }
 

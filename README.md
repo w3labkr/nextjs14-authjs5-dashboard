@@ -6,6 +6,7 @@ This is a dashboard starter template for the [NextJS](https://nextjs.org) 14 app
 
 - Next.js 14
 - NextAuth.js v5 + Prisma Adapter
+- Nodemailer
 - Shadcn
 - Zustand
 - SWR

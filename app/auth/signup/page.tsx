@@ -7,9 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { SignupForm } from "@/components/signup-form"
+import { SignUpForm } from "@/components/signup-form"
 
-export default function Page() {
+export default function SignUpPage() {
   return (
     <div className="flex h-screen w-full items-center justify-center px-4">
       <Card className="mx-auto max-w-sm">
@@ -20,7 +20,7 @@ export default function Page() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <SignupForm />
+          <SignUpForm />
           <div className="mt-4 text-sm text-muted-foreground">
             By clicking sign up, you agree to our <Link href="#" className="underline text-black">Terms of Service</Link> and <Link href="#" className="underline text-black">Privacy Policy</Link> .
           </div>

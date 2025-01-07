@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card"
 import { VerifyCodeForm } from "@/components/verify-code-form"
 
-export default function Page() {
+export default function VerifyCodePage() {
   return (
     <div className="flex h-screen w-full items-center justify-center px-4">
       <Card className="mx-auto max-w-sm">

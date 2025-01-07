@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card"
 import { NewPasswordForm } from "@/components/new-password-form"
 
-export default function Page() {
+export default function NewPasswordPage() {
   return (
     <div className="flex h-screen w-full items-center justify-center px-4">
       <Card className="mx-auto max-w-sm">

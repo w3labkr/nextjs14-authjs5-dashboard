@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card"
 import { ForgotPasswordForm } from "@/components/forgot-password-form"
 
-export default function Page() {
+export default function ForgotPasswordPage() {
   return (
     <div className="flex h-screen w-full items-center justify-center px-4">
       <Card className="mx-auto max-w-sm">

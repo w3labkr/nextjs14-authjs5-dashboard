@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description: "",
 }
 
-export default function Page() {
+export default function DashboardPage() {
   return (
     <SidebarProvider>
       <AppSidebar />

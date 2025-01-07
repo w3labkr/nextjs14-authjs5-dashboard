@@ -19,7 +19,6 @@ model User {
   name          String?
   email         String          @unique
   emailVerified DateTime?
-  password      String?
   image         String?
   accounts      Account[]
   sessions      Session[]
@@ -28,9 +27,21 @@ model User {
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
 
-// Table public.User is public, but RLS has not been enabled.
+  // Additional fields for credentials
+  username            String        @unique @default(cuid())
+  usernameChangedAt   DateTime?
+  password            String?
+  passwordChangedAt   DateTime?
+  role                String        @default("guest")
+  roleChangedAt       DateTime?
+  plan                String        @default("free")
+  planChangedAt       DateTime?
+  isBan               Boolean       @default(false)
+  bannedUntil         DateTime?
+  isAdmin             Boolean       @default(false)
+  deletedAt           DateTime?
+}
 
 model Account {
   userId            String

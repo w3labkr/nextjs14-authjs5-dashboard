@@ -1,24 +1,22 @@
-import NextAuth from "next-auth"
+import NextAuth, { type DefaultSession } from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/prisma"
-import { z } from "zod"
 
 import Credentials from "next-auth/providers/credentials"
 import Google from "next-auth/providers/google"
 
-const signInSchema = z.object({
-  email: z.string({ required_error: "Email is required" })
-    .min(1, "Email is required")
-    .email("Invalid email"),
-  password: z.string({ required_error: "Password is required" })
-    .min(1, "Password is required")
-    .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters"),
-})
-
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+      // authorization: {
+      //   params: {
+      //     prompt: 'consent'
+      //   }
+      // }
+    }),
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
@@ -29,43 +27,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       authorize: async (credentials) => {
         let user = null
 
-        // const { email, password } = await signInSchema.parseAsync(credentials)
-
         // logic to salt and hash password
         // const pwHash = saltAndHashPassword(credentials.password)
 
-        console.log(credentials)
- 
         // logic to verify if the user exists
-        // user = await prisma.user.findUnique({
-        //   where: { 
-        //     email: credentials.email as string, 
-        //     password: credentials.password as string
-        //   }
-        // })
+        user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email as string,
+            password: credentials.password as string
+          }
+        })
 
-        // if (!user) {
-        //   // No user found, so this is their first attempt to login
-        //   // Optionally, this is also the place you could do a user registration
-        //   throw new Error("Invalid credentials.")
-        // }
- 
+        if (!user) {
+          // No user found, so this is their first attempt to login
+          // Optionally, this is also the place you could do a user registration
+          // throw new Error("Invalid credentials.")
+          return null
+        }
+
         // return JSON object with the user data
         return user
       },
-    }),
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
-      authorization: {
-        params: {
-          prompt: 'consent'
-        }
-      }
     })
   ],
+  pages: {
+    signIn: '/auth/signin',
+    // signOut: '/auth/signout',
+    // error: '/auth/error', // Error code passed in query string as ?error=
+    // verifyRequest: '/auth/verify-request', // (used for check email message)
+    // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+  },
   session: {
-    strategy: 'jwt',
-    maxAge: 60 * 60 * 24 // 1 day
+    strategy: "jwt", // "jwt" | "database"
+    maxAge: 2592000, // 30 days
+    updateAge: 86400 // 1 day
   },
 })
