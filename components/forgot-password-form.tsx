@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from "react"
+import { useState } from 'react'
 import { useRouter } from "next/navigation"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -33,17 +33,19 @@ export function ForgotPasswordForm() {
       email: "",
     },
   })
+  const { control, handleSubmit, setError, formState: { errors } } = form
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  function onSubmit(values: FormValues) {
+  async function onSubmit(values: FormValues) {
     console.log(values)
     router.push('/auth/verify-code')
   }
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <FormField
-          control={form.control}
+          control={control}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -56,7 +58,8 @@ export function ForgotPasswordForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Send</Button>
+        {errors.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+        <Button type="submit" className="w-full" disabled={isSubmitting}>Send</Button>
       </form>
     </Form>
   )

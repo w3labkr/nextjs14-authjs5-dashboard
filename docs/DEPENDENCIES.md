@@ -132,6 +132,22 @@ npm install nodemailer
 npm install --save-dev @types/nodemailer
 ```
 
+## bcrypt.js
+
+Optimized bcrypt in plain JavaScript with zero dependencies.
+
+```shell
+npm i bcryptjs @types/bcryptjs
+```
+
+## jsonwebtoken
+
+JsonWebToken implementation for node.js.
+
+```shell
+npm install jsonwebtoken @types/jsonwebtoken
+```
+
 ## Day.js
 
 Day.js 2kB immutable date-time library alternative to Moment.js with the same modern API.

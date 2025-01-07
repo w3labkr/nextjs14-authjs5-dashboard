@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from "react"
+import { useState } from 'react'
 import { useRouter } from "next/navigation"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -37,17 +37,19 @@ export function VerifyCodeForm() {
       code: "",
     },
   })
+  const { control, handleSubmit, setError, formState: { errors } } = form
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  function onSubmit(values: FormValues) {
+  async function onSubmit(values: FormValues) {
     console.log(values)
     router.push('/auth/new-password')
   }
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <FormField
-          control={form.control}
+          control={control}
           name="code"
           render={({ field }) => (
             <FormItem>
@@ -69,7 +71,8 @@ export function VerifyCodeForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Verify</Button>
+        {errors.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+        <Button type="submit" className="w-full" disabled={isSubmitting}>Verify</Button>
       </form>
     </Form>
   )

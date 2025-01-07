@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from "next/navigation"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -38,17 +39,19 @@ export function NewPasswordForm() {
       confirmNewPassword: "",
     },
   })
+  const { control, handleSubmit, setError, formState: { errors } } = form
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  function onSubmit(values: FormValues) {
+  async function onSubmit(values: FormValues) {
     console.log(values)
     router.push('/auth/signin')
   }
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <FormField
-          control={form.control}
+          control={control}
           name="newPassword"
           render={({ field }) => (
             <FormItem>
@@ -62,7 +65,7 @@ export function NewPasswordForm() {
           )}
         />
         <FormField
-          control={form.control}
+          control={control}
           name="confirmNewPassword"
           render={({ field }) => (
             <FormItem>
@@ -75,7 +78,8 @@ export function NewPasswordForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Submit</Button>
+        {errors.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+        <Button type="submit" className="w-full" disabled={isSubmitting}>Submit</Button>
       </form>
     </Form>
   )

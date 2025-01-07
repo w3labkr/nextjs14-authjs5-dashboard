@@ -61,6 +61,14 @@ Start the development server.
 npm run dev
 ```
 
+## Database
+
+Apply Schema
+
+```shell
+npm exec prisma migrate dev
+```
+
 ## License
 
 This software license under the [MIT License](LICENSE).

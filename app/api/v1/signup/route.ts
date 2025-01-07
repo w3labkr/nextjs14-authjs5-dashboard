@@ -1,13 +1,25 @@
 import { type NextRequest } from 'next/server'
 import { prisma } from "@/prisma"
-import type { User } from "@prisma/client";
+import type { User } from "@prisma/client"
+import dayjs from '@/lib/dayjs'
+import bcrypt from 'bcryptjs'
+
 import { ApiResponse } from '@/lib/utils'
-import { STATUS_CODES, STATUS_TEXTS } from '@/lib/http-status-codes'
+import { STATUS_CODES } from '@/lib/http-status-codes'
+
+interface RequestBody {
+  email: string;
+  password: string;
+}
+
+interface ResponseBody {
+  user: User | null;
+}
 
 export async function POST(request: NextRequest) {
   const authorization = request.headers.get('authorization')
-  const body = await request.json()
-  const data: { user: User | null } = { user: null }
+  const body: RequestBody = await request.json()
+  const data: ResponseBody = { user: null }
 
   // if (authorization !== `Bearer ${process.env.SECRET_KEY!}`) {
   //   return ApiResponse.json(data, STATUS_CODES.UNAUTHORIZED)
@@ -25,7 +37,11 @@ export async function POST(request: NextRequest) {
   }
 
   user = await prisma.user.create({
-    data: { email: body?.email, password: body?.password },
+    data: {
+      email: body?.email,
+      password: await bcrypt.hash(body?.password, 10),
+      passwordChangedAt: dayjs().toISOString(),
+    },
   })
 
   return ApiResponse.json({ user })

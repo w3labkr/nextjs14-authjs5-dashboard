@@ -46,16 +46,18 @@ export function SignUpForm() {
       confirmNewPassword: "",
     },
   })
-
+  const { control, handleSubmit, setError, formState: { errors } } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   async function onSubmit(values: FormValues) {
     try {
       setIsSubmitting(true)
 
-      const { success, message, data } = await fetcher<SignUpAPI>('/api/v1/signup', {
+      const {success, message, data: { user }} = await fetcher<SignUpAPI>('/api/v1/signup', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           email: values?.email,
           password: values?.newPassword
@@ -63,7 +65,7 @@ export function SignUpForm() {
       })
 
       if (!success) throw new Error(message)
-      else if (!data?.user) throw new Error(message)
+      else if (!user) throw new Error(message)
 
       toast.success('You have successfully registered as a member.')
 
@@ -71,7 +73,7 @@ export function SignUpForm() {
       router.push('/auth/signin')
     } catch (e: unknown) {
       const message = (e as Error)?.message
-      if (message.includes('registered')) form.setError('email', { message })
+      if (message.includes('registered')) setError('email', { message })
       else toast.error(message)
     } finally {
       setIsSubmitting(false)
@@ -80,9 +82,9 @@ export function SignUpForm() {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <FormField
-          control={form.control}
+          control={control}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -96,7 +98,7 @@ export function SignUpForm() {
           )}
         />
         <FormField
-          control={form.control}
+          control={control}
           name="newPassword"
           render={({ field }) => (
             <FormItem>
@@ -110,7 +112,7 @@ export function SignUpForm() {
           )}
         />
         <FormField
-          control={form.control}
+          control={control}
           name="confirmNewPassword"
           render={({ field }) => (
             <FormItem>
@@ -123,6 +125,7 @@ export function SignUpForm() {
             </FormItem>
           )}
         />
+        {errors.root && <FormMessage>{errors?.root?.message}</FormMessage>}
         <Button type="submit" className="w-full" disabled={isSubmitting}>Sign Up</Button>
       </form>
     </Form>

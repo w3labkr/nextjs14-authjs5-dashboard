@@ -1,9 +1,11 @@
 'use client'
 
-import * as React from "react"
+import { useState } from 'react'
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
+import { toast } from 'sonner'
+import dayjs from '@/lib/dayjs'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -21,6 +23,9 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
+import { fetcher } from '@/lib/utils'
+import type { SignInAPI } from '@/types/api'
+
 const FormSchema = z.object({
   email: z.string().max(255).email(),
   password: z.string().min(6).max(72),
@@ -37,19 +42,47 @@ export function SignInForm() {
       password: "",
     },
   })
+  const { control, handleSubmit, setError, formState: { errors } } = form
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   async function onSubmit(values: FormValues) {
-    const signed = await signIn("credentials", values)
-    console.log(signed)
+    // const signed = await signIn("credentials", values)
     // console.log(values)
-    router.push('/dashboard')
+    // console.log(signed)
+
+    try {
+      setIsSubmitting(true)
+
+      const {success, message, data: { user }} = await fetcher<SignInAPI>('/api/v1/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: values?.email,
+          password: values?.password
+        }),
+      })
+
+      if (!success) throw new Error(message)
+      else if (!user) throw new Error(message)
+
+      // router.refresh()
+      // router.push('/dashboard')
+    } catch (e: unknown) {
+      const message = (e as Error)?.message
+      if (message.includes('email or password')) setError('root', { message })
+      else toast.error(message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <FormField
-          control={form.control}
+          control={control}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -63,7 +96,7 @@ export function SignInForm() {
           )}
         />
         <FormField
-          control={form.control}
+          control={control}
           name="password"
           render={({ field }) => (
             <FormItem>
@@ -81,7 +114,8 @@ export function SignInForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Sign In</Button>
+        {errors.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+        <Button type="submit" className="w-full" disabled={isSubmitting}>Sign In</Button>
       </form>
     </Form>
   )

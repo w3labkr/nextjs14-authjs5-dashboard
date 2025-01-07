@@ -1,6 +1,8 @@
 import NextAuth, { type DefaultSession } from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/prisma"
+import type { User } from "@prisma/client"
+import bcrypt from 'bcryptjs'
 
 import Credentials from "next-auth/providers/credentials"
 import Google from "next-auth/providers/google"
@@ -25,23 +27,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: {},
       },
       authorize: async (credentials) => {
-        let user = null
+        let user: User | null = null
 
         // logic to salt and hash password
-        // const pwHash = saltAndHashPassword(credentials.password)
+        const password = credentials?.password as string
+        const hashPassword = await bcrypt.hash(password, 10)
 
         // logic to verify if the user exists
         user = await prisma.user.findUnique({
           where: {
             email: credentials.email as string,
-            password: credentials.password as string
+            password: hashPassword
           }
         })
+
+        console.log(user)
 
         if (!user) {
           // No user found, so this is their first attempt to login
           // Optionally, this is also the place you could do a user registration
-          // throw new Error("Invalid credentials.")
           return null
         }
 
