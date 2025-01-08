@@ -70,7 +70,7 @@ export function SignUpForm() {
       toast.success('You have successfully registered as a member.')
 
       router.refresh()
-      router.push('/auth/signin')
+      router.replace('/auth/signin')
     } catch (e: unknown) {
       const message = (e as Error)?.message
       if (message.includes('registered')) setError('email', { message })

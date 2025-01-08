@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { toast } from 'sonner'
 import dayjs from '@/lib/dayjs'
 
@@ -34,6 +35,9 @@ const FormSchema = z.object({
 type FormValues = z.infer<typeof FormSchema>
 
 export function SignInForm() {
+  const { data: session } = useSession()
+  console.log(`session: ${session}`)
+
   const router = useRouter()
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -46,33 +50,36 @@ export function SignInForm() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   async function onSubmit(values: FormValues) {
-    // const signed = await signIn("credentials", values)
-    // console.log(values)
-    // console.log(signed)
-
     try {
       setIsSubmitting(true)
 
-      const {success, message, data: { user }} = await fetcher<SignInAPI>('/api/v1/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: values?.email,
-          password: values?.password
-        }),
-      })
+      const signed = await signIn("credentials", { redirect: false }, values)
+      // console.log(values)
+      console.log(signed)
 
-      if (!success) throw new Error(message)
-      else if (!user) throw new Error(message)
+      // const {success, message, data: { user }} = await fetcher<SignInAPI>('/api/v1/signin', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     email: values?.email,
+      //     password: values?.password
+      //   }),
+      // })
+
+      // if (!success) throw new Error(message)
+      // else if (!user) throw new Error(message)
+
+      // console.log(user)
 
       // router.refresh()
-      // router.push('/dashboard')
+      // router.replace('/dashboard')
     } catch (e: unknown) {
       const message = (e as Error)?.message
-      if (message.includes('email or password')) setError('root', { message })
-      else toast.error(message)
+      console.log(message)
+      // if (message.includes('email or password')) setError('root', { message })
+      // else toast.error(message)
     } finally {
       setIsSubmitting(false)
     }

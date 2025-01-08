@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from "@/prisma"
 
-export async function GET(request: NextRequest) {
+export async function GET(req: NextRequest) {
     return NextResponse.json({ user: 'user' })
 }
 
@@ -10,8 +10,8 @@ interface RequestBody {
     password: string;
 }
 
-export async function POST(request: NextRequest) {
-    const body: RequestBody = await request.json()
+export async function POST(req: NextRequest) {
+    const body: RequestBody = await req.json()
 
     return NextResponse.json({ body })
 }

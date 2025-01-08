@@ -15,9 +15,9 @@ interface ResponseBody {
   user: User | null;
 }
 
-export async function POST(request: NextRequest) {
-  const authorization = request.headers.get('authorization')
-  const body: RequestBody = await request.json()
+export async function POST(req: NextRequest) {
+  const authorization = req.headers.get('authorization')
+  const body: RequestBody = await req.json()
   const data: ResponseBody = { user: null }
 
   // if (authorization !== `Bearer ${process.env.SECRET_KEY!}`) {
