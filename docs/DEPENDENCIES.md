@@ -45,7 +45,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
-        <Toaster />
+        <Toaster richColors closeButton />
       </body>
     </html>
   );
@@ -57,6 +57,7 @@ export default function RootLayout({
 Installing Auth.js
 
 ```shell
+npm uninstall next-auth@beta
 npm install next-auth@beta
 ```
 

@@ -1,12 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 import { useSession } from "next-auth/react"
 import { toast } from 'sonner'
-import dayjs from '@/lib/dayjs'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -24,9 +23,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-import { fetcher } from '@/lib/utils'
-import type { SignInAPI } from '@/types/api'
-
 const FormSchema = z.object({
   email: z.string().max(255).email(),
   password: z.string().min(6).max(72),
@@ -35,9 +31,6 @@ const FormSchema = z.object({
 type FormValues = z.infer<typeof FormSchema>
 
 export function SignInForm() {
-  const { data: session } = useSession()
-  console.log(`session: ${session}`)
-
   const router = useRouter()
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
@@ -49,37 +42,28 @@ export function SignInForm() {
   const { control, handleSubmit, setError, formState: { errors } } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
+  // temp
+  const { data: session } = useSession()
+
+  useEffect(() => {
+    if (session) console.log(session)
+  }, [session])
+
   async function onSubmit(values: FormValues) {
     try {
       setIsSubmitting(true)
 
-      const signed = await signIn("credentials", { redirect: false }, values)
-      // console.log(values)
-      console.log(signed)
+      const res = await signIn('credentials', { ...values, redirect: false })
+      console.log(res)
 
-      // const {success, message, data: { user }} = await fetcher<SignInAPI>('/api/v1/signin', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     email: values?.email,
-      //     password: values?.password
-      //   }),
-      // })
-
-      // if (!success) throw new Error(message)
-      // else if (!user) throw new Error(message)
-
-      // console.log(user)
+      if (res?.error) throw Error(res?.code)
 
       // router.refresh()
       // router.replace('/dashboard')
     } catch (e: unknown) {
       const message = (e as Error)?.message
-      console.log(message)
-      // if (message.includes('email or password')) setError('root', { message })
-      // else toast.error(message)
+      if (message.includes('Invalid identifier or password')) setError('root', { message })
+      else toast.error(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -121,7 +105,7 @@ export function SignInForm() {
             </FormItem>
           )}
         />
-        {errors.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+        {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
         <Button type="submit" className="w-full" disabled={isSubmitting}>Sign In</Button>
       </form>
     </Form>

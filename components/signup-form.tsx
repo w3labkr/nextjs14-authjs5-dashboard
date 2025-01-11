@@ -53,7 +53,7 @@ export function SignUpForm() {
     try {
       setIsSubmitting(true)
 
-      const {success, message, data: { user }} = await fetcher<SignUpAPI>('/api/v1/signup', {
+      const {success, message, data: { user }} = await fetcher<SignUpAPI>('/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ export function SignUpForm() {
             </FormItem>
           )}
         />
-        {errors.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+        {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
         <Button type="submit" className="w-full" disabled={isSubmitting}>Sign Up</Button>
       </form>
     </Form>

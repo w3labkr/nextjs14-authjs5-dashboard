@@ -78,7 +78,7 @@ export function NewPasswordForm() {
             </FormItem>
           )}
         />
-        {errors.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+        {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
         <Button type="submit" className="w-full" disabled={isSubmitting}>Submit</Button>
       </form>
     </Form>

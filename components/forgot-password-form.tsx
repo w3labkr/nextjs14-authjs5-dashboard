@@ -58,7 +58,7 @@ export function ForgotPasswordForm() {
             </FormItem>
           )}
         />
-        {errors.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+        {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
         <Button type="submit" className="w-full" disabled={isSubmitting}>Send</Button>
       </form>
     </Form>

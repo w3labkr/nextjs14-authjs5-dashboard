@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card"
 import { SignInForm } from "@/components/signin-form"
 import { SignInWithGoogle } from "@/components/signin-with-google"
+import { SignOutButton } from "@/components/signout-button"
 
 export default function SignInPage() {
   return (
@@ -23,6 +24,7 @@ export default function SignInPage() {
         <CardContent>
           <SignInForm />
           <SignInWithGoogle />
+          <SignOutButton variant="destructive" className="w-full mt-4" />
           <div className="mt-4 text-sm">
             Don&apos;t have an account?{" "}
             <Link href="/auth/signup" className="underline">
