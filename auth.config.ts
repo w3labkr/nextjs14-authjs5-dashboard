@@ -1,11 +1,11 @@
-import { CredentialsSignin, type NextAuthConfig } from "next-auth"
+import { CredentialsSignin, type NextAuthConfig } from 'next-auth'
 import { z } from 'zod'
 
 import Credentials from 'next-auth/providers/credentials'
-import Google from "next-auth/providers/google"
+import Google from 'next-auth/providers/google'
 
-import { fetcher } from "@/lib/utils";
-import { SignInAPI } from "@/types/api";
+import { fetcher } from '@/lib/utils'
+import { SignInAPI } from '@/types/api'
 
 class CustomError extends CredentialsSignin {
   constructor(code: string) {
@@ -31,7 +31,7 @@ export default {
     Google({
       // Google requires "offline" access_type to provide a `refresh_token`
       authorization: {
-        params: { prompt: "consent", access_type: "offline", response_type: "code" },
+        params: { prompt: 'consent', access_type: 'offline', response_type: 'code' },
       },
     }),
     Credentials({
@@ -42,14 +42,20 @@ export default {
         password: {},
       },
       authorize: async (credentials) => {
-        const validatedField = z.object({
-          email: z.string().max(255).email(),
-          password: z.string().min(6).max(72),
-        }).safeParse(credentials)
+        const validatedField = z
+          .object({
+            email: z.string().max(255).email(),
+            password: z.string().min(6).max(72),
+          })
+          .safeParse(credentials)
 
         if (!validatedField.success) return null
 
-        const { success, message, data: { user } } = await fetcher<SignInAPI>('/api/auth/signin', {
+        const {
+          success,
+          message,
+          data: { user },
+        } = await fetcher<SignInAPI>('/api/auth/signin', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -1,21 +1,19 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-import { STATUS_CODES, STATUS_TEXTS, STATUS_CODE_TO_TEXT } from "@/lib/http-status-codes"
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+import { STATUS_CODES, STATUS_TEXTS, STATUS_CODE_TO_TEXT } from '@/lib/http-status-codes'
 
 export const ApiResponse = {
-  json: (
-    data: any,
-    status: number = STATUS_CODES.OK,
-    statusText?: string,
-    init?: ResponseInit
-  ) => {
-    return Response.json({
-      success: status >= 200 && status <= 299,
-      status,
-      message: statusText ?? STATUS_CODE_TO_TEXT[status?.toString()],
-      data
-    }, init)
-  }
+  json: (data: any, status: number = STATUS_CODES.OK, statusText?: string, init?: ResponseInit) => {
+    return Response.json(
+      {
+        success: status >= 200 && status <= 299,
+        status,
+        message: statusText ?? STATUS_CODE_TO_TEXT[status?.toString()],
+        data,
+      },
+      init
+    )
+  },
 }
 
 export function cn(...inputs: ClassValue[]) {

@@ -1,14 +1,8 @@
-import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { ForgotPasswordForm } from "@/components/forgot-password-form"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ForgotPasswordForm } from '@/components/forgot-password-form'
 
 export default function ForgotPasswordPage() {
   return (
@@ -22,8 +16,8 @@ export default function ForgotPasswordPage() {
         </CardHeader>
         <CardContent>
           <ForgotPasswordForm />
-          <div className="mt-4 text-sm text-center">
-            <ArrowLeft className="inline size-4 -ml-4" />
+          <div className="mt-4 text-center text-sm">
+            <ArrowLeft className="-ml-4 inline size-4" />
             {` Back to `}
             <Link href="/auth/signin" className="underline">
               sign in

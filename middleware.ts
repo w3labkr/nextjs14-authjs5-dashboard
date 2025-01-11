@@ -1,6 +1,6 @@
 import { type NextRequest } from 'next/server'
-import NextAuth from "next-auth"
-import authConfig from "./auth.config"
+import NextAuth from 'next-auth'
+import authConfig from './auth.config'
 
 // Use only one of the two middleware options below
 // 1. Use middleware directly

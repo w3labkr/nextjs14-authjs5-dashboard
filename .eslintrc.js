@@ -17,15 +17,9 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   plugins: ['import', 'react', 'react-hooks', '@typescript-eslint'],
-  ignorePatterns: [
-    // '.eslintrc.js',
-    // '*.config.js',
-    // '*.config.cjs',
-    // '*.config.mjs',
-    // '*.config.ts',
-    'components/ui/',
-    'build/',
-  ],
+  // Ignore Files in v9 (Deprecated)
+  // https://eslint.org/docs/latest/use/configure/ignore-deprecated
+  ignorePatterns: ['/build/', '/dist/', '/out/', '/components/ui/'],
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
@@ -55,6 +49,6 @@ module.exports = {
     // Unexpected any. Specify a different type.
     '@typescript-eslint/no-explicit-any': 'off',
     // An empty interface declaration allows any non-nullish value
-    '@typescript-eslint/no-empty-object-type': 'off'
-  }
+    '@typescript-eslint/no-empty-object-type': 'off',
+  },
 }

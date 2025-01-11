@@ -1,31 +1,18 @@
-import * as React from "react"
-import type { Metadata } from "next"
+import * as React from 'react'
+import type { Metadata } from 'next'
 
-import { AppSidebar } from "@/components/app-sidebar"
-import { NavActions } from "@/components/nav-actions"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/custom-ui/sidebar"
+import { AppSidebar } from '@/components/app-sidebar'
+import { NavActions } from '@/components/nav-actions'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from '@/components/ui/breadcrumb'
+import { Separator } from '@/components/ui/separator'
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/custom-ui/sidebar'
 
 export const metadata: Metadata = {
-  title: "Workspace2 | Dashboard",
-  description: "",
+  title: 'Workspace2 | Dashboard',
+  description: '',
 }
 
-export default function Layout({
-    children,
-  }: {
-    children: React.ReactNode
-  }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -37,9 +24,7 @@ export default function Layout({
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="line-clamp-1">
-                    Workspace2
-                  </BreadcrumbPage>
+                  <BreadcrumbPage className="line-clamp-1">Workspace2</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

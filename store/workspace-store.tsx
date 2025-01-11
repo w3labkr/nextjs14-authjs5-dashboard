@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
-type Favorite = {
+interface Favorite {
   name: string
   url: string
   emoji: string
@@ -18,11 +18,11 @@ export const useWorkspaceStore = create(
     (set) => ({
       favorites: [],
       addFavorite: (favorite) => set((state) => ({ favorites: [...state.favorites, favorite] })),
-      delFavorite: (url) => set((state) => ({ favorites: state.favorites.filter(x => x.url !== url)})),
+      delFavorite: (url) => set((state) => ({ favorites: state.favorites.filter((x) => x.url !== url) })),
     }),
     {
       name: 'workspace-storage', // name of the item in the storage (must be unique)
       storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
-    },
-  ),
+    }
+  )
 )

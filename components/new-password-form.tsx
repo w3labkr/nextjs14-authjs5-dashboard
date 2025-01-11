@@ -1,23 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from "next/navigation"
+import { useRouter } from 'next/navigation'
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 const FormSchema = z
   .object({
@@ -35,11 +27,16 @@ export function NewPasswordForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      newPassword: "",
-      confirmNewPassword: "",
+      newPassword: '',
+      confirmNewPassword: '',
     },
   })
-  const { control, handleSubmit, setError, formState: { errors } } = form
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   async function onSubmit(values: FormValues) {
@@ -57,7 +54,14 @@ export function NewPasswordForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" autoCapitalize="none" autoComplete="new-password" autoCorrect="off" placeholder="************" {...field} />
+                <Input
+                  type="password"
+                  autoCapitalize="none"
+                  autoComplete="new-password"
+                  autoCorrect="off"
+                  placeholder="************"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -71,7 +75,14 @@ export function NewPasswordForm() {
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <Input type="password" autoCapitalize="none" autoComplete="new-password" autoCorrect="off" placeholder="************" {...field} />
+                <Input
+                  type="password"
+                  autoCapitalize="none"
+                  autoComplete="new-password"
+                  autoCorrect="off"
+                  placeholder="************"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -79,7 +90,9 @@ export function NewPasswordForm() {
           )}
         />
         {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
-        <Button type="submit" className="w-full" disabled={isSubmitting}>Submit</Button>
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          Submit
+        </Button>
       </form>
     </Form>
   )

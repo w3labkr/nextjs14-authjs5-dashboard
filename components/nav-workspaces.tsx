@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import Link from "next/link"
+import * as React from 'react'
+import Link from 'next/link'
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/custom-ui/sidebar"
+} from '@/components/custom-ui/sidebar'
 
 export function NavWorkspaces({
   workspaces,

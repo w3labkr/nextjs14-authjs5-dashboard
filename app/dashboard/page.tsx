@@ -1,23 +1,14 @@
-import * as React from "react"
-import type { Metadata } from "next"
+import * as React from 'react'
+import type { Metadata } from 'next'
 
-import { AppSidebar } from "@/components/app-sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/custom-ui/sidebar"
+import { AppSidebar } from '@/components/app-sidebar'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from '@/components/ui/breadcrumb'
+import { Separator } from '@/components/ui/separator'
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/custom-ui/sidebar'
 
 export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "",
+  title: 'Dashboard',
+  description: '',
 }
 
 export default function DashboardPage() {
@@ -31,9 +22,7 @@ export default function DashboardPage() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbPage className="line-clamp-1">
-                  Dashboard
-                </BreadcrumbPage>
+                <BreadcrumbPage className="line-clamp-1">Dashboard</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

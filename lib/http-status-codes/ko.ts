@@ -1,3 +1,4 @@
+// prettier-ignore
 export const STATUS_CODES = {
   CONTINUE: 100,
   SWITCHING_PROTOCOLS: 101,
@@ -63,6 +64,7 @@ export const STATUS_CODES = {
   NETWORK_AUTHENTICATION_REQUIRED: 511,
 }
 
+// prettier-ignore
 export const STATUS_TEXTS = {
   CONTINUE: "계속",
   SWITCHING_PROTOCOLS: "프로토콜 전환",
@@ -128,6 +130,7 @@ export const STATUS_TEXTS = {
   NETWORK_AUTHENTICATION_REQUIRED: "네트워크 인증 필요",
 }
 
+// prettier-ignore
 export const STATUS_CODE_TO_TEXT = {
   "100": "계속",
   "101": "프로토콜 전환",
@@ -193,6 +196,7 @@ export const STATUS_CODE_TO_TEXT = {
   "511": "네트워크 인증 필요",
 }
 
+// prettier-ignore
 export const STATUS_TEXT_TO_CODE = {
   "계속": "100",
   "프로토콜 전환": "101",

@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import type { User } from '@prisma/client'
 
 export type SignInAPI = { status: number; message: string; success: boolean; data: { user: User | null } }
 

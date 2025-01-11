@@ -1,3 +1,4 @@
+// prettier-ignore
 export const STATUS_CODES = {
   CONTINUE: 100,
   SWITCHING_PROTOCOLS: 101,
@@ -63,6 +64,7 @@ export const STATUS_CODES = {
   NETWORK_AUTHENTICATION_REQUIRED: 511,
 }
 
+// prettier-ignore
 export const STATUS_TEXTS = {
   CONTINUE: "Continue",
   SWITCHING_PROTOCOLS: "Switching Protocols",
@@ -128,6 +130,7 @@ export const STATUS_TEXTS = {
   NETWORK_AUTHENTICATION_REQUIRED: "Network Authentication Required",
 }
 
+// prettier-ignore
 export const STATUS_CODE_TO_TEXT: Record<string, string> = {
   "100": "Continue",
   "101": "Switching Protocols",
@@ -193,7 +196,7 @@ export const STATUS_CODE_TO_TEXT: Record<string, string> = {
   "511": "Network Authentication Required",
 }
 
-
+// prettier-ignore
 export const STATUS_TEXT_TO_CODE: Record<string, string> = {
   "Continue": "100",
   "Switching Protocols": "101",

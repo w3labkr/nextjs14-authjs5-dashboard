@@ -1,13 +1,7 @@
-import Link from "next/link"
+import Link from 'next/link'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { VerifyCodeForm } from "@/components/verify-code-form"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { VerifyCodeForm } from '@/components/verify-code-form'
 
 export default function VerifyCodePage() {
   return (
@@ -19,7 +13,7 @@ export default function VerifyCodePage() {
         </CardHeader>
         <CardContent>
           <VerifyCodeForm />
-          <div className="mt-4 text-sm text-center">
+          <div className="mt-4 text-center text-sm">
             {`Didn't receive the email? `}
             <Link href="/auth/signin" className="underline">
               Click to resend

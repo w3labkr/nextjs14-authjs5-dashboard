@@ -1,26 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from "next/navigation"
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
-import { fetcher } from "@/lib/utils"
+import { fetcher } from '@/lib/utils'
 import type { SignUpAPI } from '@/types/api'
 
 const FormSchema = z
@@ -41,26 +33,35 @@ export function SignUpForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: "",
-      newPassword: "",
-      confirmNewPassword: "",
+      email: '',
+      newPassword: '',
+      confirmNewPassword: '',
     },
   })
-  const { control, handleSubmit, setError, formState: { errors } } = form
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   async function onSubmit(values: FormValues) {
     try {
       setIsSubmitting(true)
 
-      const {success, message, data: { user }} = await fetcher<SignUpAPI>('/api/auth/signup', {
+      const {
+        success,
+        message,
+        data: { user },
+      } = await fetcher<SignUpAPI>('/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: values?.email,
-          password: values?.newPassword
+          password: values?.newPassword,
         }),
       })
 
@@ -90,7 +91,14 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" autoCapitalize="none" autoComplete="email" autoCorrect="off" placeholder="me@example.com" {...field} />
+                <Input
+                  type="email"
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  autoCorrect="off"
+                  placeholder="me@example.com"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -104,7 +112,14 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" autoCapitalize="none" autoComplete="new-password" autoCorrect="off" placeholder="************" {...field} />
+                <Input
+                  type="password"
+                  autoCapitalize="none"
+                  autoComplete="new-password"
+                  autoCorrect="off"
+                  placeholder="************"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -118,7 +133,14 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <Input type="password" autoCapitalize="none" autoComplete="new-password" autoCorrect="off" placeholder="************" {...field} />
+                <Input
+                  type="password"
+                  autoCapitalize="none"
+                  autoComplete="new-password"
+                  autoCorrect="off"
+                  placeholder="************"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -126,7 +148,9 @@ export function SignUpForm() {
           )}
         />
         {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
-        <Button type="submit" className="w-full" disabled={isSubmitting}>Sign Up</Button>
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          Sign Up
+        </Button>
       </form>
     </Form>
   )

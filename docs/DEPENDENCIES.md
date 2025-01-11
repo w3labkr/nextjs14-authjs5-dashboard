@@ -86,50 +86,6 @@ The easiest way to explore and manipulate your data in all of your Prisma projec
 npx prisma studio
 ```
 
-## Zustand
-
-Bear necessities for state management in React
-
-```shell
-npm i zustand
-```
-
-## React Query
-
-Powerful asynchronous state management, server-state utilities and data fetching for the web. TS/JS, React Query, Solid Query, Svelte Query and Vue Query.
-
-```shell
-npm i @tanstack/react-query
-```
-
-## Nodemailer
-
-Send e-mails with Node.JS.
-
-```shell
-npm install nodemailer
-npm install --save-dev @types/nodemailer
-```
-
-## Browserslist
-
-Share target browsers between different front-end tools, like Autoprefixer, Stylelint and babel-preset-env.
-
-```shell
-npm install browserslist
-```
-
-Edit `package.json`:
-
-```json
-{
-  "browserslist": [
-    "defaults and fully supports es6-module",
-    "maintained node versions"
-  ],
-}
-```
-
 ## Serve
 
 Static file serving and directory listing
@@ -150,6 +106,50 @@ Run the script
 
 ```shell
 npm run serve
+```
+
+## Nodemailer
+
+Send e-mails with Node.JS.
+
+```shell
+npm install nodemailer
+npm install --save-dev @types/nodemailer
+```
+
+## Zustand
+
+Bear necessities for state management in React
+
+```shell
+npm i zustand
+```
+
+## React Query
+
+Powerful asynchronous state management, server-state utilities and data fetching for the web. TS/JS, React Query, Solid Query, Svelte Query and Vue Query.
+
+```shell
+npm i @tanstack/react-query
+```
+
+## Browserslist
+
+Share target browsers between different front-end tools, like Autoprefixer, Stylelint and babel-preset-env.
+
+```shell
+npm install browserslist
+```
+
+Edit `package.json`:
+
+```json
+{
+  "browserslist": [
+    "defaults and fully supports es6-module",
+    "maintained node versions"
+  ],
+}
 ```
 
 ## bcrypt.js
