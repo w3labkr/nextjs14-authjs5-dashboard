@@ -8,7 +8,7 @@ import { ApiResponse } from '@/lib/utils'
 import { STATUS_CODES } from '@/lib/http-status-codes'
 
 export async function POST(req: NextRequest) {
-  const authorization = req.headers.get('Authorization')
+  const authorization = req.headers.get('authorization')
 
   // if (authorization !== `Bearer ${process.env.JWT_SECRET!}`) {
   //   return ApiResponse.json(data, STATUS_CODES.UNAUTHORIZED)

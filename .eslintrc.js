@@ -1,5 +1,49 @@
+/* eslint-env node */
 module.exports = {
-  extends: ["next/core-web-vitals", "next/typescript"],
+  // extends: ["next/core-web-vitals", "next/typescript"],
+  oot: true,
+  env: {
+    browser: true,
+    node: true,
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    'next',
+    'plugin:prettier/recommended',
+  ],
+  plugins: ['import', 'react', 'react-hooks', '@typescript-eslint'],
+  ignorePatterns: [
+    // '.eslintrc.js',
+    // '*.config.js',
+    // '*.config.cjs',
+    // '*.config.mjs',
+    // '*.config.ts',
+    'components/ui/',
+    'build/',
+  ],
+  settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
+    },
+    'import/resolver': {
+      typescript: {},
+    },
+  },
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 12,
+    sourceType: 'module',
+  },
   rules: {
     // ... is defined but never used.
     'no-unused-vars': 'warn',

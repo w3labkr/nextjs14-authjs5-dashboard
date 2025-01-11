@@ -1,27 +1,19 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
-import { useSession } from "next-auth/react"
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 const FormSchema = z.object({
   email: z.string().max(255).email(),
@@ -35,11 +27,16 @@ export function SignInForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   })
-  const { control, handleSubmit, setError, formState: { errors } } = form
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   // temp
@@ -79,7 +76,14 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" autoCapitalize="none" autoComplete="email" autoCorrect="off" placeholder="me@example.com" {...field} />
+                <Input
+                  type="email"
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  autoCorrect="off"
+                  placeholder="me@example.com"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -91,14 +95,21 @@ export function SignInForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <div className="mt-4 flex justify-between items-center">
-              <FormLabel>Password</FormLabel>
-              <Link href="/auth/forgot-password" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </Link>
+              <div className="mt-4 flex items-center justify-between">
+                <FormLabel>Password</FormLabel>
+                <Link href="/auth/forgot-password" className="ml-auto inline-block text-sm underline">
+                  Forgot your password?
+                </Link>
               </div>
               <FormControl>
-                <Input type="password" autoCapitalize="none" autoComplete="current-password" autoCorrect="off" placeholder="************" {...field} />
+                <Input
+                  type="password"
+                  autoCapitalize="none"
+                  autoComplete="current-password"
+                  autoCorrect="off"
+                  placeholder="************"
+                  {...field}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -106,7 +117,9 @@ export function SignInForm() {
           )}
         />
         {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
-        <Button type="submit" className="w-full" disabled={isSubmitting}>Sign In</Button>
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          Sign In
+        </Button>
       </form>
     </Form>
   )

@@ -1,0 +1,79 @@
+{
+    // Configure settings to be overridden for the html language.
+    "[html]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    // Unknown at-rule.
+    "css.lint.unknownAtRules": "ignore",
+
+    // Configure settings to be overridden for the css language.
+    "[css]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    // Unknown at-rule.
+    "scss.lint.unknownAtRules": "ignore",
+
+    // Configure settings to be overridden for the scss language.
+    "[scss]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    // Enable/disable default JavaScript formatter.
+    "javascript.format.enable": true,
+
+    // Enable/disable JavaScript validation.
+    "javascript.validate.enable": true,
+
+    // Enable/disable default TypeScript formatter.
+    "typescript.format.enable": true,
+
+    // Enable/disable TypeScript validation.
+    "typescript.validate.enable": true,
+
+    // Enables ESLint as a formatter.
+    "eslint.format.enable": true,
+
+    // An array of language ids which should be validated by ESLint. If not installed ESLint will show an error.
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "html",
+        "vue",
+        "markdown"
+    ],
+
+    // Configure settings to be overridden for the javascript language.
+    "[javascript]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+
+    // Configure settings to be overridden for the javascriptreact language.
+    "[javascriptreact]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+
+    // Configure settings to be overridden for the typescript language.
+    "[typescript]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+
+    // Configure settings to be overridden for the typescriptreact language.
+    "[typescriptreact]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+}

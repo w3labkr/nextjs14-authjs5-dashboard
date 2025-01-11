@@ -119,6 +119,17 @@ Share target browsers between different front-end tools, like Autoprefixer, Styl
 npm install browserslist
 ```
 
+Edit `package.json`:
+
+```json
+{
+  "browserslist": [
+    "defaults and fully supports es6-module",
+    "maintained node versions"
+  ],
+}
+```
+
 ## Serve
 
 Static file serving and directory listing
@@ -163,4 +174,38 @@ Day.js 2kB immutable date-time library alternative to Moment.js with the same mo
 
 ```shell
 npm i dayjs
+```
+
+## ESLint
+
+ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code.
+
+```shell
+npm install --save-dev eslint eslint-plugin-react eslint-plugin-react-hooks
+npm install --save-dev eslint-plugin-import eslint-import-resolver-typescript
+npm install --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin
+npm install --save-dev @next/eslint-plugin-next
+```
+
+Find and fix problems in your JavaScript code.
+
+```shell
+npx eslint ./app
+npx eslint --fix ./{app,components,config,context,hooks,lib,queries,store,types}
+```
+
+## Prettier
+
+Prettier is an opinionated code formatter.
+
+```shell
+npm install --save-dev prettier eslint-plugin-prettier eslint-config-prettier
+npm install --save-dev eslint-plugin-tailwindcss prettier-plugin-tailwindcss
+```
+
+To format a file in-place.
+
+```shell
+npx prettier --check "./app/**/*.{ts,tsx}"
+npx prettier --write "./{app,components,config,context,hooks,lib,queries,store,types}/**/*.{ts,tsx}"
 ```
