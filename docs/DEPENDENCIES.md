@@ -52,7 +52,7 @@ export default function RootLayout({
 }
 ```
 
-## NextAuth.js
+## Auth.js
 
 Installing Auth.js
 
@@ -94,12 +94,29 @@ Bear necessities for state management in React
 npm i zustand
 ```
 
-## SWR
+## React Query
 
-React Hooks for Data Fetching.
+Powerful asynchronous state management, server-state utilities and data fetching for the web. TS/JS, React Query, Solid Query, Svelte Query and Vue Query.
 
 ```shell
-npm i swr
+npm i @tanstack/react-query
+```
+
+## Nodemailer
+
+Send e-mails with Node.JS.
+
+```shell
+npm install nodemailer
+npm install --save-dev @types/nodemailer
+```
+
+## Browserslist
+
+Share target browsers between different front-end tools, like Autoprefixer, Stylelint and babel-preset-env.
+
+```shell
+npm install browserslist
 ```
 
 ## Serve
@@ -124,15 +141,6 @@ Run the script
 npm run serve
 ```
 
-## Nodemailer
-
-Send e-mails with Node.JS.
-
-```shell
-npm install nodemailer
-npm install --save-dev @types/nodemailer
-```
-
 ## bcrypt.js
 
 Optimized bcrypt in plain JavaScript with zero dependencies.
@@ -141,12 +149,12 @@ Optimized bcrypt in plain JavaScript with zero dependencies.
 npm i bcryptjs @types/bcryptjs
 ```
 
-## jsonwebtoken
+## jose (JSON Web Token)
 
-JsonWebToken implementation for node.js.
+JWA, JWS, JWE, JWT, JWK, JWKS for Node.js, Browser, Cloudflare Workers, Deno, Bun, and other Web-interoperable runtimes.
 
 ```shell
-npm install jsonwebtoken @types/jsonwebtoken
+npm i jose
 ```
 
 ## Day.js
