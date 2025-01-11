@@ -51,7 +51,6 @@ export function SignInForm() {
       setIsSubmitting(true)
 
       const res = await signIn('credentials', { ...values, redirect: false })
-      console.log(res)
 
       if (res?.error) throw Error(res?.code)
 
@@ -59,7 +58,7 @@ export function SignInForm() {
       // router.replace('/dashboard')
     } catch (e: unknown) {
       const message = (e as Error)?.message
-      if (message.includes('Invalid identifier or password')) setError('root', { message })
+      if (message.includes('Invalid identifier')) setError('root', { message })
       else toast.error(message)
     } finally {
       setIsSubmitting(false)

@@ -51,7 +51,6 @@ export function SignUpForm() {
       setIsSubmitting(true)
 
       const {
-        success,
         message,
         data: { user },
       } = await fetcher<SignUpAPI>('/api/auth/signup', {
@@ -65,16 +64,15 @@ export function SignUpForm() {
         }),
       })
 
-      if (!success) throw new Error(message)
-      else if (!user) throw new Error(message)
+      if (!user) throw new Error(message)
 
-      toast.success('You have successfully registered as a member.')
+      toast.success(message)
 
       router.refresh()
       router.replace('/auth/signin')
     } catch (e: unknown) {
       const message = (e as Error)?.message
-      if (message.includes('registered')) setError('email', { message })
+      if (message.includes('already exists')) setError('email', { message })
       else toast.error(message)
     } finally {
       setIsSubmitting(false)

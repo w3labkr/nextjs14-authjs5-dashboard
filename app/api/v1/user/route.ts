@@ -1,17 +1,15 @@
-import { NextResponse, type NextRequest } from 'next/server'
+import { type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
 
+import { ApiResponse, STATUS_CODES } from '@/lib/http-status-codes'
+
 export async function GET(req: NextRequest) {
-  return NextResponse.json({ user: 'user' })
-}
+  const searchParams = req.nextUrl.searchParams
+  const email = searchParams.get('email') as string
 
-interface RequestBody {
-  email: string
-  password: string
-}
+  const user = await prisma.user.findFirst({
+    where: { email },
+  })
 
-export async function POST(req: NextRequest) {
-  const body: RequestBody = await req.json()
-
-  return NextResponse.json({ body })
+  return ApiResponse.json({ user })
 }

@@ -18,10 +18,6 @@ declare module 'next-auth' {
    * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    id: string
-    accessToken: string
-    expiresAt: number
-    refreshToken?: string
     user: {
       /**
        * By default, TypeScript merges new interface properties and overwrites existing ones.

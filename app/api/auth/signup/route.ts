@@ -4,8 +4,7 @@ import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import dayjs from '@/lib/dayjs'
 
-import { ApiResponse } from '@/lib/utils'
-import { STATUS_CODES } from '@/lib/http-status-codes'
+import { ApiResponse, STATUS_CODES } from '@/lib/http-status-codes'
 
 export async function POST(req: NextRequest) {
   const authorization = req.headers.get('authorization')
@@ -32,7 +31,7 @@ export async function POST(req: NextRequest) {
   })
 
   if (user) {
-    return ApiResponse.json({ user: null }, STATUS_CODES.OK, 'User already registered.')
+    return ApiResponse.json({ user: null }, STATUS_CODES.CONFLICT, 'User already exists.')
   }
 
   const newUser = await prisma.user.create({
@@ -53,11 +52,11 @@ export async function POST(req: NextRequest) {
   //     // access_token: '',
   //     // expires_at: 1736578268,
   //     // token_type: 'bearer',
-  //     // scope: 'openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+  //     // scope: 'openid https://localhost/api/token',
   //     // id_token: '',
   //     // session_state: null,
   //   },
   // })
 
-  return ApiResponse.json({ user: newUser })
+  return ApiResponse.json({ user: newUser }, STATUS_CODES.OK, 'You have registered successfully.')
 }

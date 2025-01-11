@@ -3,8 +3,7 @@ import { prisma } from '@/prisma'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 
-import { ApiResponse } from '@/lib/utils'
-import { STATUS_CODES } from '@/lib/http-status-codes'
+import { ApiResponse, STATUS_CODES } from '@/lib/http-status-codes'
 
 export async function POST(req: NextRequest) {
   const authorization = req.headers.get('authorization')
@@ -30,10 +29,11 @@ export async function POST(req: NextRequest) {
     where: { email: data?.email },
   })
 
-  if (!user) return ApiResponse.json({ user: null }, STATUS_CODES.OK, 'Invalid identifier or password')
-  if (!user?.password) return ApiResponse.json({ user: null }, STATUS_CODES.OK, 'Invalid identifier or password')
+  if (!user) return ApiResponse.json({ user: null }, STATUS_CODES.BAD_REQUEST, 'Invalid identifier or password.')
 
-  return (await bcrypt.compare(data?.password, user?.password))
-    ? ApiResponse.json({ user })
-    : ApiResponse.json({ user: null }, STATUS_CODES.OK, 'Invalid identifier or password')
+  if (user?.password && (await bcrypt.compare(data?.password, user?.password))) {
+    return ApiResponse.json({ user }, STATUS_CODES.OK, 'You have successfully logged in.')
+  }
+
+  return ApiResponse.json({ user: null }, STATUS_CODES.BAD_REQUEST, 'Invalid identifier or password.')
 }

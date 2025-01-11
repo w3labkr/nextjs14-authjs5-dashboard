@@ -37,16 +37,6 @@ model User {
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  // Token
-  // refresh_token      String? @db.Text
-  // access_token       String? @db.Text
-  // expires_at         Int?
-  // token_type         String?
-  // scope              String?
-  // id_token           String? @db.Text
-  // session_state      String?
-
-  // Additional fields
   username            String    @unique @default(uuid())
   usernameChangedAt   DateTime? @map("username_changed_at")
   password            String?
@@ -55,8 +45,8 @@ model User {
   roleChangedAt       DateTime? @map("role_changed_at")
   plan                String    @default("free")
   planChangedAt       DateTime? @map("plan_changed_at")
-  isBan               Boolean   @default(false) @map("is_ban")
   bannedUntil         DateTime? @map("banned_until")
+  isBan               Boolean   @default(false) @map("is_ban")
   isAdmin             Boolean   @default(false) @map("is_admin")
 
   @@map("users")

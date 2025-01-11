@@ -1,15 +1,14 @@
 # Next.js 14 + Auth.js Dashboard
 
-This is a dashboard starter template for the [NextJS](https://nextjs.org) 14 app router using supabase based on [shadcn-ui](https://ui.shadcn.com).
+This is a dashboard starter template for the [NextJS](https://nextjs.org) 14 app router based on [Auth.js](https://authjs.dev) v5.
 
 ## Denpendencies
 
 - Next.js 14
-- NextAuth.js v5 + Prisma Adapter
-- Nodemailer
+- Auth.js v5 + Prisma Adapter
 - Shadcn
 - Zustand
-- SWR
+- React Query
 
 ## Folder and file Structure
 
@@ -19,34 +18,30 @@ The folder and file structure is based on nextjs app router [next.js project str
 .
 ├── app/                        # App Router
 │   └── api/
-│       ├── auth/               # Public API for authentication
-│       └── v1/                 # APIs that require authentication
+│       ├── auth/               # Authentication
+│       └── v1/                 # Public APIs
 ├── components/                 # React components
 ├── config/                     # Configuration for site
 ├── context/                    # Context
 ├── docs/                       # Documents
 ├── hooks/                      # Hooks
 ├── lib/                        # Utility functions
+├── prisma/                     # Prisma Schema Location and Configuration
 ├── public/                     # Static assets to be served
 │   └── [locales]/              # Internationalization
 ├── queries/                    # API
-├── screenshots/                # Screenshots
 ├── store/                      # State
 ├── supabase/                   # Supabase CLI
 ├── types/                      # Type definitions
-└── package.json                # Project dependencies and scripts
+└── package.json
 ```
 
 ## Getting Started
 
-Clone the repository.
+Clone the repository to the current directory.
 
 ```shell
 git clone https://github.com/w3labkr/nextjs14-supabase-dashboard.git .
-```
-
-```shell
-cd nextjs14-supabase-dashboard
 ```
 
 Install all modules listed as dependencies.
@@ -55,18 +50,22 @@ Install all modules listed as dependencies.
 npm install
 ```
 
+Copy of the `.env.example` if the `.env` doesn't exist.
+
+```shell
+cp .env.example .env
+```
+
+Create an SQL migration file and execute it.
+
+```shell
+npm exec prisma migrate dev
+```
+
 Start the development server.
 
 ```shell
 npm run dev
-```
-
-## Database
-
-Apply Schema
-
-```shell
-npm exec prisma migrate dev
 ```
 
 ## License

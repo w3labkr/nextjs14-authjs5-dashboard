@@ -5,6 +5,7 @@ import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 
 import { fetcher } from '@/lib/utils'
+import { STATUS_TEXTS } from '@/lib/http-status-codes'
 import { SignInAPI } from '@/types/api'
 
 class CustomError extends CredentialsSignin {
@@ -49,28 +50,31 @@ export default {
           })
           .safeParse(credentials)
 
-        if (!validatedField.success) return null
+        if (!validatedField.success) {
+          throw new CustomError(STATUS_TEXTS.BAD_REQUEST)
+        }
 
-        const {
-          success,
-          message,
-          data: { user },
-        } = await fetcher<SignInAPI>('/api/auth/signin', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(validatedField.data),
-        })
+        try {
+          const {
+            message,
+            data: { user },
+          } = await fetcher<SignInAPI>('/api/auth/signin', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(validatedField.data),
+          })
 
-        if (!success) throw new CustomError(message)
+          // No user found, so this is their first attempt to login
+          // Optionally, this is also the place you could do a user registration
+          if (!user) throw new CustomError(message)
 
-        // No user found, so this is their first attempt to login
-        // Optionally, this is also the place you could do a user registration
-        if (!user) throw new CustomError(message)
-
-        // return user object with their profile data
-        return user
+          // return user object with their profile data
+          return user
+        } catch (e: unknown) {
+          throw new CustomError((e as Error)?.message)
+        }
       },
     }),
   ],
@@ -84,15 +88,12 @@ export default {
       if (account?.provider === 'google') return !!profile?.email_verified
       return true // Do different verification for other providers that don't have `email_verified`
     },
-    jwt: async ({ token, user }) => {
-      console.log({ token, user })
-      // if (user.id) token.id = user.id
+    jwt: async ({ token, account }) => {
+      console.log({ token, account })
       return token
     },
     session: async ({ session, token }) => {
-      session.accessToken = token.accessToken
       console.log({ session })
-      // if (token.id) session.id = token.id
       return session
     },
   },
