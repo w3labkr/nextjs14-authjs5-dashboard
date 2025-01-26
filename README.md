@@ -30,6 +30,7 @@ The folder and file structure is based on nextjs app router [next.js project str
 ├── public/                     # Static assets to be served
 │   └── [locales]/              # Internationalization
 ├── queries/                    # API
+├── schemas/                    # Schema validation
 ├── store/                      # State
 ├── supabase/                   # Supabase CLI
 ├── types/                      # Type definitions
@@ -59,7 +60,7 @@ cp .env.example .env
 Create an SQL migration file and execute it.
 
 ```shell
-npm exec prisma migrate dev
+npx prisma migrate dev --name init
 ```
 
 Start the development server.

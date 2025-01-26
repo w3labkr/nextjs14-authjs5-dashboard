@@ -71,12 +71,19 @@ Installing Prisma Adapter
 ```shell
 npm install @prisma/client @auth/prisma-adapter
 npm install prisma --save-dev
+npm install tsx --save-dev
 ```
 
-Apply Schema
+If you're not using a Prisma Postgres database, you won't need the @prisma/extension-accelerate package.
 
 ```shell
-npm exec prisma migrate dev
+npm install @prisma/extension-accelerate
+```
+
+Apply schema to database.
+
+```shell
+npx prisma migrate dev --name init
 ```
 
 The easiest way to explore and manipulate your data in all of your Prisma projects.
@@ -200,6 +207,7 @@ Prettier is an opinionated code formatter.
 ```shell
 npm install --save-dev prettier eslint-plugin-prettier eslint-config-prettier
 npm install --save-dev eslint-plugin-tailwindcss prettier-plugin-tailwindcss
+npm install --save-dev prettier-plugin-prisma
 ```
 
 To format a file in-place.
