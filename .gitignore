@@ -37,3 +37,6 @@ next-env.d.ts
 
 # production env file
 .env
+
+# etc
+/tmp

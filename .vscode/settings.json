@@ -1,4 +1,25 @@
 {
+    // Configure [glob patterns](https://aka.ms/vscode-glob-patterns) of file associations to languages (for example `"*.extension": "html"`). Patterns will match on the absolute path of a file if they contain a path separator and will match on the name of the file otherwise. These have precedence over the default associations of the languages installed.
+    "files.associations": {
+        "*.mdx": "markdown",
+        "*.css": "tailwindcss",
+        "*.mjs": "javascript",
+    },
+
+    // Insert spaces when pressing `Tab`. This setting is overridden based on the file contents when `editor.detectIndentation` is on.
+    "editor.insertSpaces": true,
+
+    // Controls whether `editor.tabSize#` and `#editor.insertSpaces` will be automatically detected when a file is opened based on the file contents.
+    "editor.detectIndentation": true,
+
+    // The number of spaces a tab is equal to. This setting is overridden based on the file contents when `editor.detectIndentation` is on.
+    "editor.tabSize": 4,
+
+    // Controls whether suggestions should automatically show up while typing. This can be controlled for typing in comments, strings, and other code. Quick suggestion can be configured to show as ghost text or with the suggest widget. Also be aware of the '#editor.suggestOnTriggerCharacters#'-setting which controls if suggestions are triggered by special characters.
+    "editor.quickSuggestions": {
+		"strings": "on"
+	},
+
     // Configure settings to be overridden for the html language.
     "[html]": {
         "editor.tabSize": 2,
@@ -23,18 +44,6 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
 
-    // Enable/disable default JavaScript formatter.
-    "javascript.format.enable": true,
-
-    // Enable/disable JavaScript validation.
-    "javascript.validate.enable": true,
-
-    // Enable/disable default TypeScript formatter.
-    "typescript.format.enable": true,
-
-    // Enable/disable TypeScript validation.
-    "typescript.validate.enable": true,
-
     // Enables ESLint as a formatter.
     "eslint.format.enable": true,
 
@@ -48,6 +57,12 @@
         "vue",
         "markdown"
     ],
+
+    // Enable/disable default JavaScript formatter.
+    "javascript.format.enable": true,
+
+    // Enable/disable JavaScript validation.
+    "javascript.validate.enable": true,
 
     // Configure settings to be overridden for the javascript language.
     "[javascript]": {
@@ -63,6 +78,12 @@
         "editor.formatOnSave": true
     },
 
+    // Enable/disable default TypeScript formatter.
+    "typescript.format.enable": true,
+
+    // Enable/disable TypeScript validation.
+    "typescript.validate.enable": true,
+
     // Configure settings to be overridden for the typescript language.
     "[typescript]": {
         "editor.tabSize": 2,
@@ -75,5 +96,37 @@
         "editor.tabSize": 2,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true
+    },
+
+    // Configure settings to be overridden for the php language.
+    "[php]": {
+        "editor.tabSize": 4
+    },
+
+    // Configure settings to be overridden for the python language.
+    "[python]": {
+        "editor.tabSize": 4
+    },
+
+    // Configure settings to be overridden for the prisma language.
+    "[prisma]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "Prisma.prisma",
+        "editor.formatOnSave": true
+    },
+
+    // Configure settings to be overridden for the sql language.
+    "[sql]": {
+        "editor.tabSize": 2
+    },
+
+    // Configure settings to be overridden for the shellscript language.
+    "[shellscript]": {
+        "editor.tabSize": 2
+    },
+
+    // Configure settings to be overridden for the yaml language.
+    "[yaml]": {
+        "editor.tabSize": 2
     },
 }

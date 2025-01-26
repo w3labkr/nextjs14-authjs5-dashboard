@@ -72,14 +72,24 @@ indent_size = 4
 [*.py]
 indent_size = 4
 
-# YAML Specification
-# http://www.yaml.org/spec/1.2/spec.html#Syntax
-[*.{yml, yaml}]
+# Prisma ORM supports formatting .prisma files automatically.
+# https://www.prisma.io/docs/orm/prisma-schema/overview#auto-formatting
+[*.prisma]
 indent_size = 2
+
+# SQL Style Guide by Simon Holywell · @Treffynnon
+# https://www.sqlstyle.guide/
+[*.sql]
+indent_size = 4
 
 # Shell Style Guide
 # https://google.github.io/styleguide/shellguide.html#s5.1-indentation
 [*.sh]
+indent_size = 2
+
+# YAML Specification
+# http://www.yaml.org/spec/1.2/spec.html#Syntax
+[*.{yml, yaml}]
 indent_size = 2
 
 # JSON (JavaScript Object Notation) is a lightweight data-interchange format. It is easy for humans to read and write.
