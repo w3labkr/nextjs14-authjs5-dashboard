@@ -6,26 +6,16 @@ import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { newPasswordSchema } from '@/schemas/auth'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-const FormSchema = z
-  .object({
-    newPassword: z.string().min(6).max(72),
-    confirmNewPassword: z.string().min(6).max(72),
-  })
-  .refine((val) => val.newPassword === val.confirmNewPassword, {
-    path: ['confirmNewPassword'],
-  })
-
-type FormValues = z.infer<typeof FormSchema>
-
 export function NewPasswordForm() {
   const router = useRouter()
-  const form = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof newPasswordSchema>>({
+    resolver: zodResolver(newPasswordSchema),
     defaultValues: {
       newPassword: '',
       confirmNewPassword: '',
@@ -39,7 +29,7 @@ export function NewPasswordForm() {
   } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: z.infer<typeof newPasswordSchema>) {
     console.log(values)
     router.push('/auth/signin')
   }

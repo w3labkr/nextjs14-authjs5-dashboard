@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { signUpSchema } from '@/schemas/auth'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -15,23 +16,10 @@ import { Input } from '@/components/ui/input'
 import { fetcher } from '@/lib/utils'
 import type { SignUpAPI } from '@/types/api'
 
-const FormSchema = z
-  .object({
-    email: z.string().min(4).max(255).email(),
-    // If the password is larger than 72 chars, it will be truncated to the first 72 chars.
-    newPassword: z.string().min(6).max(72),
-    confirmNewPassword: z.string().min(6).max(72),
-  })
-  .refine((val) => val.newPassword === val.confirmNewPassword, {
-    path: ['confirmNewPassword'],
-  })
-
-type FormValues = z.infer<typeof FormSchema>
-
 export function SignUpForm() {
   const router = useRouter()
-  const form = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: '',
       newPassword: '',
@@ -46,7 +34,7 @@ export function SignUpForm() {
   } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: z.infer<typeof signUpSchema>) {
     try {
       setIsSubmitting(true)
 
@@ -58,10 +46,7 @@ export function SignUpForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: values?.email,
-          password: values?.newPassword,
-        }),
+        body: JSON.stringify(values),
       })
 
       if (!user) throw new Error(message)

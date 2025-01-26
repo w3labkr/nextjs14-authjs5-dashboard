@@ -10,25 +10,21 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { signInSchema } from '@/schemas/auth'
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
-const FormSchema = z.object({
-  email: z.string().max(255).email(),
-  password: z.string().min(6).max(72),
-})
-
-type FormValues = z.infer<typeof FormSchema>
+import { Checkbox } from '@/components/ui/checkbox'
 
 export function SignInForm() {
   const router = useRouter()
-  const form = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: '',
       password: '',
+      rememberMe: false,
     },
   })
   const {
@@ -46,7 +42,7 @@ export function SignInForm() {
     if (session) console.log(session)
   }, [session])
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: z.infer<typeof signInSchema>) {
     try {
       setIsSubmitting(true)
 
@@ -54,7 +50,7 @@ export function SignInForm() {
 
       if (res?.error) throw Error(res?.code)
 
-      // router.refresh()
+      router.refresh()
       // router.replace('/dashboard')
     } catch (e: unknown) {
       const message = (e as Error)?.message
@@ -110,6 +106,22 @@ export function SignInForm() {
                   {...field}
                 />
               </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name="rememberMe"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center space-x-2">
+                <FormControl>
+                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                </FormControl>
+                <FormLabel>Remember me for 30 days</FormLabel>
+              </div>
               <FormDescription></FormDescription>
               <FormMessage />
             </FormItem>

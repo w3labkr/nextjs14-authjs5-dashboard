@@ -1,6 +1,5 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { STATUS_TEXTS } from '@/lib/http-status-codes'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -12,7 +11,7 @@ export async function fetcher<T>(input: string, init?: RequestInit): Promise<T> 
   const contentType = res.headers.get('content-type')
   if (!res.ok) throw new Error(res.statusText)
   if (!contentType?.includes('application/json')) {
-    throw new Error(STATUS_TEXTS.UNSUPPORTED_MEDIA_TYPE)
+    throw new Error('Unsupported Media Type')
   }
   return await (res.json() as Promise<T>)
 }
@@ -23,7 +22,7 @@ export async function fetcherText(input: string, init?: RequestInit): Promise<st
   const contentType = res.headers.get('content-type')
   if (!res.ok) throw new Error(res.statusText)
   if (!contentType?.includes('text/plain')) {
-    throw new Error(STATUS_TEXTS.UNSUPPORTED_MEDIA_TYPE)
+    throw new Error('Unsupported Media Type')
   }
   return await res.text()
 }
@@ -33,7 +32,7 @@ export async function sleep(ms: number): Promise<void> {
 }
 
 export function absoluteUrl(url: string | URL, base?: string | URL) {
-  return new URL(url, base ?? process.env.NEXT_PUBLIC_APP_URL).toString()
+  return new URL(url, base ?? process.env.NEXT_PUBLIC_APP_URL!).toString()
 }
 
 export function relativeUrl(url: string) {

@@ -6,21 +6,16 @@ import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { verifyCodeSchema } from '@/schemas/auth'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 
-const FormSchema = z.object({
-  code: z.string().min(6),
-})
-
-type FormValues = z.infer<typeof FormSchema>
-
 export function VerifyCodeForm() {
   const router = useRouter()
-  const form = useForm<FormValues>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof verifyCodeSchema>>({
+    resolver: zodResolver(verifyCodeSchema),
     defaultValues: {
       code: '',
     },
@@ -33,7 +28,7 @@ export function VerifyCodeForm() {
   } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: z.infer<typeof verifyCodeSchema>) {
     console.log(values)
     router.push('/auth/new-password')
   }
