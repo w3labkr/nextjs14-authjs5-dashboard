@@ -8,23 +8,27 @@ import { signInSchema } from '@/schemas/auth'
 import { ApiResponse, STATUS_CODES } from '@/lib/http-status-codes'
 
 export async function POST(req: NextRequest) {
+  const authorization = req.headers.get('authorization')
   const body = await req.json()
-  const validatedField = signInSchema.safeParse(body)
+  const { data, success } = signInSchema.safeParse(body)
 
-  if (!validatedField.success) {
+  // if (authorization !== `Bearer ${process.env.AUTH_SECRET}`) {
+  //   return ApiResponse.json({ tokens: null }, STATUS_CODES.UNAUTHORIZED)
+  // }
+
+  if (!success) {
     return ApiResponse.json({ user: null }, STATUS_CODES.BAD_REQUEST)
   }
 
-  const data = validatedField.data
   const user = await prisma.user.findUnique({
     where: { email: data?.email },
   })
 
-  if (!user) {
+  if (!user || !user?.password) {
     return ApiResponse.json({ user: null }, STATUS_CODES.BAD_REQUEST, 'Invalid identifier or password.')
   }
 
-  if (user?.password && (await bcrypt.compare(data?.password, user?.password))) {
+  if (await bcrypt.compare(data?.password, user?.password)) {
     return ApiResponse.json({ user }, STATUS_CODES.OK, 'You have successfully logged in.')
   }
 

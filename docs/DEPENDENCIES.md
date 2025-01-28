@@ -182,6 +182,14 @@ Day.js 2kB immutable date-time library alternative to Moment.js with the same mo
 npm i dayjs
 ```
 
+## cookies-next
+
+Getting, setting and removing cookies on both client and server with next.js
+
+```shell
+npm i cookies-next@4.3.0
+```
+
 ## ESLint
 
 ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code.

@@ -5,22 +5,20 @@ import { VerifyCodeForm } from '@/components/verify-code-form'
 
 export default function VerifyCodePage() {
   return (
-    <div className="flex h-screen w-full items-center justify-center px-4">
-      <Card className="mx-auto max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Email Verification</CardTitle>
-          <CardDescription>Please enter the 6-digit code sent to your email.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <VerifyCodeForm />
-          <div className="mt-4 text-center text-sm">
-            {`Didn't receive the email? `}
-            <Link href="/auth/signin" className="underline">
-              Click to resend
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="mx-auto max-w-sm">
+      <CardHeader>
+        <CardTitle className="text-2xl">Email Verification</CardTitle>
+        <CardDescription>Please enter the 6-digit code sent to your email.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <VerifyCodeForm />
+        <div className="mt-4 text-center text-sm">
+          {`Didn't receive the email? `}
+          <Link href="/auth/signin" className="underline">
+            Click to resend
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
   )
 }

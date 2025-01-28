@@ -6,7 +6,19 @@ declare module 'next-auth' {
    * The shape of the user object returned in the OAuth providers' `profile` callback,
    * or the second parameter of the `session` callback, when using a database.
    */
-  interface User {}
+  interface User {
+    id: string
+    provider: string
+    access_token: string
+    expires_at: number
+    refresh_token?: string
+    username: string
+    plan: string
+    role: string
+    isAdmin: boolean
+    isBan: boolean
+    bannedUntil?: Date
+  }
 
   /**
    * The shape of the account object returned in the OAuth providers' `account` callback,
@@ -26,6 +38,8 @@ declare module 'next-auth' {
        * you need to add them back into the newly declared interface.
        */
     } & DefaultSession['user']
+    access_token: string
+    error?: string
   }
 }
 
@@ -34,9 +48,16 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
   interface JWT {
     id: string
-    accessToken: string
-    expiresAt: number
-    refreshToken?: string
-    error?: 'RefreshTokenError'
+    provider: string
+    access_token: string
+    expires_at: number
+    refresh_token?: string
+    username: string
+    plan: string
+    role: string
+    isAdmin: boolean
+    isBan: boolean
+    bannedUntil?: Date
+    error?: string
   }
 }

@@ -7,9 +7,9 @@ export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
   const email = searchParams.get('email') as string
 
-  const user = await prisma.user.findFirst({
+  const user = await prisma.user.findUnique({
     where: { email },
   })
 
-  return ApiResponse.json({ user })
+  return ApiResponse.json({ user }, STATUS_CODES.OK)
 }

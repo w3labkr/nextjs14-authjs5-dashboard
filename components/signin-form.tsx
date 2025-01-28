@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
-import { useSession } from 'next-auth/react'
+import { getCookie, setCookie } from 'cookies-next'
 import { toast } from 'sonner'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -17,15 +17,18 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 
+const formValues = {
+  email: '',
+  password: '',
+  rememberMe: false,
+}
+
 export function SignInForm() {
   const router = useRouter()
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      rememberMe: false,
-    },
+    defaultValues: formValues,
+    values: { ...formValues, rememberMe: getCookie('rememberMe') === 'true' },
   })
   const {
     control,
@@ -35,23 +38,17 @@ export function SignInForm() {
   } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  // temp
-  const { data: session } = useSession()
-
-  useEffect(() => {
-    if (session) console.log(session)
-  }, [session])
-
   async function onSubmit(values: z.infer<typeof signInSchema>) {
     try {
       setIsSubmitting(true)
+      setCookie('rememberMe', values?.rememberMe)
 
       const res = await signIn('credentials', { ...values, redirect: false })
 
-      if (res?.error) throw Error(res?.code)
+      if (res?.error) throw new Error(res?.code)
 
       router.refresh()
-      // router.replace('/dashboard')
+      router.replace('/dashboard')
     } catch (e: unknown) {
       const message = (e as Error)?.message
       if (message.includes('Invalid identifier')) setError('root', { message })

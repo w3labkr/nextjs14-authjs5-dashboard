@@ -33,3 +33,8 @@ export const newPasswordSchema = z
 export const verifyCodeSchema = z.object({
   code: z.string().min(6),
 })
+
+export const authTokenSchema = z.object({
+  grant_type: z.string(),
+  refresh_token: z.string(),
+})

@@ -3,5 +3,5 @@ import { auth } from '@/auth'
 
 export const GET = auth(function GET(req) {
   if (req.auth) return NextResponse.json(req.auth)
-  return NextResponse.json({ message: 'Not authenticated' }, { status: 401 })
+  return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
 })

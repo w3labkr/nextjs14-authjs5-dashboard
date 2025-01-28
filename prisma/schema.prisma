@@ -4,6 +4,8 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// Prisma ORM supports formatting .prisma files automatically.
+// Auto formatting: https://www.prisma.io/docs/orm/prisma-schema/overview#auto-formatting
 generator client {
   provider = "prisma-client-js"
 }
@@ -23,10 +25,10 @@ datasource db {
 // The User model is for information such as the user’s name and email address.
 // Email address is optional, but if one is specified for a User, then it must be unique.
 model User {
-  id            String    @id @default(cuid())
+  id            String          @id @default(cuid())
   name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
+  email         String          @unique
+  emailVerified DateTime?       @map("email_verified")
   image         String?
   accounts      Account[]
   sessions      Session[]
@@ -37,17 +39,21 @@ model User {
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  username            String    @unique @default(uuid())
-  usernameChangedAt   DateTime? @map("username_changed_at")
-  password            String?
-  passwordChangedAt   DateTime? @map("password_changed_at")
-  role                String    @default("guest")
-  roleChangedAt       DateTime? @map("role_changed_at")
-  plan                String    @default("free")
-  planChangedAt       DateTime? @map("plan_changed_at")
-  bannedUntil         DateTime? @map("banned_until")
-  isBan               Boolean   @default(false) @map("is_ban")
-  isAdmin             Boolean   @default(false) @map("is_admin")
+  // Credentials Provider
+  provider      String?
+  refresh_token String? @db.Text
+  access_token  String? @db.Text
+  expires_at    Int?
+
+  username          String    @unique @default(uuid())
+  usernameChangedAt DateTime? @map("username_changed_at")
+  password          String?
+  passwordChangedAt DateTime? @map("password_changed_at")
+  plan              String    @default("free")
+  role              String    @default("guest")
+  isAdmin           Boolean   @default(false) @map("is_admin")
+  isBan             Boolean   @default(false) @map("is_ban")
+  bannedUntil       DateTime? @map("banned_until")
 
   @@map("users")
 }
@@ -55,18 +61,18 @@ model User {
 // The Account model is for information about accounts associated with a User.
 // A single User can have multiple Account(s), but each Account can only have one User.
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
@@ -74,7 +80,7 @@ model Account {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
+  @@unique(name: "provider_providerAccountId", [provider, providerAccountId])
   @@map("accounts")
 }
 
@@ -100,7 +106,7 @@ model VerificationToken {
   token      String
   expires    DateTime
 
-  @@unique([identifier, token])
+  @@unique(name: "identifier_token", [identifier, token])
   @@map("verification_tokens")
 }
 
@@ -118,6 +124,6 @@ model Authenticator {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, credentialID])
+  @@unique(name: "userId_credentialID", [userId, credentialID])
   @@map("authenticators")
 }

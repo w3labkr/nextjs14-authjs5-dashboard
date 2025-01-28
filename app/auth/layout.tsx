@@ -4,14 +4,14 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 
 export const metadata: Metadata = {
-  title: 'Dashboard',
+  title: 'Auth',
   description: '',
 }
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
 
-  if (!session) redirect('/auth/signin')
+  if (session) redirect('/dashboard')
 
   return <>{children}</>
 }

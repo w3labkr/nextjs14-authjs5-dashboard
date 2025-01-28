@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default function NewPasswordLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return <div className="flex h-screen w-full items-center justify-center px-4">{children}</div>
 }
