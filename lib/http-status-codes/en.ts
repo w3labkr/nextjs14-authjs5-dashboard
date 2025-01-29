@@ -1,27 +1,14 @@
 /**
- * Http-status-codes
+ * http-status-codes
  *
  * Constants enumerating the HTTP status codes. Based on the Java Apache HttpStatus API.
  * All status codes defined in RFC1945 (HTTP/1.0), RFC2616 (HTTP/1.1), RFC2518 (WebDAV), RFC6585 (Additional HTTP Status Codes), and RFC7538 (Permanent Redirect) are supported.
  *
  * @link https://github.com/prettymuchbryce/http-status-codes
  */
-const ApiResponse = {
-  json: (data: any, status: number = STATUS_CODES.OK, statusText?: string, init?: ResponseInit) => {
-    return Response.json(
-      {
-        status,
-        message: statusText ?? STATUS_CODE_TO_TEXT[status?.toString()],
-        success: status >= 200 && status <= 299,
-        data,
-      },
-      { status, statusText, ...init }
-    )
-  },
-}
 
 // prettier-ignore
-const STATUS_CODES = {
+export const STATUS_CODES = {
   CONTINUE: 100,
   SWITCHING_PROTOCOLS: 101,
   PROCESSING: 102,
@@ -87,7 +74,7 @@ const STATUS_CODES = {
 }
 
 // prettier-ignore
-const STATUS_TEXTS = {
+export const STATUS_TEXTS = {
   CONTINUE: "Continue",
   SWITCHING_PROTOCOLS: "Switching Protocols",
   PROCESSING: "Processing",
@@ -153,7 +140,7 @@ const STATUS_TEXTS = {
 }
 
 // prettier-ignore
-const STATUS_CODE_TO_TEXT: Record<string, string> = {
+export const STATUS_CODE_TO_TEXT: Record<string, string> = {
   "100": "Continue",
   "101": "Switching Protocols",
   "102": "Processing",
@@ -219,7 +206,7 @@ const STATUS_CODE_TO_TEXT: Record<string, string> = {
 }
 
 // prettier-ignore
-const STATUS_TEXT_TO_CODE: Record<string, string> = {
+export const STATUS_TEXT_TO_CODE: Record<string, string> = {
   "Continue": "100",
   "Switching Protocols": "101",
   "Processing": "102",
@@ -283,5 +270,3 @@ const STATUS_TEXT_TO_CODE: Record<string, string> = {
   "Insufficient Storage": "507",
   "Network Authentication Required": "511",
 }
-
-export { ApiResponse, STATUS_CODES, STATUS_TEXTS, STATUS_CODE_TO_TEXT, STATUS_TEXT_TO_CODE }

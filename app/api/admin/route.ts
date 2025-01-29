@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 import { auth } from '@/auth'
 
 export const GET = auth(function GET(req) {

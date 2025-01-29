@@ -28,3 +28,10 @@ export type AuthTokenAPI = {
     tokens: AuthTokens | null
   }
 }
+
+export type ForgotPasswordAPI = {
+  status: number
+  message: string
+  success: boolean
+  data: null
+}

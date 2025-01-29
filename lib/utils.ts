@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { STATUS_CODES, STATUS_CODE_TO_TEXT } from '@/lib/http-status-codes/en'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -39,4 +40,25 @@ export function relativeUrl(url: string) {
   const new_url = new URL(url)
 
   return new_url.toString().substring(new_url.origin.length)
+}
+
+export class ApiResponse extends Response {
+  constructor(body?: BodyInit | null, init?: ResponseInit) {
+    super(body, init)
+  }
+
+  static json(data: any, init?: ResponseInit) {
+    const status = init?.status ?? STATUS_CODES.OK
+    const statusText = init?.statusText
+
+    return Response.json(
+      {
+        status,
+        message: statusText ?? STATUS_CODE_TO_TEXT[status?.toString()],
+        success: status >= 200 && status <= 299,
+        data,
+      },
+      { ...init }
+    )
+  }
 }

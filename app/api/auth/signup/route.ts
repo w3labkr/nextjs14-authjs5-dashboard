@@ -1,4 +1,4 @@
-import { type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
 import bcrypt from 'bcryptjs'
 import dayjs from '@/lib/dayjs'
@@ -6,7 +6,8 @@ import dayjs from '@/lib/dayjs'
 import { z } from 'zod'
 import { signUpSchema } from '@/schemas/auth'
 
-import { ApiResponse, STATUS_CODES } from '@/lib/http-status-codes'
+import { STATUS_CODES } from '@/lib/http-status-codes/en'
+import { ApiResponse } from '@/lib/utils'
 import { generateAccessToken, generateRefreshToken } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
   // }
 
   if (!success) {
-    return ApiResponse.json({ user: null }, STATUS_CODES.BAD_REQUEST)
+    return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
   const user = await prisma.user.findUnique({
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
   })
 
   if (user) {
-    return ApiResponse.json({ user: null }, STATUS_CODES.CONFLICT, 'User already exists.')
+    return ApiResponse.json({ user: null }, { status: STATUS_CODES.CONFLICT, statusText: 'User already exists.' })
   }
 
   const newUser = await prisma.user.create({
@@ -53,5 +54,8 @@ export async function POST(req: NextRequest) {
     },
   })
 
-  return ApiResponse.json({ user: newUser }, STATUS_CODES.OK, 'You have registered successfully.')
+  return ApiResponse.json(
+    { user: newUser },
+    { status: STATUS_CODES.OK, statusText: 'You have registered successfully.' }
+  )
 }

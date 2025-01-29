@@ -4,6 +4,6 @@ export interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-  title: '',
+  title: 'Next.js',
   description: '',
 }

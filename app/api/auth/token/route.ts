@@ -1,10 +1,11 @@
-import { type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
 
 import { z } from 'zod'
 import { authTokenSchema } from '@/schemas/auth'
 
-import { ApiResponse, STATUS_CODES } from '@/lib/http-status-codes'
+import { STATUS_CODES } from '@/lib/http-status-codes/en'
+import { ApiResponse } from '@/lib/utils'
 import { generateAccessToken, generateRefreshToken, decodeJwt } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
@@ -12,38 +13,34 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   const { data, success } = authTokenSchema.safeParse(body)
 
-  if (authorization !== `Bearer ${process.env.AUTH_SECRET}`) {
-    return ApiResponse.json({ tokens: null }, STATUS_CODES.UNAUTHORIZED)
-  }
+  // if (authorization !== `Bearer ${process.env.AUTH_SECRET}`) {
+  // return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.UNAUTHORIZED })
+  // }
 
   if (!success) {
-    return ApiResponse.json({ tokens: null }, STATUS_CODES.UNAUTHORIZED)
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
   if (data.grant_type !== 'refresh_token') {
-    return ApiResponse.json({ tokens: null }, STATUS_CODES.UNAUTHORIZED)
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid grant_type' })
   }
 
   const token = decodeJwt(data.refresh_token)
 
   if (!token || !token?.sub || !token?.exp) {
-    return ApiResponse.json({ tokens: null }, STATUS_CODES.UNAUTHORIZED)
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid token' })
   }
 
   const user = await prisma.user.findUnique({
     where: { id: token.sub },
   })
 
-  if (!user) {
-    return ApiResponse.json({ tokens: null }, STATUS_CODES.UNAUTHORIZED)
-  }
-
   if (!user || !user?.refresh_token) {
-    return ApiResponse.json({ tokens: null }, STATUS_CODES.UNAUTHORIZED)
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid identifier' })
   }
 
   if (user?.refresh_token !== data.refresh_token) {
-    return ApiResponse.json({ tokens: null }, STATUS_CODES.UNAUTHORIZED)
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid refresh_token' })
   }
 
   const payload = { sub: user.id }
@@ -63,5 +60,5 @@ export async function POST(req: NextRequest) {
     data: newTokens,
   })
 
-  return ApiResponse.json({ tokens: newTokens }, STATUS_CODES.OK)
+  return ApiResponse.json({ tokens: newTokens }, { status: STATUS_CODES.OK })
 }

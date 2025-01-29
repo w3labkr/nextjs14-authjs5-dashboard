@@ -6,7 +6,7 @@ import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 
 import { fetcher } from '@/lib/utils'
-import { STATUS_TEXTS } from '@/lib/http-status-codes'
+import { STATUS_TEXTS } from '@/lib/http-status-codes/en'
 import { signInSchema } from '@/schemas/auth'
 import type { SignInAPI, AuthTokenAPI } from '@/types/api'
 
@@ -185,7 +185,6 @@ async function credentialsToken(token: JWT): Promise<JWT> {
     } = await fetcher<AuthTokenAPI>('/api/auth/token', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${process.env.AUTH_SECRET}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

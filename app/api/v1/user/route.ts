@@ -1,7 +1,8 @@
 import { type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
 
-import { ApiResponse, STATUS_CODES } from '@/lib/http-status-codes'
+import { STATUS_CODES } from '@/lib/http-status-codes/en'
+import { ApiResponse } from '@/lib/utils'
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
@@ -11,5 +12,5 @@ export async function GET(req: NextRequest) {
     where: { email },
   })
 
-  return ApiResponse.json({ user }, STATUS_CODES.OK)
+  return ApiResponse.json({ user }, { status: STATUS_CODES.OK })
 }

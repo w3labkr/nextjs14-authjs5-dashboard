@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 
-export function VerifyCodeForm() {
+export function VerifyCodeForm({ referer }: { referer: string | null }) {
   const router = useRouter()
   const form = useForm<z.infer<typeof verifyCodeSchema>>({
     resolver: zodResolver(verifyCodeSchema),
@@ -27,6 +27,8 @@ export function VerifyCodeForm() {
     formState: { errors },
   } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
+  console.log({ referer })
 
   async function onSubmit(values: z.infer<typeof verifyCodeSchema>) {
     console.log(values)
