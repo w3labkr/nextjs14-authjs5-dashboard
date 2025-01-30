@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -11,6 +12,9 @@ import { newPasswordSchema } from '@/schemas/auth'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+
+import { xhr } from '@/lib/utils'
+import type { NewPasswordAPI } from '@/types/api'
 
 export function NewPasswordForm() {
   const router = useRouter()
@@ -30,8 +34,23 @@ export function NewPasswordForm() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   async function onSubmit(values: z.infer<typeof newPasswordSchema>) {
-    console.log(values)
-    router.push('/auth/signin')
+    try {
+      setIsSubmitting(true)
+
+      console.log(values)
+
+      const { success, message } = await xhr.post<NewPasswordAPI>('/api/auth/forgot-password', {
+        body: JSON.stringify(values),
+      })
+
+      if (!success) throw new Error(message)
+
+      // router.replace('/auth/signin')
+    } catch (e: unknown) {
+      toast.error('Something went wrong.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (

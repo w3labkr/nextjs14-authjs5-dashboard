@@ -53,12 +53,14 @@ export async function POST(req: NextRequest) {
     refresh_token: Date.now() < token?.exp * 1000 - expires_before ? undefined : await generateRefreshToken(payload),
   }
 
-  await prisma.user.update({
-    where: {
-      id: user.id,
-    },
-    data: newTokens,
-  })
+  try {
+    await prisma.$transaction([prisma.user.update({ where: { id: user.id }, data: newTokens })])
+  } catch (e: unknown) {
+    return ApiResponse.json(
+      { token_hash: null },
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+    )
+  }
 
   return ApiResponse.json({ tokens: newTokens }, { status: STATUS_CODES.OK })
 }

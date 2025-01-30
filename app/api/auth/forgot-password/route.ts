@@ -38,23 +38,26 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json({ token_hash }, { status: STATUS_CODES.OK })
   }
 
-  await prisma.user.update({
-    where: {
-      id: user.id,
-    },
-    data: { code: await bcrypt.hash(code, 10) },
-  })
+  try {
+    await prisma.$transaction([
+      prisma.user.update({ where: { id: user?.id }, data: { code: await bcrypt.hash(code, 10) } }),
+    ])
+  } catch (e: unknown) {
+    return ApiResponse.json(
+      { token_hash: null },
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+    )
+  }
 
   try {
     // send mail with defined transport object
-    const info = await transporter.sendMail({
-      from: `"${sender?.name}" <${sender?.email}>`,
-      to: user.email,
-      subject: `${siteConfig.title} one-time password`,
-      html: html(code),
-    })
-
-    console.log(info)
+    // const info = await transporter.sendMail({
+    //   from: `"${sender?.name}" <${sender?.email}>`,
+    //   to: user?.email,
+    //   subject: `${siteConfig.title} one-time password`,
+    //   html: html(code),
+    // })
+    // console.log(info)
 
     return ApiResponse.json({ token_hash }, { status: STATUS_CODES.OK })
   } catch (e: unknown) {

@@ -31,31 +31,37 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json({ user: null }, { status: STATUS_CODES.CONFLICT, statusText: 'User already exists.' })
   }
 
-  const newUser = await prisma.user.create({
-    data: {
-      email: data?.email,
-      password: await bcrypt.hash(data?.newPassword, 10),
-      passwordChangedAt: dayjs().toISOString(),
-      provider: 'credentials',
-    },
-  })
+  try {
+    const newUser = await prisma.$transaction(async (tx) => {
+      const newData = {
+        email: data?.email,
+        password: await bcrypt.hash(data?.newPassword, 10),
+        passwordChangedAt: dayjs().toISOString(),
+        provider: 'credentials',
+      }
+      const created = await tx.user.create({ data: newData })
+      const expires_in = 1 * 60 * 60 // 1h * 60m * 60s = 1 hour
 
-  const payload = { sub: newUser.id }
-  const expires_in = 1 * 60 * 60 // 1h * 60m * 60s = 1 hour
+      return await tx.user.update({
+        where: {
+          id: created.id,
+        },
+        data: {
+          access_token: await generateAccessToken({ sub: created.id }),
+          expires_at: Math.floor(Date.now() / 1000 + expires_in),
+          refresh_token: await generateRefreshToken({ sub: created.id }),
+        },
+      })
+    })
 
-  await prisma.user.update({
-    where: {
-      id: newUser.id,
-    },
-    data: {
-      access_token: await generateAccessToken(payload),
-      expires_at: Math.floor(Date.now() / 1000 + expires_in),
-      refresh_token: await generateRefreshToken(payload),
-    },
-  })
-
-  return ApiResponse.json(
-    { user: newUser },
-    { status: STATUS_CODES.OK, statusText: 'You have registered successfully.' }
-  )
+    return ApiResponse.json(
+      { user: newUser },
+      { status: STATUS_CODES.OK, statusText: 'You have registered successfully.' }
+    )
+  } catch (e: unknown) {
+    return ApiResponse.json(
+      { token_hash: null },
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+    )
+  }
 }

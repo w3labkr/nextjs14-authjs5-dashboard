@@ -1,9 +1,10 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
 import bcrypt from 'bcryptjs'
+import dayjs from '@/lib/dayjs'
 
 import { z } from 'zod'
-import { verifyRequestSchema } from '@/schemas/auth'
+import { newPasswordSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/utils'
@@ -12,7 +13,7 @@ import { verifyJWT } from '@/lib/jose'
 export async function POST(req: NextRequest) {
   const authorization = req.headers.get('authorization')
   const body = await req.json()
-  const { data, success } = verifyRequestSchema.safeParse(body)
+  const { data, success } = newPasswordSchema.safeParse(body)
 
   // if (authorization !== `Bearer ${process.env.AUTH_SECRET}`) {
   //   return ApiResponse.json(null, { status: STATUS_CODES.UNAUTHORIZED })
@@ -36,17 +37,15 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid code' })
   }
 
-  if (await bcrypt.compare(data?.code, user?.code)) {
-    try {
-      await prisma.$transaction([prisma.user.update({ where: { id: user?.id }, data: { code: null } })])
-    } catch (e: unknown) {
-      return ApiResponse.json(
-        { token_hash: null },
-        { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
-      )
-    }
-    return ApiResponse.json(null, { status: STATUS_CODES.OK })
-  }
+  // const newUser = await prisma.user.update({
+  //   where: {
+  //     id: user?.id,
+  //   },
+  //   data: {
+  //     password: await bcrypt.hash(data?.newPassword, 10),
+  //     passwordChangedAt: dayjs().toISOString(),
+  //   },
+  // })
 
   return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid code' })
 }

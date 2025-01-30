@@ -1,42 +1,17 @@
 import type { User } from '@prisma/client'
 
-export type AuthTokens = {
-  access_token: string
-  expires_in: number
-  refresh_token?: string
-}
+export type API = { status: number; message: string; success: boolean }
 
 export type AuthTokenAPI = {
-  status: number
-  message: string
-  success: boolean
-  data: { tokens: AuthTokens | null }
-}
+  data: { tokens: { access_token: string; expires_in: number; refresh_token?: string } | null }
+} & API
 
-export type SignInAPI = {
-  status: number
-  message: string
-  success: boolean
-  data: { user: User | null }
-}
+export type SignInAPI = { data: { user: User | null } } & API
 
-export type SignUpAPI = {
-  status: number
-  message: string
-  success: boolean
-  data: { user: User | null }
-}
+export type SignUpAPI = { data: { user: User | null } } & API
 
-export type ForgotPasswordAPI = {
-  status: number
-  message: string
-  success: boolean
-  data: { token_hash: string | null }
-}
+export type ForgotPasswordAPI = { data: { token_hash: string | null } } & API
 
-export type VerifyRequestAPI = {
-  status: number
-  message: string
-  success: boolean
-  data: null
-}
+export type NewPasswordAPI = { data: null } & API
+
+export type VerifyRequestAPI = { data: null } & API
