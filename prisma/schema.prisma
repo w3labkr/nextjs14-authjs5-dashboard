@@ -41,9 +41,10 @@ model User {
 
   // Credentials Provider
   provider      String?
-  refresh_token String? @db.Text
   access_token  String? @db.Text
   expires_at    Int?
+  refresh_token String? @db.Text
+  code          String?
 
   username          String    @unique @default(uuid())
   usernameChangedAt DateTime? @map("username_changed_at")
@@ -66,9 +67,9 @@ model Account {
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
-  refresh_token     String? @db.Text
   access_token      String? @db.Text
   expires_at        Int?
+  refresh_token     String? @db.Text
   token_type        String?
   scope             String?
   id_token          String? @db.Text

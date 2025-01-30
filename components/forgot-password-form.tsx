@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,10 +13,11 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { fetcher } from '@/lib/utils'
+import { xhr } from '@/lib/utils'
 import type { ForgotPasswordAPI } from '@/types/api'
 
 export function ForgotPasswordForm() {
+  const router = useRouter()
   const form = useForm<z.infer<typeof forgotPasswordSchema>>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -34,23 +36,18 @@ export function ForgotPasswordForm() {
     try {
       setIsSubmitting(true)
 
-      console.log(values)
-
-      const res = await fetcher<ForgotPasswordAPI>('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const {
+        message,
+        data: { token_hash },
+      } = await xhr.post<ForgotPasswordAPI>('/api/auth/forgot-password', {
         body: JSON.stringify(values),
       })
 
-      console.log(res)
+      if (!token_hash) throw new Error(message)
 
-      if (!res.success) throw new Error(res.message)
+      router.push(`/auth/verify-request?token_hash=${token_hash}`)
     } catch (e: unknown) {
-      const message = (e as Error)?.message
-      console.log(message)
-      // toast.error('Something went wrong.')
+      toast.error('Something went wrong.')
     } finally {
       setIsSubmitting(false)
     }

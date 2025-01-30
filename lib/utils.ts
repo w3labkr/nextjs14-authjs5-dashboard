@@ -2,44 +2,63 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { STATUS_CODES, STATUS_CODE_TO_TEXT } from '@/lib/http-status-codes/en'
 
+export const xhr = {
+  headers: { 'Content-Type': 'application/json' },
+  async get<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+    return fetch(absoluteUrl(input.toString()), { method: 'GET', headers: this.headers, ...init }).then(
+      (res) => res.json() as Promise<JSON>
+    )
+  },
+  async head<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+    return fetch(absoluteUrl(input.toString()), { method: 'HEAD', headers: this.headers, ...init }).then(
+      (res) => res.json() as Promise<JSON>
+    )
+  },
+  async post<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+    return fetch(absoluteUrl(input.toString()), { method: 'POST', headers: this.headers, ...init }).then(
+      (res) => res.json() as Promise<JSON>
+    )
+  },
+  async put<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+    return fetch(absoluteUrl(input.toString()), { method: 'PUT', headers: this.headers, ...init }).then(
+      (res) => res.json() as Promise<JSON>
+    )
+  },
+  async delete<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+    return fetch(absoluteUrl(input.toString()), { method: 'DELETE', headers: this.headers, ...init }).then(
+      (res) => res.json() as Promise<JSON>
+    )
+  },
+  async patch<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+    return fetch(absoluteUrl(input.toString()), { method: 'PATCH', headers: this.headers, ...init }).then(
+      (res) => res.json() as Promise<JSON>
+    )
+  },
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
-}
-
-export async function fetcher<T>(input: string, init?: RequestInit): Promise<T> {
-  if (/^\//.test(input)) input = absoluteUrl(input)
-  const res = await fetch(input, init)
-  const contentType = res.headers.get('content-type')
-  if (!res.ok) throw new Error(res.statusText)
-  if (!contentType?.includes('application/json')) {
-    throw new Error('Unsupported Media Type')
-  }
-  return await (res.json() as Promise<T>)
-}
-
-export async function fetcherText(input: string, init?: RequestInit): Promise<string> {
-  if (/^\//.test(input)) input = absoluteUrl(input)
-  const res = await fetch(input, init)
-  const contentType = res.headers.get('content-type')
-  if (!res.ok) throw new Error(res.statusText)
-  if (!contentType?.includes('text/plain')) {
-    throw new Error('Unsupported Media Type')
-  }
-  return await res.text()
 }
 
 export async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-export function absoluteUrl(url: string | URL, base?: string | URL) {
-  return new URL(url, base ?? process.env.NEXT_PUBLIC_APP_URL!).toString()
+export async function fetcher<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+  return fetch(absoluteUrl(input.toString()), init).then((res) => res.json() as Promise<JSON>)
 }
 
-export function relativeUrl(url: string) {
-  const new_url = new URL(url)
+export function absoluteUrl(url: string | URL, base?: string | URL) {
+  try {
+    return new URL(url, base).toString()
+  } catch (e: unknown) {
+    return new URL(url, process.env.NEXT_PUBLIC_APP_URL!).toString()
+  }
+}
 
-  return new_url.toString().substring(new_url.origin.length)
+export function relativeUrl(url: string | URL, base?: string | URL) {
+  const newUrl = new URL(url, base)
+  return newUrl.toString().substring(newUrl.origin.length)
 }
 
 export class ApiResponse extends Response {

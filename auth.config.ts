@@ -5,7 +5,7 @@ import { type JWT } from 'next-auth/jwt'
 import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 
-import { fetcher } from '@/lib/utils'
+import { xhr } from '@/lib/utils'
 import { STATUS_TEXTS } from '@/lib/http-status-codes/en'
 import { signInSchema } from '@/schemas/auth'
 import type { SignInAPI, AuthTokenAPI } from '@/types/api'
@@ -27,8 +27,8 @@ export const authConfig: NextAuthConfig = {
     signIn: '/auth/signin',
     // signOut: '/auth/signout',
     // error: '/auth/error', // Error code passed in query string as ?error=
-    // verifyRequest: '/auth/verify-request', // (used for check email message)
-    // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+    verifyRequest: '/auth/verify-request', // (used for check email message)
+    // newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out if not of interest)
   },
   providers: [
     Google({
@@ -61,11 +61,7 @@ export const authConfig: NextAuthConfig = {
           const {
             message,
             data: { user },
-          } = await fetcher<SignInAPI>('/api/auth/signin', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+          } = await xhr.post<SignInAPI>('/api/auth/signin', {
             body: JSON.stringify(data),
           })
 
@@ -98,36 +94,21 @@ export const authConfig: NextAuthConfig = {
       // By default, the `id` property does not exist on `token` or `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
       if (user?.id) token.id = user.id
 
-      // User is available during sign-in
-      if (user) {
-        token = {
+      // First-time login, save the `access_token`, its expiry and the `refresh_token`
+      if (account && user) {
+        return {
           ...token,
+          provider: account.provider,
+          access_token: account.provider === 'credentials' ? user.access_token : account.access_token,
+          expires_at: account.provider === 'credentials' ? user.expires_at : account.expires_at,
+          refresh_token: account.provider === 'credentials' ? user.refresh_token : account.refresh_token,
           username: user.username,
           plan: user.plan,
           role: user.role,
           isAdmin: user.isAdmin,
           isBan: user.isBan,
           bannedUntil: user.bannedUntil,
-        }
-      }
-
-      // First-time login, save the `access_token`, its expiry and the `refresh_token`
-      if (account && user) {
-        return account.provider === 'credentials'
-          ? ({
-              ...token,
-              provider: user.provider,
-              access_token: user.access_token,
-              expires_at: user.expires_at,
-              refresh_token: user.refresh_token,
-            } as JWT)
-          : ({
-              ...token,
-              provider: account.provider,
-              access_token: account.access_token,
-              expires_at: account.expires_at,
-              refresh_token: account.refresh_token,
-            } as JWT)
+        } as JWT
       }
 
       const expires_before = 10 * 60 * 1000 // 1 * 60s * 1000ms = 1m
@@ -149,25 +130,8 @@ export const authConfig: NextAuthConfig = {
     },
     // By default, the `id` property does not exist on `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
     session: async ({ session, token }) => {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.id,
-          provider: token.provider,
-          access_token: token.access_token,
-          expires_at: token.expires_at,
-          refresh_token: token.refresh_token,
-          username: token.username,
-          plan: token.plan,
-          role: token.role,
-          isAdmin: token.isAdmin,
-          isBan: token.isBan,
-          bannedUntil: token.bannedUntil,
-        },
-        access_token: token.access_token,
-        error: token.error,
-      }
+      const { access_token, error, ...jwt } = token
+      return { ...session, user: { ...session.user, ...jwt, access_token }, access_token, error }
     },
   },
 }
@@ -182,11 +146,7 @@ async function credentialsToken(token: JWT): Promise<JWT> {
     const {
       message,
       data: { tokens },
-    } = await fetcher<AuthTokenAPI>('/api/auth/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    } = await xhr.post<AuthTokenAPI>('/api/auth/token', {
       body: JSON.stringify({
         grant_type: 'refresh_token',
         refresh_token: token.refresh_token,

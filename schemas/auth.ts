@@ -1,5 +1,10 @@
 import { z } from 'zod'
 
+export const authTokenSchema = z.object({
+  grant_type: z.string(),
+  refresh_token: z.string(),
+})
+
 export const signInSchema = z.object({
   email: z.string().max(255).email(),
   password: z.string().min(6).max(72),
@@ -30,11 +35,7 @@ export const newPasswordSchema = z
     path: ['confirmNewPassword'],
   })
 
-export const verifyCodeSchema = z.object({
+export const verifyRequestSchema = z.object({
   code: z.string().min(6),
-})
-
-export const authTokenSchema = z.object({
-  grant_type: z.string(),
-  refresh_token: z.string(),
+  token_hash: z.string(),
 })

@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { fetcher } from '@/lib/utils'
+import { xhr } from '@/lib/utils'
 import type { SignUpAPI } from '@/types/api'
 
 export function SignUpForm() {
@@ -41,11 +41,7 @@ export function SignUpForm() {
       const {
         message,
         data: { user },
-      } = await fetcher<SignUpAPI>('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      } = await xhr.post<SignUpAPI>('/api/auth/signup', {
         body: JSON.stringify(values),
       })
 

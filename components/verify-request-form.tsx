@@ -1,24 +1,35 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { toast } from 'sonner'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { verifyCodeSchema } from '@/schemas/auth'
+import { verifyRequestSchema } from '@/schemas/auth'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 
-export function VerifyCodeForm({ referer }: { referer: string | null }) {
+import { xhr } from '@/lib/utils'
+import type { VerifyRequestAPI } from '@/types/api'
+
+const defaultValues = {
+  code: '',
+  token_hash: '',
+}
+
+export function VerifyRequestForm() {
   const router = useRouter()
-  const form = useForm<z.infer<typeof verifyCodeSchema>>({
-    resolver: zodResolver(verifyCodeSchema),
-    defaultValues: {
-      code: '',
-    },
+  const searchParams = useSearchParams()
+  const token_hash = searchParams.get('token_hash') ?? ''
+
+  const form = useForm<z.infer<typeof verifyRequestSchema>>({
+    resolver: zodResolver(verifyRequestSchema),
+    defaultValues,
+    values: { ...defaultValues, token_hash },
   })
   const {
     control,
@@ -28,16 +39,30 @@ export function VerifyCodeForm({ referer }: { referer: string | null }) {
   } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  console.log({ referer })
+  async function onSubmit(values: z.infer<typeof verifyRequestSchema>) {
+    try {
+      setIsSubmitting(true)
 
-  async function onSubmit(values: z.infer<typeof verifyCodeSchema>) {
-    console.log(values)
-    router.push('/auth/new-password')
+      const { success, message } = await xhr.post<VerifyRequestAPI>('/api/auth/verify-request', {
+        body: JSON.stringify(values),
+      })
+
+      if (!success) throw new Error(message)
+
+      router.push('/auth/new-password')
+    } catch (e: unknown) {
+      const message = (e as Error)?.message
+      if (message.includes('Invalid code')) setError('code', { message })
+      else toast.error(message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <Form {...form}>
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        <FormField control={control} name="token_hash" render={({ field }) => <input type="hidden" {...field} />} />
         <FormField
           control={control}
           name="code"

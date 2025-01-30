@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 
-const formValues = {
+const defaultValues = {
   email: '',
   password: '',
   rememberMe: false,
@@ -27,8 +27,8 @@ export function SignInForm() {
   const router = useRouter()
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
-    defaultValues: formValues,
-    values: { ...formValues, rememberMe: getCookie('rememberMe') === 'true' },
+    defaultValues,
+    values: { ...defaultValues, rememberMe: getCookie('rememberMe') === 'true' },
   })
   const {
     control,

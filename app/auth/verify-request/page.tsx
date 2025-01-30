@@ -1,16 +1,8 @@
-import { headers } from 'next/headers'
-import Link from 'next/link'
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { VerifyCodeForm } from '@/components/verify-code-form'
+import { VerifyRequestForm } from '@/components/verify-request-form'
+import { ResendVerifyButton } from '@/components/resend-verify-button'
 
-export default async function VerifyCodePage() {
-  const headersList = await headers()
-  const referer = headersList.get('referer')
-
-  // { referer: 'http://localhost:3000/auth/verify-code' }
-  // console.log({ referer })
-
+export default async function VerifyRequestPage() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -18,12 +10,10 @@ export default async function VerifyCodePage() {
         <CardDescription>Please enter the 6-digit code sent to your email.</CardDescription>
       </CardHeader>
       <CardContent>
-        <VerifyCodeForm referer={referer} />
+        <VerifyRequestForm />
         <div className="mt-4 text-center text-sm">
           {`Didn't receive the email? `}
-          <Link href="/auth/signin" className="underline">
-            Click to resend
-          </Link>
+          <ResendVerifyButton />
         </div>
       </CardContent>
     </Card>

@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const { data, success } = signInSchema.safeParse(body)
 
   // if (authorization !== `Bearer ${process.env.AUTH_SECRET}`) {
-  // return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.UNAUTHORIZED })
+  //   return ApiResponse.json({ user: null }, { status: STATUS_CODES.UNAUTHORIZED })
   // }
 
   if (!success) {

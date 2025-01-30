@@ -4,14 +4,10 @@ const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
 
 export { decodeJwt } from 'jose'
 
-export async function verifyJWT(jwt: string | Uint8Array, options?: JWTVerifyOptions) {
-  try {
-    if (typeof jwt === 'string') jwt = jwt.replace('Bearer ', '')
-    const { payload, protectedHeader } = await jwtVerify(jwt, secret, options)
-    return payload
-  } catch (e: unknown) {
-    return null
-  }
+export async function verifyJWT<JSON = JWTPayload>(jwt: string | Uint8Array, options?: JWTVerifyOptions) {
+  return jwtVerify(jwt, secret, options)
+    .then((res) => res.payload as JSON)
+    .catch(() => null)
 }
 
 export async function jwtSign(payload: JWTPayload, exp: number | string | Date = '1h') {

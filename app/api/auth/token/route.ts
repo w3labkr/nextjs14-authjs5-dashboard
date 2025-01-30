@@ -6,7 +6,7 @@ import { authTokenSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/utils'
-import { generateAccessToken, generateRefreshToken, decodeJwt } from '@/lib/jose'
+import { generateAccessToken, generateRefreshToken, verifyJWT } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const authorization = req.headers.get('authorization')
@@ -21,13 +21,13 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
-  if (data.grant_type !== 'refresh_token') {
+  if (data?.grant_type !== 'refresh_token') {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid grant_type' })
   }
 
-  const token = decodeJwt(data.refresh_token)
+  const token = await verifyJWT<{ sub: string; exp: number }>(data?.refresh_token)
 
-  if (!token || !token?.sub || !token?.exp) {
+  if (!token) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid token' })
   }
 
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid identifier' })
   }
 
-  if (user?.refresh_token !== data.refresh_token) {
+  if (user?.refresh_token !== data?.refresh_token) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid refresh_token' })
   }
 
