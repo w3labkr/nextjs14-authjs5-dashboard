@@ -37,14 +37,14 @@ export async function POST(req: NextRequest) {
   }
 
   if (await bcrypt.compare(data?.code, user?.code)) {
-    try {
-      await prisma.$transaction([prisma.user.update({ where: { id: user?.id }, data: { code: null } })])
-    } catch (e: unknown) {
-      return ApiResponse.json(
-        { token_hash: null },
-        { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
-      )
-    }
+    // try {
+    //   await prisma.$transaction([prisma.user.update({ where: { id: user?.id }, data: { code: null } })])
+    // } catch (e: unknown) {
+    //   return ApiResponse.json(
+    //     { token_hash: null },
+    //     { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+    //   )
+    // }
     return ApiResponse.json(null, { status: STATUS_CODES.OK })
   }
 

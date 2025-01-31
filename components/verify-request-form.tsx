@@ -61,35 +61,36 @@ export function VerifyRequestForm() {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <FormField control={control} name="token_hash" render={({ field }) => <input type="hidden" {...field} />} />
-        <FormField
-          control={control}
-          name="code"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Digit Code</FormLabel>
-              <FormControl>
-                <InputOTP maxLength={6} {...field}>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          Verify
-        </Button>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-6">
+          <FormField control={control} name="token_hash" render={({ field }) => <input type="hidden" {...field} />} />
+          <FormField
+            control={control}
+            name="code"
+            render={({ field }) => (
+              <FormItem className="grid gap-2 space-y-0">
+                <FormLabel>Digit Code</FormLabel>
+                <FormControl>
+                  <InputOTP maxLength={6} {...field}>
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            Verify
+          </Button>
+        </div>
       </form>
     </Form>
   )

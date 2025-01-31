@@ -1,12 +1,20 @@
+import * as React from 'react'
+import type { Metadata } from 'next'
+
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { NewPasswordForm } from '@/components/new-password-form'
 
+export const metadata: Metadata = {
+  title: 'New Password',
+  description: '',
+}
+
 export default function NewPasswordPage() {
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card>
       <CardHeader>
         <CardTitle className="text-2xl">Set new password</CardTitle>
         <CardDescription>Please enter your new password below.</CardDescription>

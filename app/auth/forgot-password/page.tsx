@@ -1,12 +1,19 @@
+import * as React from 'react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ForgotPasswordForm } from '@/components/forgot-password-form'
 
+export const metadata: Metadata = {
+  title: 'Forgot Password',
+  description: '',
+}
+
 export default function ForgotPasswordPage() {
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card>
       <CardHeader>
         <CardTitle className="text-2xl">Forgot your password?</CardTitle>
         <CardDescription>

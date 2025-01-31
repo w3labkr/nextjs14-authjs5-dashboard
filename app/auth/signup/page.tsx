@@ -1,11 +1,18 @@
+import * as React from 'react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { SignUpForm } from '@/components/signup-form'
 
+export const metadata: Metadata = {
+  title: 'Sign Up',
+  description: '',
+}
+
 export default function SignUpPage() {
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card>
       <CardHeader>
         <CardTitle className="text-2xl">Create an account</CardTitle>
         <CardDescription>Enter your email below to create your account</CardDescription>
@@ -23,7 +30,7 @@ export default function SignUpPage() {
           </Link>
           .
         </div>
-        <div className="mt-4 text-sm">
+        <div className="mt-4 text-center text-sm">
           Already have an account?{' '}
           <Link href="/auth/signin" className="underline">
             Sign in

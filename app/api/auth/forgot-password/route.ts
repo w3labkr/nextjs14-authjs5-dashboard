@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
   } catch (e: unknown) {
     return ApiResponse.json(
       { token_hash: null },
-      { status: STATUS_CODES.BAD_REQUEST, statusText: (e as Error)?.message }
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
     )
   }
 }
