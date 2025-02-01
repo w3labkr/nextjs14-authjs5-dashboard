@@ -1,16 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import * as React from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
-import { xhr } from '@/lib/utils'
+import { xhr } from '@/lib/http'
 import type { ForgotPasswordAPI } from '@/types/api'
 import { decodeJwt, type Token } from '@/lib/jose'
 
-export function ResendCodeButton({ token_hash }: { token_hash: string }) {
+interface ResendCodeButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  token_hash: string
+}
+
+const ResendCodeButton = React.forwardRef<HTMLButtonElement, ResendCodeButtonProps>(({ token_hash, ...props }, ref) => {
   const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
 
   const handleSubmit = async () => {
     try {
@@ -39,8 +43,11 @@ export function ResendCodeButton({ token_hash }: { token_hash: string }) {
   }
 
   return (
-    <button type="button" className="underline" onClick={handleSubmit} disabled={isSubmitting}>
+    <button ref={ref} onClick={handleSubmit} disabled={isSubmitting} {...props}>
       Click to resend
     </button>
   )
-}
+})
+ResendCodeButton.displayName = 'ResendCodeButton'
+
+export { ResendCodeButton }

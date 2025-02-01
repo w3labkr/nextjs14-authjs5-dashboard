@@ -6,9 +6,9 @@ export type AuthTokenAPI = {
   data: { tokens: { access_token: string; expires_in: number; refresh_token?: string } | null }
 } & API
 
-export type SignInAPI = { data: { user: User | null } } & API
+export type LoginAPI = { data: { user: User | null } } & API
 
-export type SignUpAPI = { data: { user: User | null } } & API
+export type RegisterAPI = { data: { user: User | null } } & API
 
 export type ForgotPasswordAPI = { data: { token_hash: string | null } } & API
 

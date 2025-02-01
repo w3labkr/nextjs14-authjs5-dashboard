@@ -7,6 +7,7 @@ This is a dashboard starter template for the [NextJS](https://nextjs.org) 14 app
 - Next.js 14
 - Auth.js v5 + Prisma Adapter
 - Shadcn
+- Prisma
 - Zustand
 - React Query
 
@@ -32,7 +33,6 @@ The folder and file structure is based on nextjs app router [next.js project str
 ├── queries/                    # API
 ├── schemas/                    # Schema validation
 ├── store/                      # State
-├── supabase/                   # Supabase CLI
 ├── types/                      # Type definitions
 └── package.json
 ```

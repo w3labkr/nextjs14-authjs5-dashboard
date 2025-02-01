@@ -1,6 +1,7 @@
 import * as React from 'react'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import { auth } from '@/auth'
 import Link from 'next/link'
 
 import { ArrowLeft } from 'lucide-react'
@@ -20,9 +21,11 @@ export default async function VerifyRequestPage({
   params: {}
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
+  const session = await auth()
   const token_hash = searchParams?.token_hash?.toString()
 
-  if (!token_hash) redirect('/auth/forgot-password')
+  if (session) redirect('/dashboard')
+  else if (!token_hash) redirect('/auth/forgot-password')
   else if (!token_hash?.length) redirect('/auth/forgot-password')
 
   return (
@@ -34,12 +37,13 @@ export default async function VerifyRequestPage({
       <CardContent>
         <VerifyCodeForm />
         <div className="mt-4 text-center text-sm">
-          Didn&apos;t receive the email? <ResendCodeButton token_hash={token_hash} />
+          Didn&apos;t receive the email?{' '}
+          <ResendCodeButton type="button" className="underline underline-offset-4" token_hash={token_hash} />
           <br />
           <br />
           <ArrowLeft className="-ml-4 inline size-4" />
           {` Back to `}
-          <Link href="/auth/signin" className="underline">
+          <Link href="/auth/login" className="underline underline-offset-4">
             sign in
           </Link>
         </div>

@@ -1,24 +1,19 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
 import { transporter, sender } from '@/lib/nodemailer'
-import bcrypt from 'bcryptjs'
 
 import { z } from 'zod'
 import { forgotPasswordSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
-import { ApiResponse } from '@/lib/utils'
+import { ApiResponse } from '@/lib/http'
 import { getRandomIntInclusive } from '@/lib/math'
+import { generateHash } from '@/lib/bcrypt'
 import { generateVerificationToken } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
-  const authorization = req.headers.get('authorization')
   const body = await req.json()
   const { data, success } = forgotPasswordSchema.safeParse(body)
-
-  // if (authorization !== `Bearer ${process.env.AUTH_SECRET}`) {
-  //   return ApiResponse.json({ token_hash: null }, { status: STATUS_CODES.UNAUTHORIZED })
-  // }
 
   if (!success) {
     return ApiResponse.json({ token_hash: null }, { status: STATUS_CODES.BAD_REQUEST })
@@ -26,8 +21,6 @@ export async function POST(req: NextRequest) {
 
   const code = getRandomIntInclusive(100000, 999999).toString()
   const token_hash = await generateVerificationToken(data?.email)
-
-  console.log({ code })
 
   const user = await prisma.user.findUnique({
     where: { email: data?.email },
@@ -39,7 +32,7 @@ export async function POST(req: NextRequest) {
 
   try {
     await prisma.$transaction([
-      prisma.user.update({ where: { id: user?.id }, data: { code: await bcrypt.hash(code, 10) } }),
+      prisma.user.update({ where: { id: user?.id }, data: { code: await generateHash(code) } }),
     ])
   } catch (e: unknown) {
     return ApiResponse.json(
@@ -49,15 +42,13 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // const info = await transporter.sendMail({
-    //   from: `"${sender?.name}" <${sender?.email}>`,
-    //   to: user?.email,
-    //   subject: 'sign in with OTP',
-    //   text: text({ code }),
-    //   html: html({ code }),
-    // })
-    // console.log({ info })
-
+    const info = await transporter.sendMail({
+      from: `"${sender?.name}" <${sender?.email}>`,
+      to: user?.email,
+      subject: `[${sender?.name}] Your account verification code`,
+      text: text({ code }),
+      html: html({ code }),
+    })
     return ApiResponse.json({ token_hash }, { status: STATUS_CODES.OK })
   } catch (e: unknown) {
     return ApiResponse.json(
@@ -70,13 +61,19 @@ export async function POST(req: NextRequest) {
 function html({ code }: { code: string }) {
   return `
   <div>
-    <h2>One time login code</h2>
-    <p>Please enter this code: ${code}</p>
+    <h2>Hello,</h2>
+    <br />
+    <p>Your account verification code is:</p>
+    <p>${code}</p>
+    <br />
+    <p>This code expires in 15 minutes. Please do not share this code with anyone.</p>
+    <br />
+    <p>If you did not request a code, you can ignore this email.</p>
   </div>
 `
 }
 
 // Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
 function text({ code }: { code: string }) {
-  return `One time login code.\nPlease enter this code: ${code}\n\n`
+  return `Your account verification code is ${code}.`
 }

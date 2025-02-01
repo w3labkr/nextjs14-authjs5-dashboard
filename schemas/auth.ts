@@ -5,13 +5,13 @@ export const authTokenSchema = z.object({
   refresh_token: z.string(),
 })
 
-export const signInSchema = z.object({
+export const loginSchema = z.object({
   email: z.string().max(255).email(),
   password: z.string().min(6).max(72),
   rememberMe: z.boolean().default(false),
 })
 
-export const signUpSchema = z
+export const registerSchema = z
   .object({
     email: z.string().min(4).max(255).email(),
     // If the password is larger than 72 chars, it will be truncated to the first 72 chars.

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
-import bcrypt from 'bcryptjs'
 import dayjs from '@/lib/dayjs'
+import { generateHash } from '@/lib/bcrypt'
 import { generateAccessToken, generateRefreshToken } from '@/lib/jose'
 
 const prisma = new PrismaClient()
@@ -14,7 +14,7 @@ export async function main() {
       const created = await tx.user.create({
         data: {
           email: 'me@example.com',
-          password: await bcrypt.hash('123123', 10),
+          password: await generateHash('123123'),
           passwordChangedAt: dayjs().toISOString(),
           type: 'credentials',
           provider: 'credentials',

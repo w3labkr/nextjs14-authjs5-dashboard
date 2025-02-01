@@ -1,21 +1,16 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
-import bcrypt from 'bcryptjs'
 
 import { z } from 'zod'
-import { signInSchema } from '@/schemas/auth'
+import { loginSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
-import { ApiResponse } from '@/lib/utils'
+import { ApiResponse } from '@/lib/http'
+import { compareHash } from '@/lib/bcrypt'
 
 export async function POST(req: NextRequest) {
-  const authorization = req.headers.get('authorization')
   const body = await req.json()
-  const { data, success } = signInSchema.safeParse(body)
-
-  // if (authorization !== `Bearer ${process.env.AUTH_SECRET}`) {
-  //   return ApiResponse.json({ user: null }, { status: STATUS_CODES.UNAUTHORIZED })
-  // }
+  const { data, success } = loginSchema.safeParse(body)
 
   if (!success) {
     return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST })
@@ -32,7 +27,7 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  if (user?.password && (await bcrypt.compare(data?.password, user?.password))) {
+  if (user?.password && (await compareHash(data?.password, user?.password))) {
     return ApiResponse.json({ user }, { status: STATUS_CODES.OK, statusText: 'You have successfully logged in.' })
   }
 

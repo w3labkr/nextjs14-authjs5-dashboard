@@ -9,12 +9,20 @@ declare global {
       JWT_SECRET: string
 
       AUTH_SECRET: string
+      AUTH_GITHUB_ID: string
+      AUTH_GITHUB_SECRET: string
       AUTH_GOOGLE_ID: string
       AUTH_GOOGLE_SECRET: string
+      AUTH_FACEBOOK_ID: string
+      AUTH_FACEBOOK_SECRET: string
+      AUTH_INSTAGRAM_ID: string
+      AUTH_INSTAGRAM_SECRET: string
       AUTH_KAKAO_ID: string
       AUTH_KAKAO_SECRET: string
       AUTH_NAVER_ID: string
       AUTH_NAVER_SECRET: string
+      AUTH_TWITTER_ID: string
+      AUTH_TWITTER_SECRET: string
 
       ACCESS_TOKEN_EXPIRES_IN: string
       ACCESS_TOKEN_EXPIRES_BEFORE: string

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import * as React from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { xhr } from '@/lib/utils'
+import { xhr } from '@/lib/http'
 import type { ForgotPasswordAPI } from '@/types/api'
 
 const defaultValues = { email: '' }
@@ -30,7 +30,7 @@ export function ForgotPasswordForm() {
     setError,
     formState: { errors },
   } = form
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
 
   async function onSubmit(values: z.infer<typeof forgotPasswordSchema>) {
     try {

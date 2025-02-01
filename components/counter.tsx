@@ -3,8 +3,7 @@
 import { useCounterStore } from '@/store/counter-store'
 
 export function Counter() {
-  const count = useCounterStore((state) => state.count)
-  const { increase, decrease } = useCounterStore((state) => state)
+  const { count, increase, decrease } = useCounterStore((state) => state)
 
   return (
     <div>

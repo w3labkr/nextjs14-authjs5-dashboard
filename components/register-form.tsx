@@ -1,27 +1,27 @@
 'use client'
 
-import { useState } from 'react'
+import * as React from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { signUpSchema } from '@/schemas/auth'
+import { registerSchema } from '@/schemas/auth'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { xhr } from '@/lib/utils'
-import type { SignUpAPI } from '@/types/api'
+import { xhr } from '@/lib/http'
+import type { RegisterAPI } from '@/types/api'
 
 const defaultValues = { email: '', newPassword: '', confirmNewPassword: '' }
 
-export function SignUpForm() {
+export function RegisterForm() {
   const router = useRouter()
-  const form = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues,
   })
   const {
@@ -30,16 +30,16 @@ export function SignUpForm() {
     setError,
     formState: { errors },
   } = form
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
 
-  async function onSubmit(values: z.infer<typeof signUpSchema>) {
+  async function onSubmit(values: z.infer<typeof registerSchema>) {
     try {
       setIsSubmitting(true)
 
       const {
         message,
         data: { user },
-      } = await xhr.post<SignUpAPI>('/api/auth/signup', {
+      } = await xhr.post<RegisterAPI>('/api/auth/register', {
         body: JSON.stringify(values),
       })
 
@@ -47,8 +47,7 @@ export function SignUpForm() {
 
       toast.success(message)
 
-      router.refresh()
-      router.replace('/auth/signin')
+      router.replace('/auth/login')
     } catch (e: unknown) {
       const message = (e as Error)?.message
       if (message.includes('already exists')) setError('email', { message })
@@ -124,7 +123,7 @@ export function SignUpForm() {
           />
           {errors?.root ? <FormMessage>{errors?.root?.message}</FormMessage> : null}
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            Sign Up
+            Create account
           </Button>
         </div>
       </form>

@@ -2,6 +2,7 @@ import * as React from 'react'
 import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { auth } from '@/auth'
 import Link from 'next/link'
 
 import { ArrowLeft } from 'lucide-react'
@@ -20,11 +21,13 @@ export default async function NewPasswordPage({
   params: {}
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
+  const session = await auth()
   const referer = (await headers()).get('referer')
   const token_hash = searchParams?.token_hash?.toString()
   const code = searchParams?.code?.toString()
 
-  if (!referer) redirect('/auth/forgot-password')
+  if (session) redirect('/dashboard')
+  else if (!referer) redirect('/auth/forgot-password')
   else if (!referer.includes('/auth/verify-request')) redirect('/auth/forgot-password')
   else if (!token_hash || !code) redirect('/auth/forgot-password')
   else if (!token_hash?.length || !code?.length) redirect('/auth/forgot-password')
@@ -40,7 +43,7 @@ export default async function NewPasswordPage({
         <div className="mt-4 text-center text-sm">
           <ArrowLeft className="-ml-4 inline size-4" />
           {` Back to `}
-          <Link href="/auth/signin" className="underline">
+          <Link href="/auth/login" className="underline underline-offset-4">
             sign in
           </Link>
         </div>

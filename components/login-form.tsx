@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import * as React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { signInSchema } from '@/schemas/auth'
+import { loginSchema } from '@/schemas/auth'
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
@@ -19,10 +19,10 @@ import { Checkbox } from '@/components/ui/checkbox'
 
 const defaultValues = { email: '', password: '', rememberMe: false }
 
-export function SignInForm() {
+export function LoginForm() {
   const router = useRouter()
-  const form = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues,
     values: { ...defaultValues, rememberMe: getCookie('rememberMe') === 'true' },
   })
@@ -32,9 +32,9 @@ export function SignInForm() {
     setError,
     formState: { errors },
   } = form
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
 
-  async function onSubmit(values: z.infer<typeof signInSchema>) {
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
     try {
       setIsSubmitting(true)
       setCookie('rememberMe', values?.rememberMe)
@@ -121,7 +121,7 @@ export function SignInForm() {
           />
           {errors?.root ? <FormMessage>{errors?.root?.message}</FormMessage> : null}
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            Sign In
+            Login
           </Button>
         </div>
       </form>

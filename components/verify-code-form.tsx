@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import * as React from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 
@@ -13,7 +13,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { Button } from '@/components/ui/button'
 
-import { xhr } from '@/lib/utils'
+import { xhr } from '@/lib/http'
 import type { VerifyRequestAPI } from '@/types/api'
 
 const defaultValues = { code: '', token_hash: '' }
@@ -36,7 +36,7 @@ export function VerifyCodeForm() {
     setError,
     formState: { errors },
   } = form
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
 
   async function onSubmit(values: z.infer<typeof verifyCodeSchema>) {
     try {

@@ -5,10 +5,10 @@ import { type JWT } from 'next-auth/jwt'
 import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 
-import { xhr } from '@/lib/utils'
+import { xhr } from '@/lib/http'
 import { STATUS_TEXTS } from '@/lib/http-status-codes/en'
-import { signInSchema } from '@/schemas/auth'
-import type { SignInAPI, AuthTokenAPI } from '@/types/api'
+import { loginSchema } from '@/schemas/auth'
+import type { LoginAPI, AuthTokenAPI } from '@/types/api'
 
 const ACCESS_TOKEN_EXPIRES_IN = +process.env.ACCESS_TOKEN_EXPIRES_IN!
 const ACCESS_TOKEN_EXPIRES_BEFORE = +process.env.ACCESS_TOKEN_EXPIRES_BEFORE!
@@ -27,8 +27,8 @@ class CustomError extends CredentialsSignin {
 export const authConfig: NextAuthConfig = {
   secret: process.env.AUTH_SECRET,
   pages: {
-    signIn: '/auth/signin',
-    // signOut: '/auth/signout',
+    signIn: '/auth/login',
+    signOut: '/auth/logout',
     error: '/auth/error', // Error code passed in query string as ?error=
     verifyRequest: '/auth/verify-request', // (used for check email message)
     // newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out if not of interest)
@@ -51,7 +51,7 @@ export const authConfig: NextAuthConfig = {
         rememberMe: {},
       },
       authorize: async (credentials) => {
-        const { data, success } = signInSchema.safeParse({
+        const { data, success } = loginSchema.safeParse({
           ...credentials,
           rememberMe: credentials?.rememberMe === 'true',
         })
@@ -64,7 +64,7 @@ export const authConfig: NextAuthConfig = {
           const {
             message,
             data: { user },
-          } = await xhr.post<SignInAPI>('/api/auth/signin', {
+          } = await xhr.post<LoginAPI>('/api/auth/login', {
             body: JSON.stringify(data),
           })
 

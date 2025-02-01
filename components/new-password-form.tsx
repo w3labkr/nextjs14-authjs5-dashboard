@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import * as React from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 
@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { xhr } from '@/lib/utils'
+import { xhr } from '@/lib/http'
 import type { NewPasswordAPI } from '@/types/api'
 
 const defaultValues = { newPassword: '', confirmNewPassword: '', code: '', token_hash: '' }
@@ -37,7 +37,7 @@ export function NewPasswordForm() {
     setError,
     formState: { errors },
   } = form
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
 
   async function onSubmit(values: z.infer<typeof newPasswordSchema>) {
     try {
@@ -51,7 +51,7 @@ export function NewPasswordForm() {
 
       toast.success('Your password has been changed.')
 
-      router.replace('/auth/signin')
+      router.replace('/auth/login')
     } catch (e: unknown) {
       toast.error((e as Error)?.message)
     } finally {

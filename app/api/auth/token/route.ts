@@ -5,20 +5,15 @@ import { z } from 'zod'
 import { authTokenSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
-import { ApiResponse } from '@/lib/utils'
+import { ApiResponse } from '@/lib/http'
 import { generateAccessToken, generateRefreshToken, verifyJWT, type Token } from '@/lib/jose'
 
 const ACCESS_TOKEN_EXPIRES_IN = +process.env.ACCESS_TOKEN_EXPIRES_IN!
 const ACCESS_TOKEN_EXPIRES_BEFORE = +process.env.ACCESS_TOKEN_EXPIRES_BEFORE!
 
 export async function POST(req: NextRequest) {
-  const authorization = req.headers.get('authorization')
   const body = await req.json()
   const { data, success } = authTokenSchema.safeParse(body)
-
-  // if (authorization !== `Bearer ${process.env.AUTH_SECRET}`) {
-  // return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.UNAUTHORIZED })
-  // }
 
   if (!success) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST })
