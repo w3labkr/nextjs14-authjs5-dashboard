@@ -32,8 +32,8 @@ export const authConfig: NextAuthConfig = {
   },
   providers: [
     Google({
-      clientId: process.env.AUTH_GOOGLE_ID!,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
       // Google requires "offline" access_type to provide a `refresh_token`
       authorization: {
         params: { access_type: 'offline', prompt: 'consent', response_type: 'code' },
@@ -76,6 +76,8 @@ export const authConfig: NextAuthConfig = {
         }
       },
     }),
+    // [ERROR] Module not found: Can't resolve 'crypto'
+    // Nodemailer({ server: process.env.EMAIL_SERVER, from: process.env.EMAIL_FROM }),
   ],
   //  By default, the `id` property does not exist on `token` or `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
   callbacks: {
@@ -98,6 +100,7 @@ export const authConfig: NextAuthConfig = {
       if (account && user) {
         return {
           ...token,
+          type: account.type,
           provider: account.provider,
           access_token: account.provider === 'credentials' ? user.access_token : account.access_token,
           expires_at: account.provider === 'credentials' ? user.expires_at : account.expires_at,

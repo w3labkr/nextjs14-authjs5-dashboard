@@ -10,7 +10,6 @@ import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/utils'
 import { getRandomIntInclusive } from '@/lib/math'
 import { jwtSign } from '@/lib/jose'
-import { siteConfig } from '@/config/site'
 
 export async function POST(req: NextRequest) {
   const authorization = req.headers.get('authorization')
@@ -50,14 +49,14 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // send mail with defined transport object
     // const info = await transporter.sendMail({
     //   from: `"${sender?.name}" <${sender?.email}>`,
     //   to: user?.email,
-    //   subject: `${siteConfig.title} one-time password`,
-    //   html: html(code),
+    //   subject: 'sign in with OTP',
+    //   text: text({ code }),
+    //   html: html({ code }),
     // })
-    // console.log(info)
+    // console.log({ info })
 
     return ApiResponse.json({ token_hash }, { status: STATUS_CODES.OK })
   } catch (e: unknown) {
@@ -68,14 +67,16 @@ export async function POST(req: NextRequest) {
   }
 }
 
-function html(code: string) {
+function html({ code }: { code: string }) {
   return `
   <div>
-    <h2>This is a one-time password.</h2>
-    <p>Someone has requested a password reset for the following account:</p>
-    <p>Your password expires in 15 minutes.</p>
-    <p>${code}</p>
-    <p>If this was a mistake, just ignore this email and nothing will happen.</p>
+    <h2>One time login code</h2>
+    <p>Please enter this code: ${code}</p>
   </div>
 `
+}
+
+// Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
+function text({ code }: { code: string }) {
+  return `One time login code.\nPlease enter this code: ${code}\n\n`
 }

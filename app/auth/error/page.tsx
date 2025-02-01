@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
 export default function AuthErrorPage() {
-  const search = useSearchParams()
-  const error = search.get('error')
+  const searchParams = useSearchParams()
+  const error = searchParams.get('error')
 
   return (
     <Link

@@ -7,29 +7,28 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { verifyRequestSchema } from '@/schemas/auth'
+import { verifyCodeSchema } from '@/schemas/auth'
 
-import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
+import { Button } from '@/components/ui/button'
 
 import { xhr } from '@/lib/utils'
 import type { VerifyRequestAPI } from '@/types/api'
 
-const defaultValues = {
-  code: '',
-  token_hash: '',
-}
+const defaultValues = { code: '', token_hash: '' }
 
-export function VerifyRequestForm() {
+export function VerifyCodeForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const token_hash = searchParams.get('token_hash') ?? ''
 
-  const form = useForm<z.infer<typeof verifyRequestSchema>>({
-    resolver: zodResolver(verifyRequestSchema),
+  const form = useForm<z.infer<typeof verifyCodeSchema>>({
+    resolver: zodResolver(verifyCodeSchema),
     defaultValues,
-    values: { ...defaultValues, token_hash },
+    values: {
+      ...defaultValues,
+      token_hash: searchParams.get('token_hash') ?? '',
+    },
   })
   const {
     control,
@@ -39,7 +38,7 @@ export function VerifyRequestForm() {
   } = form
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  async function onSubmit(values: z.infer<typeof verifyRequestSchema>) {
+  async function onSubmit(values: z.infer<typeof verifyCodeSchema>) {
     try {
       setIsSubmitting(true)
 
@@ -49,7 +48,7 @@ export function VerifyRequestForm() {
 
       if (!success) throw new Error(message)
 
-      router.push('/auth/new-password')
+      router.replace(`/auth/new-password?token_hash=${values?.token_hash}&code=${values?.code}`)
     } catch (e: unknown) {
       const message = (e as Error)?.message
       if (message.includes('Invalid code')) setError('code', { message })
@@ -86,7 +85,7 @@ export function VerifyRequestForm() {
               </FormItem>
             )}
           />
-          {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+          {errors?.root ? <FormMessage>{errors?.root?.message}</FormMessage> : null}
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             Verify
           </Button>

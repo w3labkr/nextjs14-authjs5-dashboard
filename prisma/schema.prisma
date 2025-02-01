@@ -39,17 +39,18 @@ model User {
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  // Credentials Provider
-  provider      String?
+  // Refresh token rotation for Credentials Provider
+  type          String? // oidc, oauth, credentials, ...
+  provider      String? // google, credentials, ...
   access_token  String? @db.Text
   expires_at    Int?
   refresh_token String? @db.Text
-  code          String?
 
   username          String    @unique @default(uuid())
   usernameChangedAt DateTime? @map("username_changed_at")
   password          String?
   passwordChangedAt DateTime? @map("password_changed_at")
+  code              String? // one-time password
   plan              String    @default("free")
   role              String    @default("guest")
   isAdmin           Boolean   @default(false) @map("is_admin")

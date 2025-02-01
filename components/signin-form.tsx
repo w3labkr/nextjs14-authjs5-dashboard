@@ -16,13 +16,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import { SignInWithGoogle } from './signin-with-google'
 
-const defaultValues = {
-  email: '',
-  password: '',
-  rememberMe: false,
-}
+const defaultValues = { email: '', password: '', rememberMe: false }
 
 export function SignInForm() {
   const router = useRouter()
@@ -52,7 +47,7 @@ export function SignInForm() {
       router.replace('/dashboard')
     } catch (e: unknown) {
       const message = (e as Error)?.message
-      if (message.includes('Invalid identifier')) setError('root', { message })
+      if (message.includes('email or password')) setError('root', { message })
       else toast.error(message)
     } finally {
       setIsSubmitting(false)
@@ -124,7 +119,7 @@ export function SignInForm() {
               </FormItem>
             )}
           />
-          {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+          {errors?.root ? <FormMessage>{errors?.root?.message}</FormMessage> : null}
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             Sign In
           </Button>

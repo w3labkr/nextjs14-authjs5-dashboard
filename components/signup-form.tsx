@@ -16,15 +16,13 @@ import { Input } from '@/components/ui/input'
 import { xhr } from '@/lib/utils'
 import type { SignUpAPI } from '@/types/api'
 
+const defaultValues = { email: '', newPassword: '', confirmNewPassword: '' }
+
 export function SignUpForm() {
   const router = useRouter()
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      email: '',
-      newPassword: '',
-      confirmNewPassword: '',
-    },
+    defaultValues,
   })
   const {
     control,
@@ -124,7 +122,7 @@ export function SignUpForm() {
               </FormItem>
             )}
           />
-          {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+          {errors?.root ? <FormMessage>{errors?.root?.message}</FormMessage> : null}
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             Sign Up
           </Button>

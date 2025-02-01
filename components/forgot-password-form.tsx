@@ -16,13 +16,13 @@ import { Input } from '@/components/ui/input'
 import { xhr } from '@/lib/utils'
 import type { ForgotPasswordAPI } from '@/types/api'
 
+const defaultValues = { email: '' }
+
 export function ForgotPasswordForm() {
   const router = useRouter()
   const form = useForm<z.infer<typeof forgotPasswordSchema>>({
     resolver: zodResolver(forgotPasswordSchema),
-    defaultValues: {
-      email: '',
-    },
+    defaultValues,
   })
   const {
     control,
@@ -47,7 +47,7 @@ export function ForgotPasswordForm() {
 
       router.push(`/auth/verify-request?token_hash=${token_hash}`)
     } catch (e: unknown) {
-      toast.error('Something went wrong.')
+      toast.error((e as Error)?.message)
     } finally {
       setIsSubmitting(false)
     }
@@ -77,7 +77,7 @@ export function ForgotPasswordForm() {
               </FormItem>
             )}
           />
-          {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+          {errors?.root ? <FormMessage>{errors?.root?.message}</FormMessage> : null}
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             Send
           </Button>

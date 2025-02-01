@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
         email: data?.email,
         password: await bcrypt.hash(data?.newPassword, 10),
         passwordChangedAt: dayjs().toISOString(),
+        type: 'credentials',
         provider: 'credentials',
       }
       const created = await tx.user.create({ data: newData })

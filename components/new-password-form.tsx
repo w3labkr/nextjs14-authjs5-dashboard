@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,13 +16,19 @@ import { Input } from '@/components/ui/input'
 import { xhr } from '@/lib/utils'
 import type { NewPasswordAPI } from '@/types/api'
 
+const defaultValues = { newPassword: '', confirmNewPassword: '', code: '', token_hash: '' }
+
 export function NewPasswordForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+
   const form = useForm<z.infer<typeof newPasswordSchema>>({
     resolver: zodResolver(newPasswordSchema),
-    defaultValues: {
-      newPassword: '',
-      confirmNewPassword: '',
+    defaultValues,
+    values: {
+      ...defaultValues,
+      code: searchParams.get('code') ?? '',
+      token_hash: searchParams.get('token_hash') ?? '',
     },
   })
   const {
@@ -37,15 +43,13 @@ export function NewPasswordForm() {
     try {
       setIsSubmitting(true)
 
-      console.log(values)
-
-      const { success, message } = await xhr.post<NewPasswordAPI>('/api/auth/forgot-password', {
+      const { success, message } = await xhr.post<NewPasswordAPI>('/api/auth/new-password', {
         body: JSON.stringify(values),
       })
 
       if (!success) throw new Error(message)
 
-      // router.replace('/auth/signin')
+      router.replace('/auth/signin')
     } catch (e: unknown) {
       toast.error('Something went wrong.')
     } finally {
@@ -57,6 +61,8 @@ export function NewPasswordForm() {
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
+          <FormField control={control} name="code" render={({ field }) => <input type="hidden" {...field} />} />
+          <FormField control={control} name="token_hash" render={({ field }) => <input type="hidden" {...field} />} />
           <FormField
             control={control}
             name="newPassword"
@@ -97,7 +103,7 @@ export function NewPasswordForm() {
               </FormItem>
             )}
           />
-          {errors?.root && <FormMessage>{errors?.root?.message}</FormMessage>}
+          {errors?.root ? <FormMessage>{errors?.root?.message}</FormMessage> : null}
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             Submit
           </Button>

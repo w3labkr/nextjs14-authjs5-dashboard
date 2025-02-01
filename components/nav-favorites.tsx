@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { ArrowUpRight, Link2, MoreHorizontal, StarOff, Trash2 } from 'lucide-react'
 
+import { ArrowUpRight, Link2, MoreHorizontal, StarOff, Trash2 } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 import { usePathname } from 'next/navigation'
-import { Star } from 'lucide-react'
 
+import { Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 import { dashboardConfig } from '@/config/dashboard'

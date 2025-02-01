@@ -26,26 +26,36 @@ export async function POST(req: NextRequest) {
   const token = await verifyJWT<{ sub: string; exp: number }>(data?.token_hash)
 
   if (!token) {
-    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid token' })
+    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Token Expired' })
   }
 
   const user = await prisma.user.findUnique({
     where: { email: token?.sub },
   })
 
-  if (!user || !user?.code) {
-    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid code' })
+  if (!user) {
+    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid User' })
   }
 
-  // const newUser = await prisma.user.update({
-  //   where: {
-  //     id: user?.id,
-  //   },
-  //   data: {
-  //     password: await bcrypt.hash(data?.newPassword, 10),
-  //     passwordChangedAt: dayjs().toISOString(),
-  //   },
-  // })
+  if (user?.code && (await bcrypt.compare(data?.code, user?.code))) {
+    try {
+      await prisma.$transaction([
+        prisma.user.update({
+          where: {
+            id: user?.id,
+          },
+          data: {
+            password: await bcrypt.hash(data?.newPassword, 10),
+            passwordChangedAt: dayjs().toISOString(),
+            code: null,
+          },
+        }),
+      ])
+    } catch (e: unknown) {
+      return ApiResponse.json(null, { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message })
+    }
+    return ApiResponse.json(null, { status: STATUS_CODES.OK })
+  }
 
   return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid code' })
 }

@@ -12,6 +12,7 @@ export async function main() {
         email: 'me@example.com',
         password: await bcrypt.hash('123123', 10),
         passwordChangedAt: dayjs().toISOString(),
+        type: 'credentials',
         provider: 'credentials',
       }
       const created = await tx.user.create({ data: newData })

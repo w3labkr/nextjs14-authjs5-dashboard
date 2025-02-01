@@ -1,3 +1,4 @@
+import { NextResponse, type NextRequest } from 'next/server'
 import NextAuth from 'next-auth'
 import { authConfig } from './auth.config'
 
@@ -8,11 +9,13 @@ import { authConfig } from './auth.config'
 // 2. Wrapped middleware option
 const { auth } = NextAuth(authConfig)
 export default auth(async function middleware(req) {
-  // Your custom middleware logic goes here
-  const url = new URL(req.url)
-  req.headers.set('x-url', req.url)
-  req.headers.set('x-origin', url.origin)
-  req.headers.set('x-pathname', url.pathname)
+  const res = NextResponse.next({ request: { headers: req.headers } })
+
+  res.headers.set('x-url', req.nextUrl.href)
+  res.headers.set('x-origin', req.nextUrl.origin)
+  res.headers.set('x-pathname', req.nextUrl.pathname)
+
+  return res
 })
 
 export const config = {

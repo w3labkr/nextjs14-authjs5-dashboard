@@ -30,12 +30,14 @@ export const newPasswordSchema = z
   .object({
     newPassword: z.string().min(6).max(72),
     confirmNewPassword: z.string().min(6).max(72),
+    code: z.string().length(6),
+    token_hash: z.string(),
   })
   .refine((val) => val.newPassword === val.confirmNewPassword, {
     path: ['confirmNewPassword'],
   })
 
-export const verifyRequestSchema = z.object({
-  code: z.string().min(6),
+export const verifyCodeSchema = z.object({
+  code: z.string().length(6),
   token_hash: z.string(),
 })

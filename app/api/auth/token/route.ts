@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   const token = await verifyJWT<{ sub: string; exp: number }>(data?.refresh_token)
 
   if (!token) {
-    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid token' })
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Token Expired' })
   }
 
   const user = await prisma.user.findUnique({
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
   })
 
   if (!user || !user?.refresh_token) {
-    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid identifier' })
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid User' })
   }
 
   if (user?.refresh_token !== data?.refresh_token) {

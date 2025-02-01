@@ -8,6 +8,7 @@ declare module 'next-auth' {
    */
   interface User {
     id: string
+    type: string
     provider: string
     access_token: string
     expires_at: number
@@ -48,6 +49,7 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
   interface JWT {
     id: string
+    type: string
     provider: string
     access_token: string
     expires_at: number
