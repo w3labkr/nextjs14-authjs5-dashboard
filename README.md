@@ -1,6 +1,10 @@
-# Next.js 14 + Auth.js Dashboard
+# Next.js 14 - Auth.js 5 - Dashboard
 
 This is a dashboard starter template for the [NextJS](https://nextjs.org) 14 app router based on [Auth.js](https://authjs.dev) v5.
+
+## Screenshots
+
+![screenshot](./screenshot.png)
 
 ## Denpendencies
 
@@ -32,6 +36,7 @@ The folder and file structure is based on nextjs app router [next.js project str
 │   └── [locales]/              # Internationalization
 ├── queries/                    # API
 ├── schemas/                    # Schema validation
+├── screenshots/                # Screenshots
 ├── store/                      # State
 ├── types/                      # Type definitions
 └── package.json
@@ -42,7 +47,7 @@ The folder and file structure is based on nextjs app router [next.js project str
 Clone the repository to the current directory.
 
 ```shell
-git clone https://github.com/w3labkr/nextjs14-supabase-dashboard.git .
+git clone https://github.com/w3labkr/nextjs14-authjs5-dashboard.git .
 ```
 
 Install all modules listed as dependencies.
