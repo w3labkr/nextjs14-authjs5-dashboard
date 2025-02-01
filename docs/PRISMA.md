@@ -64,8 +64,14 @@ npx prisma format
 
 ## Troubleshooting
 
-- [Supabase Prisma](https://supabase.com/docs/guides/database/prisma)
-- [Troubleshooting prisma errors](https://supabase.com/docs/guides/database/prisma/prisma-troubleshooting)
+ERROR: must be a member of the role whose process is being terminated or member of `pg_signal_backend`
+
+```sql
+SELECT current_user, session_user;
+GRANT pg_signal_backend TO postgres;
+```
+
+This quickly shows how to connect your Prisma application to Supabase Postgres.
 
 ```sql
 -- Create custom user
@@ -86,8 +92,6 @@ ALTER DEFAULT privileges FOR role postgres IN schema public GRANT ALL ON sequenc
 
 -- Alter prisma password if needed
 ALTER USER "postgres" WITH password 'new_password';
-
--- ERROR: must be a member of the role whose process is being terminated or member of pg_signal_backend
-SELECT current_user, session_user;
-GRANT pg_signal_backend TO postgres;
 ```
+
+<https://supabase.com/docs/guides/database/prisma>
