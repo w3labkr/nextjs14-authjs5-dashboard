@@ -45,6 +45,8 @@ export function ForgotPasswordForm() {
 
       if (!token_hash) throw new Error(message)
 
+      toast.success('Your email has been sent.')
+
       router.push(`/auth/verify-request?token_hash=${token_hash}`)
     } catch (e: unknown) {
       toast.error((e as Error)?.message)

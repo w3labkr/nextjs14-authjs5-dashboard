@@ -1,11 +1,12 @@
 import * as React from 'react'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
+import { ArrowLeft } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { VerifyCodeForm } from '@/components/verify-code-form'
 import { ResendCodeButton } from '@/components/resend-code-button'
-import { decodeJwt } from '@/lib/jose'
 
 export const metadata: Metadata = {
   title: 'Verify Request',
@@ -33,7 +34,14 @@ export default async function VerifyRequestPage({
       <CardContent>
         <VerifyCodeForm />
         <div className="mt-4 text-center text-sm">
-          Didn&apos;t receive the email? <ResendCodeButton mailto={decodeJwt(token_hash)?.sub} />
+          Didn&apos;t receive the email? <ResendCodeButton token_hash={token_hash} />
+          <br />
+          <br />
+          <ArrowLeft className="-ml-4 inline size-4" />
+          {` Back to `}
+          <Link href="/auth/signin" className="underline">
+            sign in
+          </Link>
         </div>
       </CardContent>
     </Card>

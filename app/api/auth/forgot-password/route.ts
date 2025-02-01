@@ -9,7 +9,7 @@ import { forgotPasswordSchema } from '@/schemas/auth'
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/utils'
 import { getRandomIntInclusive } from '@/lib/math'
-import { jwtSign } from '@/lib/jose'
+import { generateVerificationToken } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const authorization = req.headers.get('authorization')
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   }
 
   const code = getRandomIntInclusive(100000, 999999).toString()
-  const token_hash = await jwtSign({ sub: data?.email }, '15m')
+  const token_hash = await generateVerificationToken(data?.email)
 
   console.log({ code })
 

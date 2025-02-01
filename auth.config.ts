@@ -10,6 +10,9 @@ import { STATUS_TEXTS } from '@/lib/http-status-codes/en'
 import { signInSchema } from '@/schemas/auth'
 import type { SignInAPI, AuthTokenAPI } from '@/types/api'
 
+const ACCESS_TOKEN_EXPIRES_IN = +process.env.ACCESS_TOKEN_EXPIRES_IN!
+const ACCESS_TOKEN_EXPIRES_BEFORE = +process.env.ACCESS_TOKEN_EXPIRES_BEFORE!
+
 class CustomError extends CredentialsSignin {
   constructor(code: string) {
     super()
@@ -114,10 +117,8 @@ export const authConfig: NextAuthConfig = {
         } as JWT
       }
 
-      const expires_before = 10 * 60 * 1000 // 1 * 60s * 1000ms = 1m
-
       // Subsequent logins, but the `access_token` is still valid
-      if (Date.now() < token.expires_at * 1000 - expires_before) return token
+      if (Date.now() < (token.expires_at - ACCESS_TOKEN_EXPIRES_BEFORE) * 1000) return token
 
       // If do not remember me for 30 days, destroy the token
       if (!rememberMe) return null

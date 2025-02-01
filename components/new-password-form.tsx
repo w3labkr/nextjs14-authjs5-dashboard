@@ -49,9 +49,11 @@ export function NewPasswordForm() {
 
       if (!success) throw new Error(message)
 
+      toast.success('Your password has been changed.')
+
       router.replace('/auth/signin')
     } catch (e: unknown) {
-      toast.error('Something went wrong.')
+      toast.error((e as Error)?.message)
     } finally {
       setIsSubmitting(false)
     }

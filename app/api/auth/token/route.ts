@@ -6,7 +6,10 @@ import { authTokenSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/utils'
-import { generateAccessToken, generateRefreshToken, verifyJWT } from '@/lib/jose'
+import { generateAccessToken, generateRefreshToken, verifyJWT, type Token } from '@/lib/jose'
+
+const ACCESS_TOKEN_EXPIRES_IN = +process.env.ACCESS_TOKEN_EXPIRES_IN!
+const ACCESS_TOKEN_EXPIRES_BEFORE = +process.env.ACCESS_TOKEN_EXPIRES_BEFORE!
 
 export async function POST(req: NextRequest) {
   const authorization = req.headers.get('authorization')
@@ -25,7 +28,7 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid grant_type' })
   }
 
-  const token = await verifyJWT<{ sub: string; exp: number }>(data?.refresh_token)
+  const token = await verifyJWT<Token>(data?.refresh_token)
 
   if (!token) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Token Expired' })
@@ -43,14 +46,11 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid refresh_token' })
   }
 
-  const payload = { sub: user.id }
-  const expires_in = 1 * 60 * 60 // 1 * 60m * 60s = 1h
-  const expires_before = 10 * 60 * 1000 // 1 * 60s * 1000ms = 1m
-
   const newTokens = {
-    access_token: await generateAccessToken(payload),
-    expires_at: Math.floor(Date.now() / 1000 + expires_in),
-    refresh_token: Date.now() < token?.exp * 1000 - expires_before ? undefined : await generateRefreshToken(payload),
+    access_token: await generateAccessToken(user.id),
+    expires_at: Math.floor(Date.now() / 1000 + ACCESS_TOKEN_EXPIRES_IN),
+    refresh_token:
+      Date.now() < (token?.exp - ACCESS_TOKEN_EXPIRES_BEFORE) * 1000 ? undefined : await generateRefreshToken(user.id),
   }
 
   try {

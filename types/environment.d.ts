@@ -16,6 +16,9 @@ declare global {
       AUTH_NAVER_ID: string
       AUTH_NAVER_SECRET: string
 
+      ACCESS_TOKEN_EXPIRES_IN: string
+      ACCESS_TOKEN_EXPIRES_BEFORE: string
+
       DATABASE_URL: string
       DIRECT_URL: string
 
