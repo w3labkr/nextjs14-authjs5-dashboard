@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { SessionProvider } from 'next-auth/react'
+import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 
-import { Analytics } from '@vercel/analytics/react'
-import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { Toaster } from '@/components/ui/sonner'
+import { TailwindIndicator } from '@/components/tailwind-indicator'
+import { CookieConsent } from '@/components/cookie-consent'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -22,6 +23,7 @@ export default function RootLayout({
         <SessionProvider>
           {children}
           <Toaster richColors closeButton />
+          <CookieConsent />
         </SessionProvider>
         {process.env.NODE_ENV !== 'production' ? <TailwindIndicator /> : null}
         {process.env.NODE_ENV === 'production' ? <Analytics /> : null}

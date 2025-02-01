@@ -1,13 +1,5 @@
 # PRISMA
 
-## Format
-
-Formats the Prisma schema file, which includes validating, formatting, and persisting the schema.
-
-```shell
-npx prisma format
-```
-
 ## Development environments
 
 (DANGER) `migrate dev` is a development command and should never be used in a production environment.
@@ -60,4 +52,42 @@ Seed your database with the initial data you defined in the `seed.ts` file.
 
 ```shell
 npx prisma db seed
+```
+
+## Format
+
+Formats the Prisma schema file, which includes validating, formatting, and persisting the schema.
+
+```shell
+npx prisma format
+```
+
+## Troubleshooting
+
+- [Supabase Prisma](https://supabase.com/docs/guides/database/prisma)
+- [Troubleshooting prisma errors](https://supabase.com/docs/guides/database/prisma/prisma-troubleshooting)
+
+```sql
+-- Create custom user
+CREATE USER "prisma" WITH password 'custom_password' bypassrls createdb;
+
+-- extend prisma's privileges to postgres (necessary to view changes in Dashboard)
+GRANT "prisma" TO "postgres";
+
+-- Grant it necessary permissions over the relevant schemas (public)
+GRANT usage ON schema public TO prisma;
+GRANT CREATE ON schema public TO prisma;
+GRANT ALL ON ALL tables IN schema public TO prisma;
+GRANT ALL ON ALL routines IN schema public TO prisma;
+GRANT ALL ON ALL sequences IN schema public TO prisma;
+ALTER DEFAULT privileges FOR role postgres IN schema public GRANT ALL ON tables TO prisma;
+ALTER DEFAULT privileges FOR role postgres IN schema public GRANT ALL ON routines TO prisma;
+ALTER DEFAULT privileges FOR role postgres IN schema public GRANT ALL ON sequences TO prisma;
+
+-- Alter prisma password if needed
+ALTER USER "postgres" WITH password 'new_password';
+
+-- ERROR: must be a member of the role whose process is being terminated or member of pg_signal_backend
+SELECT current_user, session_user;
+GRANT pg_signal_backend TO postgres;
 ```
