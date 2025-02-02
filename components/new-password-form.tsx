@@ -7,7 +7,6 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { newPasswordSchema } from '@/schemas/auth'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -16,14 +15,33 @@ import { Input } from '@/components/ui/input'
 import { xhr } from '@/lib/http'
 import type { NewPasswordAPI } from '@/types/api'
 
-const defaultValues = { newPassword: '', confirmNewPassword: '', code: '', token_hash: '' }
+export const newPasswordFormSchema = z
+  .object({
+    newPassword: z.string().min(6).max(72),
+    confirmNewPassword: z.string().min(6).max(72),
+    code: z.string().length(6),
+    token_hash: z.string(),
+  })
+  .refine((val) => val.newPassword === val.confirmNewPassword, {
+    path: ['confirmNewPassword'],
+  })
+
+type NewPasswordFormValues = z.infer<typeof newPasswordFormSchema>
+
+// This can come from your database or API.
+const defaultValues: NewPasswordFormValues = {
+  newPassword: '',
+  confirmNewPassword: '',
+  code: '',
+  token_hash: '',
+}
 
 export function NewPasswordForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const form = useForm<z.infer<typeof newPasswordSchema>>({
-    resolver: zodResolver(newPasswordSchema),
+  const form = useForm<NewPasswordFormValues>({
+    resolver: zodResolver(newPasswordFormSchema),
     defaultValues,
     values: {
       ...defaultValues,
@@ -39,7 +57,7 @@ export function NewPasswordForm() {
   } = form
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
 
-  async function onSubmit(values: z.infer<typeof newPasswordSchema>) {
+  async function onSubmit(values: NewPasswordFormValues) {
     try {
       setIsSubmitting(true)
 

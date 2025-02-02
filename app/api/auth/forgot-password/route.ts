@@ -3,7 +3,7 @@ import { prisma } from '@/prisma'
 import { transporter, sender } from '@/lib/nodemailer'
 
 import { z } from 'zod'
-import { forgotPasswordSchema } from '@/schemas/auth'
+import { forgotPasswordFormSchema } from '@/components/forgot-password-form'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
@@ -13,7 +13,7 @@ import { generateVerificationToken } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { data, success } = forgotPasswordSchema.safeParse(body)
+  const { data, success } = forgotPasswordFormSchema.safeParse(body)
 
   if (!success) {
     return ApiResponse.json({ token_hash: null }, { status: STATUS_CODES.BAD_REQUEST })

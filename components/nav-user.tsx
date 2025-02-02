@@ -20,7 +20,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/c
 // This is sample data.
 const user = {
   name: 'shadcn',
-  email: 'm@example.com',
+  email: 'me@example.com',
   avatar: '#',
   // avatar: "/avatars/shadcn.jpg",
 }
@@ -74,6 +74,7 @@ export function NavUser() {
                 Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
+            <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => router.push('/dashboard/account')}>
                 <BadgeCheck />

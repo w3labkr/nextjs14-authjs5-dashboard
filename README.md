@@ -35,7 +35,6 @@ The folder and file structure is based on nextjs app router [next.js project str
 ├── public/                     # Static assets to be served
 │   └── [locales]/              # Internationalization
 ├── queries/                    # API
-├── schemas/                    # Schema validation
 ├── screenshots/                # Screenshots
 ├── store/                      # State
 ├── types/                      # Type definitions

@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
 
 import { z } from 'zod'
-import { verifyCodeSchema } from '@/schemas/auth'
+import { verifyCodeFormSchema } from '@/components/verify-code-form'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
@@ -11,7 +11,7 @@ import { verifyJWT, type Token } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { data, success } = verifyCodeSchema.safeParse(body)
+  const { data, success } = verifyCodeFormSchema.safeParse(body)
 
   if (!success) {
     return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST })

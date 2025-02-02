@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
 
 import { z } from 'zod'
-import { loginSchema } from '@/schemas/auth'
+import { loginFormSchema } from '@/components/login-form'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
@@ -10,7 +10,7 @@ import { compareHash } from '@/lib/bcrypt'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { data, success } = loginSchema.safeParse(body)
+  const { data, success } = loginFormSchema.safeParse(body)
 
   if (!success) {
     return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST })

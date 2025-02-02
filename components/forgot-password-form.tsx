@@ -7,7 +7,6 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { forgotPasswordSchema } from '@/schemas/auth'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -16,12 +15,21 @@ import { Input } from '@/components/ui/input'
 import { xhr } from '@/lib/http'
 import type { ForgotPasswordAPI } from '@/types/api'
 
-const defaultValues = { email: '' }
+export const forgotPasswordFormSchema = z.object({
+  email: z.string().max(255).email(),
+})
+
+type ForgotPasswordFormValues = z.infer<typeof forgotPasswordFormSchema>
+
+// This can come from your database or API.
+const defaultValues: ForgotPasswordFormValues = {
+  email: '',
+}
 
 export function ForgotPasswordForm() {
   const router = useRouter()
-  const form = useForm<z.infer<typeof forgotPasswordSchema>>({
-    resolver: zodResolver(forgotPasswordSchema),
+  const form = useForm<ForgotPasswordFormValues>({
+    resolver: zodResolver(forgotPasswordFormSchema),
     defaultValues,
   })
   const {
@@ -32,7 +40,7 @@ export function ForgotPasswordForm() {
   } = form
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
 
-  async function onSubmit(values: z.infer<typeof forgotPasswordSchema>) {
+  async function onSubmit(values: ForgotPasswordFormValues) {
     try {
       setIsSubmitting(true)
 

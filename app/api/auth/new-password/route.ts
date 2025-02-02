@@ -3,7 +3,7 @@ import { prisma } from '@/prisma'
 import dayjs from '@/lib/dayjs'
 
 import { z } from 'zod'
-import { newPasswordSchema } from '@/schemas/auth'
+import { newPasswordFormSchema } from '@/components/new-password-form'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
@@ -12,7 +12,7 @@ import { verifyJWT, type Token } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { data, success } = newPasswordSchema.safeParse(body)
+  const { data, success } = newPasswordFormSchema.safeParse(body)
 
   if (!success) {
     return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST })

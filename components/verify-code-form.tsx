@@ -7,7 +7,6 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { verifyCodeSchema } from '@/schemas/auth'
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
@@ -16,14 +15,25 @@ import { Button } from '@/components/ui/button'
 import { xhr } from '@/lib/http'
 import type { VerifyRequestAPI } from '@/types/api'
 
-const defaultValues = { code: '', token_hash: '' }
+export const verifyCodeFormSchema = z.object({
+  code: z.string().length(6),
+  token_hash: z.string(),
+})
+
+type VerifyCodeFormValues = z.infer<typeof verifyCodeFormSchema>
+
+// This can come from your database or API.
+const defaultValues: VerifyCodeFormValues = {
+  code: '',
+  token_hash: '',
+}
 
 export function VerifyCodeForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const form = useForm<z.infer<typeof verifyCodeSchema>>({
-    resolver: zodResolver(verifyCodeSchema),
+  const form = useForm<VerifyCodeFormValues>({
+    resolver: zodResolver(verifyCodeFormSchema),
     defaultValues,
     values: {
       ...defaultValues,
@@ -38,7 +48,7 @@ export function VerifyCodeForm() {
   } = form
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
 
-  async function onSubmit(values: z.infer<typeof verifyCodeSchema>) {
+  async function onSubmit(values: VerifyCodeFormValues) {
     try {
       setIsSubmitting(true)
 

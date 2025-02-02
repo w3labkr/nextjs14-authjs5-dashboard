@@ -3,7 +3,7 @@ import { prisma } from '@/prisma'
 import dayjs from '@/lib/dayjs'
 
 import { z } from 'zod'
-import { registerSchema } from '@/schemas/auth'
+import { registerFormSchema } from '@/components/register-form'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
@@ -15,7 +15,7 @@ const ACCESS_TOKEN_EXPIRES_BEFORE = +process.env.ACCESS_TOKEN_EXPIRES_BEFORE!
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { data, success } = registerSchema.safeParse(body)
+  const { data, success } = registerFormSchema.safeParse(body)
 
   if (!success) {
     return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST })

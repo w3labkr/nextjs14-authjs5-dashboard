@@ -7,7 +7,6 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { registerSchema } from '@/schemas/auth'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -16,12 +15,30 @@ import { Input } from '@/components/ui/input'
 import { xhr } from '@/lib/http'
 import type { RegisterAPI } from '@/types/api'
 
-const defaultValues = { email: '', newPassword: '', confirmNewPassword: '' }
+export const registerFormSchema = z
+  .object({
+    email: z.string().min(4).max(255).email(),
+    // If the password is larger than 72 chars, it will be truncated to the first 72 chars.
+    newPassword: z.string().min(6).max(72),
+    confirmNewPassword: z.string().min(6).max(72),
+  })
+  .refine((val) => val.newPassword === val.confirmNewPassword, {
+    path: ['confirmNewPassword'],
+  })
+
+type RegisterFormValues = z.infer<typeof registerFormSchema>
+
+// This can come from your database or API.
+const defaultValues: RegisterFormValues = {
+  email: '',
+  newPassword: '',
+  confirmNewPassword: '',
+}
 
 export function RegisterForm() {
   const router = useRouter()
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerFormSchema),
     defaultValues,
   })
   const {
@@ -32,7 +49,7 @@ export function RegisterForm() {
   } = form
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
 
-  async function onSubmit(values: z.infer<typeof registerSchema>) {
+  async function onSubmit(values: RegisterFormValues) {
     try {
       setIsSubmitting(true)
 

@@ -5,9 +5,11 @@ import { type JWT } from 'next-auth/jwt'
 import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 
+import { z } from 'zod'
+import { loginFormSchema } from '@/components/login-form'
+
 import { xhr } from '@/lib/http'
 import { STATUS_TEXTS } from '@/lib/http-status-codes/en'
-import { loginSchema } from '@/schemas/auth'
 import type { LoginAPI, AuthTokenAPI } from '@/types/api'
 
 const ACCESS_TOKEN_EXPIRES_IN = +process.env.ACCESS_TOKEN_EXPIRES_IN!
@@ -51,7 +53,7 @@ export const authConfig: NextAuthConfig = {
         rememberMe: {},
       },
       authorize: async (credentials) => {
-        const { data, success } = loginSchema.safeParse({
+        const { data, success } = loginFormSchema.safeParse({
           ...credentials,
           rememberMe: credentials?.rememberMe === 'true',
         })

@@ -2,7 +2,6 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
 
 import { z } from 'zod'
-import { authTokenSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
@@ -13,7 +12,7 @@ const ACCESS_TOKEN_EXPIRES_BEFORE = +process.env.ACCESS_TOKEN_EXPIRES_BEFORE!
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { data, success } = authTokenSchema.safeParse(body)
+  const { data, success } = z.object({ grant_type: z.string(), refresh_token: z.string() }).safeParse(body)
 
   if (!success) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST })
