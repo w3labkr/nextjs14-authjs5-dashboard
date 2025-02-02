@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import plugin from 'tailwindcss/plugin'
 
 const config: Config = {
   darkMode: ['class'],
@@ -93,10 +94,28 @@ const config: Config = {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'caret-blink': 'caret-blink 1.25s ease-out infinite',
       },
+      aspectRatio: {
+        '1/1': '1 / 1',
+        '2/1': '2 / 1',
+        '3/2': '3 / 2',
+        '4/3': '4 / 3',
+        '16/9': '16 / 9',
+        '16/10': '16 / 10',
+        '1/2': '1 / 2',
+        '2/3': '2 / 3',
+        '3/4': '3 / 4',
+        '9/16': '9 / 16',
+        '10/16': '10 / 16',
+      },
     },
   },
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  plugins: [require('tailwindcss-animate')],
+  plugins: [
+    require('tailwindcss-animate'),
+    require('@tailwindcss/typography'),
+    plugin(function ({ addUtilities, addComponents, e, config }) {
+      addUtilities({ '.text-2xs': { 'font-size': '0.625rem', 'line-height': '1rem' } })
+    }),
+  ],
 }
 
 export default config

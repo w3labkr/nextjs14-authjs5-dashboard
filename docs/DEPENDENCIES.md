@@ -52,6 +52,14 @@ export default function RootLayout({
 }
 ```
 
+## Tailwindcss
+
+Beautiful typographic defaults for HTML you don't control.
+
+```shell
+npm install -D @tailwindcss/typography
+```
+
 ## Auth.js
 
 Installing Auth.js
