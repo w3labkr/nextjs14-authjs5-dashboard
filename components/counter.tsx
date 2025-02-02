@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from 'react'
 import { useCounterStore } from '@/store/counter-store'
 
 export function Counter() {

@@ -10,6 +10,7 @@ This is a dashboard starter template for the [NextJS](https://nextjs.org) 14 app
 
 - Next.js 14
 - Auth.js v5 + Prisma Adapter
+- Tailwindcss
 - Shadcn
 - Prisma
 - Zustand

@@ -10,13 +10,8 @@ const navMain = [
 
 const navSecondary = [
   {
-    title: 'Settings',
-    url: '/dashboard/settings',
-    icon: Settings2,
-  },
-  {
-    title: 'Help',
-    url: '/dashboard/help',
+    title: 'FAQ',
+    url: '/dashboard/faq',
     icon: MessageCircleQuestion,
   },
 ]

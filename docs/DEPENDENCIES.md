@@ -33,6 +33,12 @@ You can now start adding components to your project.
 npx shadcn@latest add -a
 ```
 
+Add `tanstack/react-table` dependency:
+
+```shell
+npm install @tanstack/react-table
+```
+
 Add the Toaster component. Edit `app/layout.tsx`:
 
 ```javascript
@@ -53,6 +59,12 @@ export default function RootLayout({
 ```
 
 ## Tailwindcss
+
+Install Tailwind CSS with Next.js
+
+```shell
+npm install -D tailwindcss@3 postcss autoprefixer
+```
 
 Beautiful typographic defaults for HTML you don't control.
 
@@ -196,6 +208,14 @@ Getting, setting and removing cookies on both client and server with next.js
 
 ```shell
 npm i cookies-next@4.3.0
+```
+
+## React Icons
+
+svg react icons of popular icon packs
+
+```shell
+npm i react-icons
 ```
 
 ## ESLint

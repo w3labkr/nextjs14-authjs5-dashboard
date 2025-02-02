@@ -19,7 +19,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@/components/custom-ui/sidebar'
+} from '@/components/ui/sidebar'
 
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard'
 import { useWorkspaceStore } from '@/store/workspace-store'

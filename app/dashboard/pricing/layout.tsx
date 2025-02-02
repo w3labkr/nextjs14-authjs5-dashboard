@@ -9,11 +9,11 @@ import { NavUser } from '@/components/nav-user'
 import { NavNotify } from '@/components/nav-notify'
 
 export const metadata: Metadata = {
-  title: 'Workspace3 | Dashboard',
+  title: 'Pricing | Dashboard',
   description: '',
 }
 
-export default function Workspace3Layout({ children }: { children: React.ReactNode }) {
+export default function PricingLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -25,7 +25,7 @@ export default function Workspace3Layout({ children }: { children: React.ReactNo
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="line-clamp-1">Workspace3</BreadcrumbPage>
+                  <BreadcrumbPage className="line-clamp-1">Pricing</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

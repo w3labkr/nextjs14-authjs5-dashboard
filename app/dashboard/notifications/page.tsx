@@ -1,11 +1,14 @@
 import * as React from 'react'
+import { NotificationsForm } from '@/components/notifications-form'
 
-export default function Page() {
+export default function NotificationsPage() {
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
-      {Array.from({ length: 24 }).map((_, index) => (
-        <div key={index} className="aspect-video h-12 w-full rounded-lg bg-muted/50" />
-      ))}
+    <div className="flex flex-1 flex-col gap-8 p-8">
+      <div className="space-y-1">
+        <h2 className="text-2xl font-bold tracking-tight">Notifications</h2>
+        <p className="text-muted-foreground">Configure how you receive notifications.</p>
+      </div>
+      <NotificationsForm />
     </div>
   )
 }

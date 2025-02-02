@@ -1,14 +1,21 @@
 import * as React from 'react'
 
-export default function Page() {
+import { SubscriptionPlan } from '@/components/subscription-plan'
+import { Usage } from '@/components/usage'
+import { PaymentMethod } from '@/components/payment-method'
+import { RecentInvoices } from '@/components/recent-invoices'
+
+export default function BillingPage() {
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
-      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-        <div className="aspect-video rounded-xl bg-muted/50" />
-        <div className="aspect-video rounded-xl bg-muted/50" />
-        <div className="aspect-video rounded-xl bg-muted/50" />
+    <div className="flex flex-1 flex-col gap-8 p-8">
+      <div className="space-y-1">
+        <h2 className="text-2xl font-bold tracking-tight">Billing</h2>
+        <p className="text-muted-foreground"></p>
       </div>
-      <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+      <SubscriptionPlan />
+      <Usage />
+      <PaymentMethod />
+      <RecentInvoices />
     </div>
   )
 }

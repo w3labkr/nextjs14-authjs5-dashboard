@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
+
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -9,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@/components/custom-ui/sidebar'
+} from '@/components/ui/sidebar'
 
 export function NavWorkspaces({
   workspaces,

@@ -110,8 +110,8 @@ const config: Config = {
     },
   },
   plugins: [
-    require('tailwindcss-animate'),
     require('@tailwindcss/typography'),
+    require('tailwindcss-animate'),
     plugin(function ({ addUtilities, addComponents, e, config }) {
       addUtilities({ '.text-2xs': { 'font-size': '0.625rem', 'line-height': '1rem' } })
     }),
