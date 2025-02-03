@@ -22,11 +22,8 @@ export const metadata: Metadata = {
 }
 
 export default async function ProfileLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies()
-  const defaultOpen = cookieStore.get('sidebar:state')?.value === 'true'
-
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
+    <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
