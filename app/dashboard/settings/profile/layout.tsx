@@ -33,7 +33,7 @@ export default async function ProfileLayout({ children }: { children: React.Reac
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/dashboard/settings">Settings</BreadcrumbLink>
+                  <BreadcrumbLink href="#">Settings</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>

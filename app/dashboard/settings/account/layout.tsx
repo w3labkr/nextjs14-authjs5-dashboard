@@ -32,7 +32,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/dashboard/settings">Settings</BreadcrumbLink>
+                  <BreadcrumbLink href="#">Settings</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
