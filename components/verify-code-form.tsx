@@ -70,7 +70,7 @@ export function VerifyCodeForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
           <FormField control={control} name="token_hash" render={({ field }) => <input type="hidden" {...field} />} />
           <FormField

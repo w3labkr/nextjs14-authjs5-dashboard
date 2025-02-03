@@ -1,9 +1,7 @@
-export interface SiteConfig {
-  title: string
-  description: string
-}
+import { description, version } from '@/package.json'
 
-export const siteConfig: SiteConfig = {
-  title: 'Next.js',
-  description: '',
+export const site = {
+  title: 'Acme Inc',
+  description,
+  version: `v${version}`,
 }

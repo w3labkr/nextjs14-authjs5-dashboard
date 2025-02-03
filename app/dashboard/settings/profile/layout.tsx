@@ -1,5 +1,6 @@
 import * as React from 'react'
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 
 import {
   Breadcrumb,
@@ -16,13 +17,16 @@ import { NavUser } from '@/components/nav-user'
 import { NavNotify } from '@/components/nav-notify'
 
 export const metadata: Metadata = {
-  title: 'Billing',
+  title: 'Profile',
   description: '',
 }
 
-export default function BillingLayout({ children }: { children: React.ReactNode }) {
+export default async function ProfileLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies()
+  const defaultOpen = cookieStore.get('sidebar:state')?.value === 'true'
+
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
@@ -31,8 +35,12 @@ export default function BillingLayout({ children }: { children: React.ReactNode 
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
               <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="/dashboard/settings">Settings</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="line-clamp-1">Billing</BreadcrumbPage>
+                  <BreadcrumbPage className="line-clamp-1">Profile</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

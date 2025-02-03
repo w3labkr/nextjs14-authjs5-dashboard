@@ -2,20 +2,21 @@
 
 import * as React from 'react'
 import { format } from 'date-fns'
-import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { cn } from '@/lib/utils'
-import { toast } from '@/hooks/use-toast'
+import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+
+import { cn } from '@/lib/utils'
+import { toast } from '@/hooks/use-toast'
 
 const languages = [
   { label: 'English', value: 'en' },
@@ -73,7 +74,7 @@ export function AccountForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="name"

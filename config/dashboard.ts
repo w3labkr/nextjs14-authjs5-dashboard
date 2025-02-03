@@ -1,10 +1,25 @@
-import { Home, MessageCircleQuestion, Settings2 } from 'lucide-react'
+import { MessageCircleQuestion, Settings2, SquareTerminal } from 'lucide-react'
 
 const navMain = [
   {
-    title: 'Home',
+    title: 'Dashboard',
     url: '/dashboard',
-    icon: Home,
+    icon: SquareTerminal,
+    isActive: true,
+    items: [],
+  },
+  {
+    title: 'Settings',
+    url: '#',
+    icon: Settings2,
+    isActive: true,
+    items: [
+      { title: 'Profile', url: '/dashboard/settings/profile' },
+      { title: 'Account', url: '/dashboard/settings/account' },
+      { title: 'Appearance', url: '/dashboard/settings/appearance' },
+      { title: 'Notifications', url: '/dashboard/settings/notifications' },
+      { title: 'Display', url: '/dashboard/settings/display' },
+    ],
   },
 ]
 
@@ -16,27 +31,7 @@ const navSecondary = [
   },
 ]
 
-const workspaces = [
-  {
-    name: 'Daily Journal & Reflection',
-    url: '/dashboard/workspace1',
-    emoji: '📔',
-  },
-  {
-    name: 'Health & Wellness Tracker',
-    url: '/dashboard/workspace2',
-    emoji: '🍏',
-  },
-  {
-    name: 'Personal Growth & Learning Goals',
-    url: '/dashboard/workspace3',
-    emoji: '🌟',
-  },
-]
-
-// This is sample data.
-export const dashboardConfig = {
+export const dashboard = {
   navMain,
   navSecondary,
-  workspaces,
 }

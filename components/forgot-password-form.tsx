@@ -65,7 +65,7 @@ export function ForgotPasswordForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
           <FormField
             control={control}

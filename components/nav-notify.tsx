@@ -1,8 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import { Bell, BellRing, Check } from 'lucide-react'
 
+import { Bell, BellRing, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'

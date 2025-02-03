@@ -1,4 +1,4 @@
-# Next.js 14 - Auth.js 5 - Dashboard
+# nextjs14-authjs5-dashboard
 
 This is a dashboard starter template for the [NextJS](https://nextjs.org) 14 app router based on [Auth.js](https://authjs.dev) v5.
 

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -70,7 +71,7 @@ export function ProfileForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="username"
@@ -107,7 +108,8 @@ export function ProfileForm() {
                 </SelectContent>
               </Select>
               <FormDescription>
-                You can manage verified email addresses in your <Link href="/dashboard/account">email settings</Link>.
+                You can manage verified email addresses in your{' '}
+                <Link href="/dashboard/settings/account">email settings</Link>.
               </FormDescription>
               <FormMessage />
             </FormItem>

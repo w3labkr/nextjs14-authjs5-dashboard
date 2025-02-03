@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useRouter } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-react'
+import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -44,7 +44,7 @@ export function NavUser() {
         sideOffset={4}
       >
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push('/dashboard/profile')}>
+          <DropdownMenuItem onClick={() => router.push('/dashboard/settings/profile')}>
             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar className="h-8 w-8 rounded-full">
                 <AvatarImage src={user.avatar} alt={user.name} />
@@ -66,7 +66,7 @@ export function NavUser() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push('/dashboard/account')}>
+          <DropdownMenuItem onClick={() => router.push('/dashboard/settings/account')}>
             <BadgeCheck />
             Account
           </DropdownMenuItem>
@@ -74,7 +74,7 @@ export function NavUser() {
             <CreditCard />
             Billing
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push('/dashboard/notifications')}>
+          <DropdownMenuItem onClick={() => router.push('/dashboard/settings/notifications')}>
             <Bell />
             Notifications
           </DropdownMenuItem>
