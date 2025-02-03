@@ -1,9 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
+import { newPasswordFormSchema } from '@/schemas/auth'
 import dayjs from '@/lib/dayjs'
-
-import { z } from 'zod'
-import { newPasswordFormSchema } from '@/components/new-password-form'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'

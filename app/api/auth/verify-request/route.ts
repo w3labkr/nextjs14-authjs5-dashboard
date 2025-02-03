@@ -1,8 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
-
-import { z } from 'zod'
-import { verifyCodeFormSchema } from '@/components/verify-code-form'
+import { verifyCodeFormSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'

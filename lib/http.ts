@@ -3,42 +3,42 @@ import { absoluteUrl } from '@/lib/utils'
 
 export const xhr = {
   headers: { 'Content-Type': 'application/json' },
-  get<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+  async get<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
     return fetch(absoluteUrl(input.toString()), {
       ...init,
       method: 'GET',
       headers: { ...this.headers, ...init?.headers },
     }).then((res) => res.json() as Promise<JSON>)
   },
-  head<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+  async head<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
     return fetch(absoluteUrl(input.toString()), {
       ...init,
       method: 'HEAD',
       headers: { ...this.headers, ...init?.headers },
     }).then((res) => res.json() as Promise<JSON>)
   },
-  post<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+  async post<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
     return fetch(absoluteUrl(input.toString()), {
       ...init,
       method: 'POST',
       headers: { ...this.headers, ...init?.headers },
     }).then((res) => res.json() as Promise<JSON>)
   },
-  put<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+  async put<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
     return fetch(absoluteUrl(input.toString()), {
       ...init,
       method: 'PUT',
       headers: { ...this.headers, ...init?.headers },
     }).then((res) => res.json() as Promise<JSON>)
   },
-  delete<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+  async delete<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
     return fetch(absoluteUrl(input.toString()), {
       ...init,
       method: 'DELETE',
       headers: { ...this.headers, ...init?.headers },
     }).then((res) => res.json() as Promise<JSON>)
   },
-  patch<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
+  async patch<JSON = any>(input: RequestInfo | URL, init?: RequestInit) {
     return fetch(absoluteUrl(input.toString()), {
       ...init,
       method: 'PATCH',

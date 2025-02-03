@@ -1,9 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { prisma } from '@/prisma'
 import { transporter, sender } from '@/lib/nodemailer'
-
-import { z } from 'zod'
-import { forgotPasswordFormSchema } from '@/components/forgot-password-form'
+import { prisma } from '@/prisma'
+import { forgotPasswordFormSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'

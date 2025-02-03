@@ -6,7 +6,7 @@ import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 
 import { z } from 'zod'
-import { loginFormSchema } from '@/components/login-form'
+import { loginFormSchema } from '@/schemas/auth'
 
 import { xhr } from '@/lib/http'
 import { STATUS_TEXTS } from '@/lib/http-status-codes/en'

@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { sidebarOptInFormSchema } from '@/schemas/dashboard'
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -13,10 +14,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useSidebar } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
-
-export const sidebarOptInFormSchema = z.object({
-  email: z.string().min(4).max(255).email(),
-})
 
 type SidebarOptInFormValues = z.infer<typeof sidebarOptInFormSchema>
 

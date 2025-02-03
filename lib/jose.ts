@@ -6,7 +6,7 @@ export { decodeJwt } from 'jose'
 
 export type Token = { sub: string; iat: number; exp: number }
 
-export function verifyJWT<JSON = JWTPayload>(jwt: string | Uint8Array, options?: JWTVerifyOptions) {
+export async function verifyJWT<JSON = JWTPayload>(jwt: string | Uint8Array, options?: JWTVerifyOptions) {
   return jwtVerify(jwt, secret, options)
     .then((res) => res.payload as JSON)
     .catch(() => null)

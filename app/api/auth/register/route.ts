@@ -1,10 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
+import { registerFormSchema } from '@/schemas/auth'
+
 import dayjs from '@/lib/dayjs'
-
-import { z } from 'zod'
-import { registerFormSchema } from '@/components/register-form'
-
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
 import { generateHash } from '@/lib/bcrypt'

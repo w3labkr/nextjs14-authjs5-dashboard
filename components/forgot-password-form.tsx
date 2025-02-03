@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { forgotPasswordFormSchema } from '@/schemas/auth'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -14,10 +15,6 @@ import { Input } from '@/components/ui/input'
 
 import { xhr } from '@/lib/http'
 import type { ForgotPasswordAPI } from '@/types/api'
-
-export const forgotPasswordFormSchema = z.object({
-  email: z.string().max(255).email(),
-})
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordFormSchema>
 

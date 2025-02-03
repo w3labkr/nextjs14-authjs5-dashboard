@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { displayFormSchema } from '@/schemas/dashboard'
 
 import { toast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
@@ -17,12 +18,6 @@ const items = [
   { id: 'downloads', label: 'Downloads' },
   { id: 'documents', label: 'Documents' },
 ] as const
-
-export const displayFormSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: 'You have to select at least one item.',
-  }),
-})
 
 type DisplayFormValues = z.infer<typeof displayFormSchema>
 

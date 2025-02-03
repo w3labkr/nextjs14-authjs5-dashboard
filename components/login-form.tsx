@@ -10,17 +10,12 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { loginFormSchema } from '@/schemas/auth'
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-
-export const loginFormSchema = z.object({
-  email: z.string().max(255).email(),
-  password: z.string().min(6).max(72),
-  rememberMe: z.boolean().default(false),
-})
 
 type LoginFormValues = z.infer<typeof loginFormSchema>
 

@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { appearanceFormSchema } from '@/schemas/dashboard'
 
 import { ChevronDown } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -11,16 +12,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
 import { cn } from '@/lib/utils'
 import { toast } from '@/hooks/use-toast'
-
-export const appearanceFormSchema = z.object({
-  theme: z.enum(['light', 'dark'], {
-    required_error: 'Please select a theme.',
-  }),
-  font: z.enum(['inter', 'manrope', 'system'], {
-    invalid_type_error: 'Select a font',
-    required_error: 'Please select a font.',
-  }),
-})
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>
 

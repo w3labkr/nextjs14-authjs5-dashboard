@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { verifyCodeFormSchema } from '@/schemas/auth'
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
@@ -14,11 +15,6 @@ import { Button } from '@/components/ui/button'
 
 import { xhr } from '@/lib/http'
 import type { VerifyRequestAPI } from '@/types/api'
-
-export const verifyCodeFormSchema = z.object({
-  code: z.string().length(6),
-  token_hash: z.string(),
-})
 
 type VerifyCodeFormValues = z.infer<typeof verifyCodeFormSchema>
 

@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { accountFormSchema } from '@/schemas/dashboard'
 
 import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -29,23 +30,6 @@ const languages = [
   { label: 'Korean', value: 'ko' },
   { label: 'Chinese', value: 'zh' },
 ] as const
-
-export const accountFormSchema = z.object({
-  username: z
-    .string()
-    .min(2, {
-      message: 'Username must be at least 2 characters.',
-    })
-    .max(30, {
-      message: 'Username must not be longer than 30 characters.',
-    }),
-  dob: z.date({
-    required_error: 'A date of birth is required.',
-  }),
-  language: z.string({
-    required_error: 'Please select a language.',
-  }),
-})
 
 type AccountFormValues = z.infer<typeof accountFormSchema>
 
