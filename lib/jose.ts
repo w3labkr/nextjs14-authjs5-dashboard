@@ -46,3 +46,24 @@ export async function generateRefreshToken(sub: string) {
     .setExpirationTime('30d')
     .sign(secret)
 }
+
+/**
+ * generateTokenExpiresAt
+ *
+ * @param expiresIn 3600 seconds (60 minutes)
+ * @returns
+ */
+export function generateTokenExpiresAt(expiresIn: number = 3600) {
+  return Math.floor(Date.now() / 1000 + expiresIn)
+}
+
+/**
+ * isTokenExpired
+ *
+ * @param exp milliseconds
+ * @param expiresBefore 600 seconds (10 minutes)
+ * @returns
+ */
+export function isTokenExpired(exp: number, expiresBefore: number = 600) {
+  return Date.now() >= (exp - expiresBefore) * 1000
+}

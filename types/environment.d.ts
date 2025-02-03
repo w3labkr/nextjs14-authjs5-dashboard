@@ -24,9 +24,6 @@ declare global {
       AUTH_TWITTER_ID: string
       AUTH_TWITTER_SECRET: string
 
-      ACCESS_TOKEN_EXPIRES_IN: string
-      ACCESS_TOKEN_EXPIRES_BEFORE: string
-
       DATABASE_URL: string
       DIRECT_URL: string
 

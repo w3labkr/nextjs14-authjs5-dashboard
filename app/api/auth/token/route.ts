@@ -5,10 +5,14 @@ import { z } from 'zod'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
-import { generateAccessToken, generateRefreshToken, verifyJWT, type Token } from '@/lib/jose'
-
-const ACCESS_TOKEN_EXPIRES_IN = +process.env.ACCESS_TOKEN_EXPIRES_IN!
-const ACCESS_TOKEN_EXPIRES_BEFORE = +process.env.ACCESS_TOKEN_EXPIRES_BEFORE!
+import {
+  generateAccessToken,
+  generateTokenExpiresAt,
+  generateRefreshToken,
+  isTokenExpired,
+  verifyJWT,
+  type Token,
+} from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
@@ -25,7 +29,7 @@ export async function POST(req: NextRequest) {
   const token = await verifyJWT<Token>(data?.refresh_token)
 
   if (!token) {
-    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Token Expired' })
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid refresh_token' })
   }
 
   const user = await prisma.user.findUnique({
@@ -42,9 +46,8 @@ export async function POST(req: NextRequest) {
 
   const newTokens = {
     access_token: await generateAccessToken(user.id),
-    expires_at: Math.floor(Date.now() / 1000 + ACCESS_TOKEN_EXPIRES_IN),
-    refresh_token:
-      Date.now() < (token?.exp - ACCESS_TOKEN_EXPIRES_BEFORE) * 1000 ? undefined : await generateRefreshToken(user.id),
+    expires_at: generateTokenExpiresAt(),
+    refresh_token: !isTokenExpired(token?.exp) ? undefined : await generateRefreshToken(user.id),
   }
 
   try {

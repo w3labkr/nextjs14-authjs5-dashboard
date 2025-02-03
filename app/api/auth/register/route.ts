@@ -6,10 +6,7 @@ import dayjs from '@/lib/dayjs'
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
 import { generateHash } from '@/lib/bcrypt'
-import { generateAccessToken, generateRefreshToken } from '@/lib/jose'
-
-const ACCESS_TOKEN_EXPIRES_IN = +process.env.ACCESS_TOKEN_EXPIRES_IN!
-const ACCESS_TOKEN_EXPIRES_BEFORE = +process.env.ACCESS_TOKEN_EXPIRES_BEFORE!
+import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
@@ -44,7 +41,7 @@ export async function POST(req: NextRequest) {
         },
         data: {
           access_token: await generateAccessToken(created.id),
-          expires_at: Math.floor(Date.now() / 1000 + ACCESS_TOKEN_EXPIRES_IN),
+          expires_at: generateTokenExpiresAt(),
           refresh_token: await generateRefreshToken(created.id),
         },
       })

@@ -11,9 +11,7 @@ import { loginFormSchema } from '@/schemas/auth'
 import { xhr } from '@/lib/http'
 import { STATUS_TEXTS } from '@/lib/http-status-codes/en'
 import type { LoginAPI, AuthTokenAPI } from '@/types/api'
-
-const ACCESS_TOKEN_EXPIRES_IN = +process.env.ACCESS_TOKEN_EXPIRES_IN!
-const ACCESS_TOKEN_EXPIRES_BEFORE = +process.env.ACCESS_TOKEN_EXPIRES_BEFORE!
+import { isTokenExpired } from '@/lib/jose'
 
 class CustomError extends CredentialsSignin {
   constructor(code: string) {
@@ -119,8 +117,10 @@ export const authConfig: NextAuthConfig = {
         } as JWT
       }
 
+      console.log({ token, user, account })
+
       // Subsequent logins, but the `access_token` is still valid
-      if (Date.now() < (token.expires_at - ACCESS_TOKEN_EXPIRES_BEFORE) * 1000) return token
+      if (!isTokenExpired(token.expires_at)) return token
 
       // If do not remember me for 30 days, destroy the token
       if (!rememberMe) return null
