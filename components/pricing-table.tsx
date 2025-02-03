@@ -13,43 +13,41 @@ export function PricingTable() {
   const [isAnnually, setIsAnnually] = React.useState<boolean>(false)
 
   return (
-    <div className="container">
-      <div className="mx-auto flex max-w-screen-xl flex-col gap-6">
-        <div className="flex flex-col justify-between gap-10 md:flex-row">
-          <div className="flex h-11 w-fit shrink-0 items-center rounded-md bg-muted p-1 text-lg">
-            <RadioGroup
-              defaultValue="monthly"
-              className="h-full grid-cols-2"
-              onValueChange={(value) => {
-                setIsAnnually(value === 'annually')
-              }}
-            >
-              <div className='h-full rounded-md transition-all has-[button[data-state="checked"]]:bg-white'>
-                <RadioGroupItem value="monthly" id="monthly" className="peer sr-only" />
-                <Label
-                  htmlFor="monthly"
-                  className="flex h-full cursor-pointer items-center justify-center px-7 font-semibold text-muted-foreground peer-data-[state=checked]:text-primary"
-                >
-                  Monthly
-                </Label>
-              </div>
-              <div className='h-full rounded-md transition-all has-[button[data-state="checked"]]:bg-white'>
-                <RadioGroupItem value="annually" id="annually" className="peer sr-only" />
-                <Label
-                  htmlFor="annually"
-                  className="flex h-full cursor-pointer items-center justify-center gap-1 px-7 font-semibold text-muted-foreground peer-data-[state=checked]:text-primary"
-                >
-                  Yearly
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col justify-between gap-10 md:flex-row">
+        <div className="flex h-11 w-fit shrink-0 items-center rounded-md bg-muted p-1 text-lg">
+          <RadioGroup
+            defaultValue="monthly"
+            className="h-full grid-cols-2"
+            onValueChange={(value) => {
+              setIsAnnually(value === 'annually')
+            }}
+          >
+            <div className='h-full rounded-md transition-all has-[button[data-state="checked"]]:bg-white'>
+              <RadioGroupItem value="monthly" id="monthly" className="peer sr-only" />
+              <Label
+                htmlFor="monthly"
+                className="flex h-full cursor-pointer items-center justify-center px-7 font-semibold text-muted-foreground peer-data-[state=checked]:text-primary"
+              >
+                Monthly
+              </Label>
+            </div>
+            <div className='h-full rounded-md transition-all has-[button[data-state="checked"]]:bg-white'>
+              <RadioGroupItem value="annually" id="annually" className="peer sr-only" />
+              <Label
+                htmlFor="annually"
+                className="flex h-full cursor-pointer items-center justify-center gap-1 px-7 font-semibold text-muted-foreground peer-data-[state=checked]:text-primary"
+              >
+                Yearly
+              </Label>
+            </div>
+          </RadioGroup>
         </div>
-        <div className="flex w-full flex-col items-stretch gap-6 md:flex-row">
-          <PricingFree isAnnually={isAnnually} />
-          <PricingPro isAnnually={isAnnually} />
-          <PricingEnterprise isAnnually={isAnnually} />
-        </div>
+      </div>
+      <div className="flex w-full flex-col items-stretch gap-6 md:flex-row">
+        <PricingFree isAnnually={isAnnually} />
+        <PricingPro isAnnually={isAnnually} />
+        <PricingEnterprise isAnnually={isAnnually} />
       </div>
     </div>
   )
