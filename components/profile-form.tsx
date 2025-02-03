@@ -15,13 +15,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 
 export const profileFormSchema = z.object({
-  username: z
+  name: z
     .string()
     .min(2, {
-      message: 'Username must be at least 2 characters.',
+      message: 'Name must be at least 2 characters.',
     })
     .max(30, {
-      message: 'Username must not be longer than 30 characters.',
+      message: 'Name must not be longer than 30 characters.',
     }),
   email: z
     .string({
@@ -74,17 +74,14 @@ export function ProfileForm() {
       <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="Your name" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name. It can be your real name or a pseudonym. You can only change this once
-                every 30 days.
-              </FormDescription>
+              <FormDescription>This is the name that will be displayed on your profile and in emails.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

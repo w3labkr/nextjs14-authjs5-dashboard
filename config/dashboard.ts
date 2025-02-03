@@ -1,18 +1,25 @@
-import { MessageCircleQuestion, Settings2, SquareTerminal } from 'lucide-react'
+import { ListTodo, MessageCircleQuestion, Settings2, SquareTerminal } from 'lucide-react'
 
 const navMain = [
   {
     title: 'Dashboard',
     url: '/dashboard',
     icon: SquareTerminal,
-    isActive: true,
+    open: true,
+    items: [],
+  },
+  {
+    title: 'Tasks',
+    url: '/dashboard/tasks',
+    icon: ListTodo,
+    open: true,
     items: [],
   },
   {
     title: 'Settings',
     url: '#',
     icon: Settings2,
-    isActive: true,
+    open: true,
     items: [
       { title: 'Profile', url: '/dashboard/settings/profile' },
       { title: 'Account', url: '/dashboard/settings/account' },

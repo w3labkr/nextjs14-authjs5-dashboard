@@ -31,13 +31,13 @@ const languages = [
 ] as const
 
 export const accountFormSchema = z.object({
-  name: z
+  username: z
     .string()
     .min(2, {
-      message: 'Name must be at least 2 characters.',
+      message: 'Username must be at least 2 characters.',
     })
     .max(30, {
-      message: 'Name must not be longer than 30 characters.',
+      message: 'Username must not be longer than 30 characters.',
     }),
   dob: z.date({
     required_error: 'A date of birth is required.',
@@ -77,14 +77,17 @@ export function AccountForm() {
       <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="name"
+          name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Your name" {...field} />
+                <Input placeholder="shadcn" {...field} />
               </FormControl>
-              <FormDescription>This is the name that will be displayed on your profile and in emails.</FormDescription>
+              <FormDescription>
+                This is your public display name. It can be your real name or a pseudonym. You can only change this once
+                every 30 days.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

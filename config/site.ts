@@ -1,7 +1,7 @@
-import { description, version } from '@/package.json'
+import pkg from '@/package.json'
 
 export const site = {
   title: 'Acme Inc',
-  description,
-  version: `v${version}`,
+  description: pkg.description,
+  version: `v${pkg.version}`,
 }
