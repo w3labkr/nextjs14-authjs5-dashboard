@@ -1,9 +1,5 @@
 import { z } from 'zod'
 
-export const sidebarOptInFormSchema = z.object({
-  email: z.string().min(4).max(255).email(),
-})
-
 export const profileFormSchema = z.object({
   name: z.string().min(2).max(30),
   email: z.string().min(4).max(255).email(),
@@ -33,4 +29,8 @@ export const notificationsFormSchema = z.object({
 
 export const displayFormSchema = z.object({
   items: z.array(z.string()).refine((value) => value.some((item) => item)),
+})
+
+export const sidebarOptInFormSchema = z.object({
+  email: z.string().min(4).max(255).email(),
 })

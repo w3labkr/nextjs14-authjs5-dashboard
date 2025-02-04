@@ -8,17 +8,17 @@ declare module 'next-auth' {
    */
   interface User {
     id: string
-    type: string
-    provider: string
+    name?: string
+    email: string
+    username: string
+    plan?: string
+    role?: string
+    isAdmin?: boolean
+    isBan?: boolean
+    bannedUntil?: Date
     access_token: string
     expires_at: number
     refresh_token?: string
-    username: string
-    plan: string
-    role: string
-    isAdmin: boolean
-    isBan: boolean
-    bannedUntil?: Date
   }
 
   /**
@@ -48,18 +48,22 @@ declare module 'next-auth' {
 // If the mixed casing is an issue for you, most adapters have a dedicated documentation section on how to force a casing convention.
 declare module 'next-auth/jwt' {
   interface JWT {
-    id: string
+    // Account & User
     type: string
     provider: string
     access_token: string
     expires_at: number
     refresh_token?: string
-    username: string
-    plan: string
-    role: string
-    isAdmin: boolean
-    isBan: boolean
-    bannedUntil?: Date
     error?: string
+    // User
+    id: string
+    name?: string
+    email: string
+    username: string
+    plan?: string
+    role?: string
+    isAdmin?: boolean
+    isBan?: boolean
+    bannedUntil?: Date
   }
 }

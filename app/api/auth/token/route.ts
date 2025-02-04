@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
-
-import { z } from 'zod'
+import { refreshTokenApiSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
@@ -16,7 +15,7 @@ import {
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { data, success } = z.object({ grant_type: z.string(), refresh_token: z.string() }).safeParse(body)
+  const { data, success } = refreshTokenApiSchema.safeParse(body)
 
   if (!success) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST })
@@ -47,17 +46,27 @@ export async function POST(req: NextRequest) {
   const newTokens = {
     access_token: await generateAccessToken(user.id),
     expires_at: generateTokenExpiresAt(),
-    refresh_token: !isTokenExpired(token?.exp) ? undefined : await generateRefreshToken(user.id),
+    refresh_token: await generateRefreshToken(user.id, user.refresh_token),
   }
 
   try {
-    await prisma.$transaction([prisma.user.update({ where: { id: user.id }, data: newTokens })])
+    const newUser = await prisma.$transaction(async (tx) => {
+      return await tx.user.update({ where: { id: user.id }, data: newTokens })
+    })
+    return ApiResponse.json(
+      {
+        tokens: {
+          access_token: newUser.access_token,
+          expires_at: newUser.expires_at,
+          refresh_token: newUser.refresh_token,
+        },
+      },
+      { status: STATUS_CODES.OK }
+    )
   } catch (e: unknown) {
     return ApiResponse.json(
       { token_hash: null },
       { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
     )
   }
-
-  return ApiResponse.json({ tokens: newTokens }, { status: STATUS_CODES.OK })
 }

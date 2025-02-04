@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { auth } from '@/auth'
+import { auth, logOut } from '@/auth'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LogoutButton } from '@/components/logout-button'
@@ -15,6 +15,7 @@ export default async function LogoutPage() {
   const session = await auth()
 
   if (!session) redirect('/auth/login')
+  if (session?.error) logOut({ redirectTo: '/auth/login' })
 
   return (
     <Card>

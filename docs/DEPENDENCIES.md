@@ -218,6 +218,14 @@ svg react icons of popular icon packs
 npm i react-icons
 ```
 
+## qs
+
+A querystring parser with nesting support
+
+```shell
+npm i qs @types/qs
+```
+
 ## ESLint
 
 ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code.

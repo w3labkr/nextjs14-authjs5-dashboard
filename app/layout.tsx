@@ -1,8 +1,8 @@
 import * as React from 'react'
 import type { Metadata } from 'next'
-import { SessionProvider } from 'next-auth/react'
 import './globals.css'
 
+import { NextAuthProvider } from '@/context/next-auth-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { CookieConsent } from '@/components/cookie-consent'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
@@ -21,12 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <SessionProvider>
+        <NextAuthProvider>
           {children}
-          <Toaster richColors closeButton />
           <CookieConsent />
-        </SessionProvider>
-        <TailwindIndicator />
+          <TailwindIndicator />
+          <Toaster richColors closeButton />
+        </NextAuthProvider>
         <VercelAnalytics />
       </body>
     </html>

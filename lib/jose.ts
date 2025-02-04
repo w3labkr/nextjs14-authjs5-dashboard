@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify, type JWTPayload, type JWTVerifyOptions } from 'jose'
+import { SignJWT, decodeJwt, jwtVerify, type JWTPayload, type JWTVerifyOptions } from 'jose'
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
 
@@ -38,7 +38,11 @@ export async function generateAccessToken(sub: string) {
     .sign(secret)
 }
 
-export async function generateRefreshToken(sub: string) {
+export async function generateRefreshToken(sub: string, token?: string | null) {
+  if (token) {
+    const decoded = decodeJwt<Token>(token)
+    if (!isTokenExpired(decoded?.exp)) return token
+  }
   return await new SignJWT()
     .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
     .setSubject(sub)
@@ -50,7 +54,7 @@ export async function generateRefreshToken(sub: string) {
 /**
  * generateTokenExpiresAt
  *
- * @param expiresIn 3600 seconds (60 minutes)
+ * @param expiresIn seconds (3600 = 60min)
  * @returns
  */
 export function generateTokenExpiresAt(expiresIn: number = 3600) {
@@ -61,7 +65,7 @@ export function generateTokenExpiresAt(expiresIn: number = 3600) {
  * isTokenExpired
  *
  * @param exp milliseconds
- * @param expiresBefore 600 seconds (10 minutes)
+ * @param expiresBefore seconds (600 = 10min)
  * @returns
  */
 export function isTokenExpired(exp: number, expiresBefore: number = 600) {

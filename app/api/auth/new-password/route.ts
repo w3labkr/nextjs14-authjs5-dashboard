@@ -32,8 +32,8 @@ export async function POST(req: NextRequest) {
 
   if (user?.code && (await compareHash(data?.code, user?.code))) {
     try {
-      await prisma.$transaction([
-        prisma.user.update({
+      await prisma.$transaction(async (tx) => {
+        return await tx.user.update({
           where: {
             id: user?.id,
           },
@@ -42,8 +42,8 @@ export async function POST(req: NextRequest) {
             passwordChangedAt: dayjs().toISOString(),
             code: null,
           },
-        }),
-      ])
+        })
+      })
     } catch (e: unknown) {
       return ApiResponse.json(null, { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message })
     }

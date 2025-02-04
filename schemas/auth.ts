@@ -36,3 +36,8 @@ export const newPasswordFormSchema = z
   .refine((val) => val.newPassword === val.confirmNewPassword, {
     path: ['confirmNewPassword'],
   })
+
+export const refreshTokenApiSchema = z.object({
+  grant_type: z.string(),
+  refresh_token: z.string(),
+})

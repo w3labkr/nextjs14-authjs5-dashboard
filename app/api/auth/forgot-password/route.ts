@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
   }
 
   const code = getRandomIntInclusive(100000, 999999).toString()
+  const code_hash = await generateHash(code)
   const token_hash = await generateVerificationToken(data?.email)
 
   const user = await prisma.user.findUnique({
@@ -29,9 +30,9 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    await prisma.$transaction([
-      prisma.user.update({ where: { id: user?.id }, data: { code: await generateHash(code) } }),
-    ])
+    await prisma.$transaction(async (tx) => {
+      return await tx.user.update({ where: { id: user?.id }, data: { code: code_hash } })
+    })
   } catch (e: unknown) {
     return ApiResponse.json(
       { token_hash: null },

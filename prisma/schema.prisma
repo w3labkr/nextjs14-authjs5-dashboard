@@ -25,11 +25,24 @@ datasource db {
 // The User model is for information such as the user’s name and email address.
 // Email address is optional, but if one is specified for a User, then it must be unique.
 model User {
-  id            String          @id @default(cuid())
-  name          String?
-  email         String          @unique
-  emailVerified DateTime?       @map("email_verified")
-  image         String?
+  // OAuth Privoder
+  id                String    @id @default(cuid())
+  name              String?
+  email             String    @unique
+  emailVerified     DateTime? @map("email_verified")
+  image             String?
+  // Role-based access control
+  username          String    @unique @default(uuid())
+  usernameChangedAt DateTime? @map("username_changed_at")
+  password          String?
+  passwordChangedAt DateTime? @map("password_changed_at")
+  code              String? // one-time password
+  plan              String?   @default("free")
+  role              String?   @default("guest")
+  isAdmin           Boolean?  @default(false) @map("is_admin")
+  isBan             Boolean?  @default(false) @map("is_ban")
+  bannedUntil       DateTime? @map("banned_until")
+
   accounts      Account[]
   sessions      Session[]
   // Optional for WebAuthn support
@@ -39,23 +52,10 @@ model User {
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  // Refresh token rotation for Credentials Provider
-  type          String? // oidc, oauth, credentials, ...
-  provider      String? // google, credentials, ...
+  // Credentials Provider
   access_token  String? @db.Text
   expires_at    Int?
   refresh_token String? @db.Text
-
-  username          String    @unique @default(uuid())
-  usernameChangedAt DateTime? @map("username_changed_at")
-  password          String?
-  passwordChangedAt DateTime? @map("password_changed_at")
-  code              String? // one-time password
-  plan              String    @default("free")
-  role              String    @default("guest")
-  isAdmin           Boolean   @default(false) @map("is_admin")
-  isBan             Boolean   @default(false) @map("is_ban")
-  bannedUntil       DateTime? @map("banned_until")
 
   @@map("users")
 }

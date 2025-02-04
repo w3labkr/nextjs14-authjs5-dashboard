@@ -40,7 +40,6 @@ export function SidebarOptInForm() {
     try {
       setIsSubmitting(true)
       // ...
-      console.log(values)
     } catch (e: unknown) {
       const message = (e as Error)?.message
       if (message.includes('already exists')) setError('email', { message })

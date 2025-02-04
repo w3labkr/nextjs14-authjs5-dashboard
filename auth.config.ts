@@ -41,6 +41,11 @@ export const authConfig: NextAuthConfig = {
       authorization: {
         params: { access_type: 'offline', prompt: 'consent', response_type: 'code' },
       },
+      // Receives the full Profile returned by the OAuth provider, and returns a subset.
+      // It is used to create the user in the database.
+      async profile(profile) {
+        return { ...profile }
+      },
     }),
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
@@ -50,7 +55,7 @@ export const authConfig: NextAuthConfig = {
         password: {},
         rememberMe: {},
       },
-      authorize: async (credentials) => {
+      async authorize(credentials) {
         const { data, success } = loginFormSchema.safeParse({
           ...credentials,
           rememberMe: credentials?.rememberMe === 'true',
@@ -73,7 +78,20 @@ export const authConfig: NextAuthConfig = {
           if (!user) throw new CustomError(message)
 
           // return user object with their profile data
-          return user as User
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            username: user.username,
+            plan: user.plan,
+            role: user.role,
+            isAdmin: user.isAdmin,
+            isBan: user.isBan,
+            bannedUntil: user.bannedUntil,
+            access_token: user.access_token,
+            expires_at: user.expires_at,
+            refresh_token: user.refresh_token,
+          } as User
         } catch (e: unknown) {
           throw new CustomError((e as Error)?.message)
         }
@@ -84,46 +102,41 @@ export const authConfig: NextAuthConfig = {
   ],
   //  By default, the `id` property does not exist on `token` or `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
   callbacks: {
-    authorized: async ({ request, auth }) => {
+    async authorized({ request, auth }) {
       // Logged in users are authenticated, otherwise redirect to login page
       return !!auth
     },
-    signIn: async ({ account, profile }) => {
+    async signIn({ account, profile }) {
       if (account?.provider === 'google') return !!profile?.email_verified
       return true // Do different verification for other providers that don't have `email_verified`
     },
-    jwt: async ({ token, user, account, profile, trigger, session }) => {
+    async jwt({ token, user, account, profile, trigger, session }) {
       const cookieStore = await cookies()
-      const rememberMe = cookieStore.get('rememberMe')?.value === 'true'
-
-      // By default, the `id` property does not exist on `token` or `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
-      if (user?.id) token.id = user.id
+      const isRememberMe = cookieStore.get('rememberMe')?.value === 'true'
 
       // First-time login, save the `access_token`, its expiry and the `refresh_token`
       if (account && user) {
-        return {
-          ...token,
-          type: account.type,
-          provider: account.provider,
-          access_token: account.provider === 'credentials' ? user.access_token : account.access_token,
-          expires_at: account.provider === 'credentials' ? user.expires_at : account.expires_at,
-          refresh_token: account.provider === 'credentials' ? user.refresh_token : account.refresh_token,
-          username: user.username,
-          plan: user.plan,
-          role: user.role,
-          isAdmin: user.isAdmin,
-          isBan: user.isBan,
-          bannedUntil: user.bannedUntil,
-        } as JWT
+        token = { ...token, ...user } as JWT
+        if (account.type) token.type = account.type
+        if (account.provider) token.provider = account.provider
+        if (account.access_token) token.access_token = account.access_token
+        if (account.expires_at) token.expires_at = account.expires_at
+        if (account.refresh_token) token.refresh_token = account.refresh_token
+        if (!isRememberMe) token.refresh_token = undefined
+        return token
       }
 
-      console.log({ token, user, account })
+      if (trigger === 'update' && session) {
+        return { ...token, ...session?.user }
+      }
+
+      // Check if access_token is expired
+      if (isTokenExpired(token.expires_at)) {
+        return { ...token, error: 'AccessTokenExpired' }
+      }
 
       // Subsequent logins, but the `access_token` is still valid
-      if (!isTokenExpired(token.expires_at)) return token
-
-      // If do not remember me for 30 days, destroy the token
-      if (!rememberMe) return null
+      if (!isRememberMe) return token
 
       // Access token has expired, try to update it
       if (token?.provider === 'credentials') {
@@ -132,14 +145,21 @@ export const authConfig: NextAuthConfig = {
         token = await googleToken(token)
       }
 
-      return token?.error ? null : token
+      return token
     },
     // By default, the `id` property does not exist on `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
-    session: async ({ session, token }) => {
-      const { access_token, error, ...jwt } = token
-      return { ...session, user: { ...session.user, ...jwt, access_token }, access_token, error }
+    async session({ session, token }) {
+      return { ...session, user: token, access_token: token.access_token, error: token.error }
     },
   },
+  // events: {
+  //   createUser: async (message) => {},
+  //   linkAccount: async (message) => {},
+  //   session: async (message) => {},
+  //   signIn: async (message) => {},
+  //   signOut: async (message) => {},
+  //   updateUser: async (message) => {},
+  // },
 }
 
 async function credentialsToken(token: JWT): Promise<JWT> {

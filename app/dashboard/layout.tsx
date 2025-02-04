@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { auth } from '@/auth'
+import { auth, logOut } from '@/auth'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -12,6 +12,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const session = await auth()
 
   if (!session) redirect('/auth/login')
+  if (session?.error) logOut({ redirectTo: '/auth/login' })
 
   return <>{children}</>
 }
