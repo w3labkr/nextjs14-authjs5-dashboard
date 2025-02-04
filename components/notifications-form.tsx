@@ -157,8 +157,7 @@ export function NotificationsForm() {
               <div className="space-y-1 leading-none">
                 <FormLabel>Use different settings for my mobile devices</FormLabel>
                 <FormDescription>
-                  You can manage your mobile notifications in the <Link href="/examples/forms">mobile settings</Link>{' '}
-                  page.
+                  You can manage your mobile notifications in the <Link href="#">mobile settings</Link> page.
                 </FormDescription>
               </div>
             </FormItem>
