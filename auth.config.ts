@@ -41,11 +41,6 @@ export const authConfig: NextAuthConfig = {
       authorization: {
         params: { access_type: 'offline', prompt: 'consent', response_type: 'code' },
       },
-      // Receives the full Profile returned by the OAuth provider, and returns a subset.
-      // It is used to create the user in the database.
-      async profile(profile) {
-        return { ...profile }
-      },
     }),
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
