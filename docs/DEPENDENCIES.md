@@ -27,10 +27,16 @@ Run the init command to create a new Next.js project or to setup an existing one
 npx shadcn@latest init -d
 ```
 
-You can now start adding components to your project.
+Use the add command to add components and dependencies to your project.
 
 ```shell
 npx shadcn@latest add -a
+```
+
+This will add/install all shadcn components (overwrite if present).
+
+```shell
+npx shadcn@latest add -a -y -o
 ```
 
 Add `tanstack/react-table` dependency:
