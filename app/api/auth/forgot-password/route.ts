@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { transporter, sender } from '@/lib/nodemailer'
 import { prisma } from '@/prisma'
 import { forgotPasswordFormSchema } from '@/schemas/auth'
+import { transporter, sender } from '@/lib/nodemailer'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'

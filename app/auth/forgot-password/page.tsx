@@ -1,8 +1,8 @@
 import * as React from 'react'
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
-import Link from 'next/link'
 
 import { ArrowLeft } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
