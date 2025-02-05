@@ -78,14 +78,8 @@ export const authConfig: NextAuthConfig = {
           // return user object with their profile data
           return {
             id: user.id,
-            name: user.name,
-            email: user.email,
-            username: user.username,
-            plan: user.plan,
             role: user.role,
-            isAdmin: user.isAdmin,
-            isBan: user.isBan,
-            bannedUntil: user.bannedUntil,
+            plan: user.plan,
             access_token: user.access_token,
             expires_at: user.expires_at,
             refresh_token: user.refresh_token,
