@@ -76,6 +76,12 @@ Start the development server.
 npm run dev
 ```
 
+## Documents
+
+- [DEPENDENCIES](./docs/DEPENDENCIES.md)
+- [GIT](./docs/GIT.md)
+- [PRISMA](./docs/PRISMA.md)
+
 ## License
 
 This software license under the [MIT License](LICENSE).

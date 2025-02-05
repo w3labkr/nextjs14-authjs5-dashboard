@@ -158,12 +158,12 @@ export const authConfig: NextAuthConfig = {
     },
   },
   // events: {
-  //   createUser: async (message) => {},
-  //   linkAccount: async (message) => {},
-  //   session: async (message) => {},
-  //   signIn: async (message) => {},
-  //   signOut: async (message) => {},
-  //   updateUser: async (message) => {},
+  //   createUser: async (message) => { /* user created */ },
+  //   linkAccount: async (message) => { /* account (e.g. Twitter) linked to a user */ },
+  //   session: async (message) => { /* session is active */ },
+  //   signIn: async (message) => { /* on successful sign in */ },
+  //   signOut: async (message) => { /* on signout */ },
+  //   updateUser: async (message) => { /* user updated - e.g. their email was verified */ },
   // },
 }
 
