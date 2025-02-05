@@ -40,6 +40,7 @@ declare module 'next-auth' {
        */
     } & DefaultSession['user']
     access_token: string
+    expires_at: number
     error?: string
   }
 }
@@ -48,13 +49,12 @@ declare module 'next-auth' {
 // If the mixed casing is an issue for you, most adapters have a dedicated documentation section on how to force a casing convention.
 declare module 'next-auth/jwt' {
   interface JWT {
-    // Account & User
+    // Account
     type: string
     provider: string
     access_token: string
     expires_at: number
     refresh_token?: string
-    error?: string
     // User
     id: string
     name?: string
@@ -65,5 +65,7 @@ declare module 'next-auth/jwt' {
     isAdmin?: boolean
     isBan?: boolean
     bannedUntil?: Date
+    // Session
+    error?: string
   }
 }

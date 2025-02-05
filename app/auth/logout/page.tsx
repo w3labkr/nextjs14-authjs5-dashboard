@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
-import { auth, logOut } from '@/auth'
+import { auth } from '@/auth'
+import { NotAuthenticated, TokenExpired } from '@/context/auth-provider'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LogoutButton } from '@/components/logout-button'
@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 export default async function LogoutPage() {
   const session = await auth()
 
-  if (!session) redirect('/auth/login')
-  if (session?.error) logOut({ redirectTo: '/auth/login' })
+  if (!session) return <NotAuthenticated />
+  else if (session?.error) return <TokenExpired />
 
   return (
     <Card>

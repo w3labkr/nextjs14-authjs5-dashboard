@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
-import { auth, logOut } from '@/auth'
+import { auth } from '@/auth'
+import { ClientAuthProvider, NotAuthenticated, TokenExpired } from '@/context/auth-provider'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
 
-  if (!session) redirect('/auth/login')
-  if (session?.error) logOut({ redirectTo: '/auth/login' })
+  if (!session) return <NotAuthenticated />
+  else if (session?.error) return <TokenExpired />
 
-  return <>{children}</>
+  return <ClientAuthProvider>{children}</ClientAuthProvider>
 }

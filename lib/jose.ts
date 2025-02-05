@@ -54,20 +54,20 @@ export async function generateRefreshToken(sub: string, token?: string | null) {
 /**
  * generateTokenExpiresAt
  *
- * @param expiresIn seconds (3600 = 60min)
+ * @param expiresIn (seconds) 3600 - 60 minutes
  * @returns
  */
-export function generateTokenExpiresAt(expiresIn: number = 3600) {
+export function generateTokenExpiresAt(expiresIn: number = 60 * 60) {
   return Math.floor(Date.now() / 1000 + expiresIn)
 }
 
 /**
  * isTokenExpired
  *
- * @param exp milliseconds
- * @param expiresBefore seconds (600 = 10min)
+ * @param exp (milliseconds)
+ * @param expiresBefore (seconds) 600 - 10 minutes
  * @returns
  */
-export function isTokenExpired(exp: number, expiresBefore: number = 600) {
+export function isTokenExpired(exp: number, expiresBefore: number = 60 * 10) {
   return Date.now() >= (exp - expiresBefore) * 1000
 }

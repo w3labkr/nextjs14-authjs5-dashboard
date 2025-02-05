@@ -107,7 +107,8 @@ export const authConfig: NextAuthConfig = {
       if (account?.provider === 'google') return !!profile?.email_verified
       return true // Do different verification for other providers that don't have `email_verified`
     },
-    async jwt({ token, user, account, profile, trigger, session }) {
+    // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
+    async jwt({ token, user, account, trigger, session }) {
       const cookieStore = await cookies()
       const isRememberMe = cookieStore.get('rememberMe')?.value === 'true'
 
@@ -123,7 +124,8 @@ export const authConfig: NextAuthConfig = {
         return token
       }
 
-      if (trigger === 'update' && session) {
+      // Note, that `session` can be any arbitrary object, remember to validate it!
+      if (trigger === 'update' && session?.user) {
         return { ...token, ...session?.user }
       }
 
@@ -146,7 +148,13 @@ export const authConfig: NextAuthConfig = {
     },
     // By default, the `id` property does not exist on `session`. See the [TypeScript](https://authjs.dev/getting-started/typescript) on how to add it.
     async session({ session, token }) {
-      return { ...session, user: token, access_token: token.access_token, error: token.error }
+      return {
+        ...session,
+        user: token,
+        access_token: token.access_token,
+        expires_at: token.expires_at,
+        error: token.error,
+      }
     },
   },
   // events: {
