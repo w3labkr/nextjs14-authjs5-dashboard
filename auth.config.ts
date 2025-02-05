@@ -41,6 +41,8 @@ export const authConfig: NextAuthConfig = {
       authorization: {
         params: { access_type: 'offline', prompt: 'consent', response_type: 'code' },
       },
+      // [ERROR] OAuthAccountNotLinked
+      // async profile(profile) { return profile },
     }),
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.

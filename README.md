@@ -22,6 +22,7 @@ The folder and file structure is based on nextjs app router [next.js project str
 
 ```txt
 .
+├── actions/                    # Server Actions
 ├── app/                        # App Router
 │   └── api/
 │       ├── auth/               # Authentication
