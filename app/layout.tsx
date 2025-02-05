@@ -2,7 +2,7 @@ import * as React from 'react'
 import type { Metadata } from 'next'
 import './globals.css'
 
-import { AuthProvider } from '@/context/auth-provider'
+import { AuthProvider } from '@/context/next-auth-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { CookieConsent } from '@/components/cookie-consent'
 import { TailwindIndicator } from '@/components/tailwind-indicator'

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import type { Metadata } from 'next'
 import { auth } from '@/auth'
-import { ClientAuthProvider, NotAuthenticated, TokenExpired } from '@/context/auth-provider'
+import { ClientAuthProvider, NotAuthenticated, TokenExpired } from '@/context/next-auth-provider'
 
 export const metadata: Metadata = {
   title: 'Dashboard',

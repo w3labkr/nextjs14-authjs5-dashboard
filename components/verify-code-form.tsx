@@ -2,19 +2,20 @@
 
 import * as React from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { toast } from 'sonner'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { verifyCodeFormSchema } from '@/schemas/auth'
 
+import { toast } from 'sonner'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { Button } from '@/components/ui/button'
 
 import { xhr } from '@/lib/http'
 import type { VerifyRequestAPI } from '@/types/api'
+import { getCsrfToken } from 'next-auth/react'
 
 type VerifyCodeFormValues = z.infer<typeof verifyCodeFormSchema>
 
@@ -48,7 +49,9 @@ export function VerifyCodeForm() {
     try {
       setIsSubmitting(true)
 
+      const csrfToken = await getCsrfToken()
       const { success, message } = await xhr.post<VerifyRequestAPI>('/api/auth/verify-request', {
+        headers: { Authorization: `Bearer ${csrfToken}` },
         body: JSON.stringify(values),
       })
 

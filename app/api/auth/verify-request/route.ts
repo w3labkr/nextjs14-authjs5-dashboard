@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
+import { verifyCsrfToken } from '@/lib/next-auth'
 import { verifyCodeFormSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
@@ -8,6 +9,13 @@ import { compareHash } from '@/lib/bcrypt'
 import { verifyJWT, type Token } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
+  const authorization = req.headers.get('authorization')
+  const authorized = verifyCsrfToken({ req, authorization })
+
+  if (!authorized) {
+    return ApiResponse.json(null, { status: STATUS_CODES.UNAUTHORIZED })
+  }
+
   const body = await req.json()
   const { data, success } = verifyCodeFormSchema.safeParse(body)
 

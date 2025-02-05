@@ -52,9 +52,10 @@ export const authConfig: NextAuthConfig = {
         password: {},
         rememberMe: {},
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         const { data, success } = loginFormSchema.safeParse({
-          ...credentials,
+          email: credentials?.email,
+          password: credentials?.password,
           rememberMe: credentials?.rememberMe === 'true',
         })
 
@@ -109,8 +110,7 @@ export const authConfig: NextAuthConfig = {
     },
     // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
     async jwt({ token, user, account, trigger, session }) {
-      const cookieStore = await cookies()
-      const isRememberMe = cookieStore.get('rememberMe')?.value === 'true'
+      const isRememberMe = cookies().get('rememberMe')?.value === 'true'
 
       // First-time login, save the `access_token`, its expiry and the `refresh_token`
       if (account && user) {

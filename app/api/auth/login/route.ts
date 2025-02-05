@@ -5,7 +5,7 @@ import { loginFormSchema } from '@/schemas/auth'
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
 import { compareHash } from '@/lib/bcrypt'
-import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken, verifyJWT, Token } from '@/lib/jose'
+import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()

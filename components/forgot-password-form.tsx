@@ -2,19 +2,20 @@
 
 import * as React from 'react'
 import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { forgotPasswordFormSchema } from '@/schemas/auth'
 
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
 import { xhr } from '@/lib/http'
 import type { ForgotPasswordAPI } from '@/types/api'
+import { getCsrfToken } from 'next-auth/react'
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordFormSchema>
 
@@ -41,10 +42,12 @@ export function ForgotPasswordForm() {
     try {
       setIsSubmitting(true)
 
+      const csrfToken = await getCsrfToken()
       const {
         message,
         data: { token_hash },
       } = await xhr.post<ForgotPasswordAPI>('/api/auth/forgot-password', {
+        headers: { Authorization: `Bearer ${csrfToken}` },
         body: JSON.stringify(values),
       })
 

@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
 import { forgotPasswordFormSchema } from '@/schemas/auth'
 import { transporter, sender } from '@/lib/nodemailer'
+import { verifyCsrfToken } from '@/lib/next-auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
@@ -10,6 +11,13 @@ import { generateHash } from '@/lib/bcrypt'
 import { generateVerificationToken } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
+  const authorization = req.headers.get('authorization')
+  const authorized = verifyCsrfToken({ req, authorization })
+
+  if (!authorized) {
+    return ApiResponse.json({ token_hash: null }, { status: STATUS_CODES.UNAUTHORIZED })
+  }
+
   const body = await req.json()
   const { data, success } = forgotPasswordFormSchema.safeParse(body)
 

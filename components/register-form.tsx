@@ -2,19 +2,20 @@
 
 import * as React from 'react'
 import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { registerFormSchema } from '@/schemas/auth'
 
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
 import { xhr } from '@/lib/http'
 import type { RegisterAPI } from '@/types/api'
+import { getCsrfToken } from 'next-auth/react'
 
 type RegisterFormValues = z.infer<typeof registerFormSchema>
 
@@ -43,10 +44,12 @@ export function RegisterForm() {
     try {
       setIsSubmitting(true)
 
+      const csrfToken = await getCsrfToken()
       const {
         message,
         data: { user },
       } = await xhr.post<RegisterAPI>('/api/auth/register', {
+        headers: { Authorization: `Bearer ${csrfToken}` },
         body: JSON.stringify(values),
       })
 

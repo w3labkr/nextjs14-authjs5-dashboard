@@ -4,14 +4,7 @@ import { refreshTokenApiSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
-import {
-  generateAccessToken,
-  generateTokenExpiresAt,
-  generateRefreshToken,
-  isTokenExpired,
-  verifyJWT,
-  type Token,
-} from '@/lib/jose'
+import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken, verifyJWT, type Token } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()

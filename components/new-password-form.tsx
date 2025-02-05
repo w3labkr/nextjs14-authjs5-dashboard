@@ -2,19 +2,20 @@
 
 import * as React from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { toast } from 'sonner'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { newPasswordFormSchema } from '@/schemas/auth'
 
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
 import { xhr } from '@/lib/http'
 import type { NewPasswordAPI } from '@/types/api'
+import { getCsrfToken } from 'next-auth/react'
 
 type NewPasswordFormValues = z.infer<typeof newPasswordFormSchema>
 
@@ -51,7 +52,9 @@ export function NewPasswordForm() {
     try {
       setIsSubmitting(true)
 
+      const csrfToken = await getCsrfToken()
       const { success, message } = await xhr.post<NewPasswordAPI>('/api/auth/new-password', {
+        headers: { Authorization: `Bearer ${csrfToken}` },
         body: JSON.stringify(values),
       })
 
