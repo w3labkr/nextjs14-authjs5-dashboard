@@ -10,11 +10,11 @@ import { generateHash } from '@/lib/bcrypt'
 
 export async function POST(req: NextRequest) {
   const authorization = req.headers.get('authorization')
-  const authorized = verifyCsrfToken({ req, authorization })
+  // const authorized = verifyCsrfToken({ req, authorization })
 
-  if (!authorized) {
-    return ApiResponse.json({ user: null }, { status: STATUS_CODES.UNAUTHORIZED })
-  }
+  // if (!authorized) {
+  //   return ApiResponse.json({ user: null }, { status: STATUS_CODES.UNAUTHORIZED })
+  // }
 
   const body = await req.json()
   const { data, success } = registerFormSchema.safeParse(body)
