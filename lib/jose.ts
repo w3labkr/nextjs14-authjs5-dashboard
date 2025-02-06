@@ -4,6 +4,9 @@ const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
 
 export { decodeJwt } from 'jose'
 
+// JSON Web Token Claims
+// https://www.iana.org/assignments/jwt/jwt.xhtml
+
 export type Token = { sub: string; iat: number; exp: number; [key: string]: any } & JWTPayload
 
 export async function verifyJwt<JSON = JWTPayload>(jwt: string | Uint8Array, options?: JWTVerifyOptions) {
