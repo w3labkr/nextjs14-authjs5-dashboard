@@ -15,18 +15,18 @@ export async function POST(req: NextRequest) {
   }
 
   if (data?.grant_type !== 'refresh_token') {
-    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid grant_type' })
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, message: 'Invalid grant_type' })
   }
 
   const token = decodeJwt<Token>(data?.refresh_token)
   const user = await prisma.user.findUnique({ where: { id: token.sub } })
 
   if (!user) {
-    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid user' })
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, message: 'Invalid user' })
   }
 
   if (user?.refresh_token !== data?.refresh_token) {
-    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid refresh_token' })
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, message: 'Invalid refresh_token' })
   }
 
   const newTokens = {
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
   } catch (e: unknown) {
     return ApiResponse.json(
       { token_hash: null },
-      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, message: (e as Error)?.message }
     )
   }
 }

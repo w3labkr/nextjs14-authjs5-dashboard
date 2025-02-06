@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   if (!verifyCSRFToken(csrfToken)) {
     return ApiResponse.json(
       { token: null },
-      { status: STATUS_CODES.UNAUTHORIZED, statusText: 'CSRF Token missing or incorrect' }
+      { status: STATUS_CODES.UNAUTHORIZED, message: 'CSRF Token missing or incorrect' }
     )
   }
 
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
   } catch (e: unknown) {
     return ApiResponse.json(
       { token: null },
-      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, message: (e as Error)?.message }
     )
   }
 
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
   } catch (e: unknown) {
     return ApiResponse.json(
       { token: null },
-      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, message: (e as Error)?.message }
     )
   }
 }

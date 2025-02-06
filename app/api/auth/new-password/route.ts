@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   if (!verifyCSRFToken(csrfToken)) {
     return ApiResponse.json(
       { token: null },
-      { status: STATUS_CODES.UNAUTHORIZED, statusText: 'CSRF Token missing or incorrect' }
+      { status: STATUS_CODES.UNAUTHORIZED, message: 'CSRF Token missing or incorrect' }
     )
   }
 
@@ -28,17 +28,17 @@ export async function POST(req: NextRequest) {
   const token = await verifyJwt<Token>(data?.token_hash)
 
   if (!token) {
-    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid or expired token' })
+    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, message: 'Invalid or expired token' })
   }
 
   const user = await prisma.user.findUnique({ where: { email: token?.sub } })
 
   if (!user) {
-    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid user' })
+    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, message: 'Invalid user' })
   }
 
   if (user?.recovery_token !== data?.token_hash) {
-    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid or expired token' })
+    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, message: 'Invalid or expired token' })
   }
 
   try {
@@ -53,6 +53,6 @@ export async function POST(req: NextRequest) {
     })
     return ApiResponse.json(null)
   } catch (e: unknown) {
-    return ApiResponse.json(null, { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message })
+    return ApiResponse.json(null, { status: STATUS_CODES.INTERNAL_SERVER_ERROR, message: (e as Error)?.message })
   }
 }

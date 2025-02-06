@@ -51,18 +51,15 @@ export class ApiResponse extends NextResponse {
   constructor(body?: BodyInit | null, init?: ResponseInit) {
     super(body, init)
   }
-  static json(data: any, init?: ResponseInit) {
+  static json(data: any, init?: ResponseInit & { message?: string }) {
     const status = init?.status ?? STATUS_CODES.OK
-    const statusText = init?.statusText
     const body: any = {
-      status,
-      message: statusText ?? STATUS_CODE_TO_TEXT[status?.toString()],
+      status: status >= 200 && status <= 299 ? 'success' : 'fail',
+      message: init?.message ?? STATUS_CODE_TO_TEXT[status?.toString()],
       success: status >= 200 && status <= 299,
       data,
     }
-    return super.json(body, {
-      ...init,
-      headers: { 'content-type': 'application/json', ...init?.headers },
-    })
+    if (init?.message) delete init.message
+    return super.json(body, init)
   }
 }

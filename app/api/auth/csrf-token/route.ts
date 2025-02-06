@@ -8,7 +8,7 @@ export async function GET() {
   const token = tokens.create(secret)
 
   // Set CSRF token as an HTTP-only cookie
-  const response = NextResponse.json({ status: 200, message: 'OK', success: true, data: { token } })
+  const response = NextResponse.json({ status: 'success', message: 'OK', success: true, data: { token } })
   response.cookies.set('XSRF-TOKEN', token, { httpOnly: true })
 
   return response

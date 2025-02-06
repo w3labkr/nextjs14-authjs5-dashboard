@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   if (!verifyCSRFToken(csrfToken)) {
     return ApiResponse.json(
       { token: null },
-      { status: STATUS_CODES.UNAUTHORIZED, statusText: 'CSRF Token missing or incorrect' }
+      { status: STATUS_CODES.UNAUTHORIZED, message: 'CSRF Token missing or incorrect' }
     )
   }
 
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   const user = await prisma.user.findUnique({ where: { email: data?.email } })
 
   if (user) {
-    return ApiResponse.json({ user: null }, { status: STATUS_CODES.CONFLICT, statusText: 'User already exists' })
+    return ApiResponse.json({ user: null }, { status: STATUS_CODES.CONFLICT, message: 'User already exists' })
   }
 
   try {
@@ -41,11 +41,11 @@ export async function POST(req: NextRequest) {
         },
       })
     })
-    return ApiResponse.json({ user: newUser }, { statusText: 'You have registered successfully' })
+    return ApiResponse.json({ user: newUser }, { message: 'You have registered successfully' })
   } catch (e: unknown) {
     return ApiResponse.json(
       { token_hash: null },
-      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, message: (e as Error)?.message }
     )
   }
 }
