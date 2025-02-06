@@ -10,7 +10,7 @@ export type LoginAPI = { data: { user: User | null } } & API
 
 export type RegisterAPI = { data: { user: User | null } } & API
 
-export type ForgotPasswordAPI = { data: { token_hash: string | null } } & API
+export type ForgotPasswordAPI = { data: { token: string | null } } & API
 
 export type NewPasswordAPI = { data: null } & API
 

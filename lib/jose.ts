@@ -12,16 +12,17 @@ export async function verifyJWT<JSON = JWTPayload>(jwt: string | Uint8Array, opt
     .catch(() => null)
 }
 
-export async function jwtSign(payload: JWTPayload, exp: number | string | Date = '1h') {
+export async function jwtSign(sub: string, exp: number | string | Date = '1h', payload?: JWTPayload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+    .setSubject(sub)
     .setIssuedAt()
     .setExpirationTime(exp)
     .sign(secret)
 }
 
-export async function generateVerificationToken(sub: string) {
-  return await new SignJWT()
+export async function generateRecoveryToken(sub: string, payload?: JWTPayload) {
+  return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
     .setSubject(sub)
     .setIssuedAt()
@@ -54,7 +55,7 @@ export async function generateRefreshToken(sub: string, token?: string | null) {
 /**
  * generateTokenExpiresAt
  *
- * @param expiresIn (seconds) 3600 - 60 minutes
+ * @param expiresIn (seconds) 3600 = 60 minutes
  * @returns
  */
 export function generateTokenExpiresAt(expiresIn: number = 60 * 60) {
@@ -65,7 +66,7 @@ export function generateTokenExpiresAt(expiresIn: number = 60 * 60) {
  * isTokenExpired
  *
  * @param exp (milliseconds)
- * @param expiresBefore (seconds) 600 - 10 minutes
+ * @param expiresBefore (seconds) 600 = 10 minutes
  * @returns
  */
 export function isTokenExpired(exp: number, expiresBefore: number = 60 * 10) {

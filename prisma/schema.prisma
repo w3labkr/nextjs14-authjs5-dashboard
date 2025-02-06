@@ -44,12 +44,12 @@ model User {
   usernameChangedAt DateTime? @map("username_changed_at")
   password          String?
   passwordChangedAt DateTime? @map("password_changed_at")
-  code              String? // one-time password
   role              String?   @default("guest")
   plan              String?   @default("free")
   access_token      String?   @db.Text
   expires_at        Int?
   refresh_token     String?   @db.Text
+  recovery_token    String?   @db.Text
 
   @@map("users")
 }

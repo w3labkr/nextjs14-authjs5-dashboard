@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
-import { verifyCsrfToken } from '@/lib/next-auth'
+import { verifyCsrfToken } from '@/auth'
 import { registerFormSchema } from '@/schemas/auth'
 
 import dayjs from '@/lib/dayjs'
@@ -23,9 +23,7 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
-  const user = await prisma.user.findUnique({
-    where: { email: data?.email },
-  })
+  const user = await prisma.user.findUnique({ where: { email: data?.email } })
 
   if (user) {
     return ApiResponse.json({ user: null }, { status: STATUS_CODES.CONFLICT, statusText: 'User already exists.' })

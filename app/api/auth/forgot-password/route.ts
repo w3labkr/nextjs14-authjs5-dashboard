@@ -1,49 +1,45 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
+import { verifyCsrfToken } from '@/auth'
 import { forgotPasswordFormSchema } from '@/schemas/auth'
 import { transporter, sender } from '@/lib/nodemailer'
-import { verifyCsrfToken } from '@/lib/next-auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
 import { getRandomIntInclusive } from '@/lib/math'
-import { generateHash } from '@/lib/bcrypt'
-import { generateVerificationToken } from '@/lib/jose'
+import { generateRecoveryToken } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const authorization = req.headers.get('authorization')
   const authorized = verifyCsrfToken({ req, authorization })
 
   if (!authorized) {
-    return ApiResponse.json({ token_hash: null }, { status: STATUS_CODES.UNAUTHORIZED })
+    return ApiResponse.json({ token: null }, { status: STATUS_CODES.UNAUTHORIZED })
   }
 
   const body = await req.json()
   const { data, success } = forgotPasswordFormSchema.safeParse(body)
 
   if (!success) {
-    return ApiResponse.json({ token_hash: null }, { status: STATUS_CODES.BAD_REQUEST })
+    return ApiResponse.json({ token: null }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
   const code = getRandomIntInclusive(100000, 999999).toString()
-  const code_hash = await generateHash(code)
-  const token_hash = await generateVerificationToken(data?.email)
+  const token = await generateRecoveryToken(data?.email, { code })
 
-  const user = await prisma.user.findUnique({
-    where: { email: data?.email },
-  })
+  const user = await prisma.user.findUnique({ where: { email: data?.email } })
 
   if (!user) {
-    return ApiResponse.json({ token_hash }, { status: STATUS_CODES.OK })
+    return ApiResponse.json({ token }, { status: STATUS_CODES.OK })
   }
 
   try {
     await prisma.$transaction(async (tx) => {
-      return await tx.user.update({ where: { id: user?.id }, data: { code: code_hash } })
+      return await tx.user.update({ where: { id: user?.id }, data: { recovery_token: token } })
     })
   } catch (e: unknown) {
     return ApiResponse.json(
-      { token_hash: null },
+      { token: null },
       { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
     )
   }
@@ -52,14 +48,14 @@ export async function POST(req: NextRequest) {
     const info = await transporter.sendMail({
       from: `"${sender?.name}" <${sender?.email}>`,
       to: user?.email,
-      subject: `[${sender?.name}] Your account verification code`,
+      subject: `[${sender?.name}] Reset your password`,
       text: text({ code }),
       html: html({ code }),
     })
-    return ApiResponse.json({ token_hash }, { status: STATUS_CODES.OK })
+    return ApiResponse.json({ token }, { status: STATUS_CODES.OK })
   } catch (e: unknown) {
     return ApiResponse.json(
-      { token_hash: null },
+      { token: null },
       { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
     )
   }

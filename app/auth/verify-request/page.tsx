@@ -26,7 +26,6 @@ export default async function VerifyRequestPage({
 
   if (session) redirect('/dashboard')
   else if (!token_hash) redirect('/auth/forgot-password')
-  else if (!token_hash?.length) redirect('/auth/forgot-password')
 
   return (
     <Card>

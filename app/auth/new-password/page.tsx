@@ -30,7 +30,6 @@ export default async function NewPasswordPage({
   else if (!referer) redirect('/auth/forgot-password')
   else if (!referer.includes('/auth/verify-request')) redirect('/auth/forgot-password')
   else if (!token_hash || !code) redirect('/auth/forgot-password')
-  else if (!token_hash?.length || !code?.length) redirect('/auth/forgot-password')
 
   return (
     <Card>

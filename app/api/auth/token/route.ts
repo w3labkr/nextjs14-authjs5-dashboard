@@ -24,9 +24,7 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid refresh_token' })
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: token.sub },
-  })
+  const user = await prisma.user.findUnique({ where: { id: token.sub } })
 
   if (!user || !user?.refresh_token) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid User' })

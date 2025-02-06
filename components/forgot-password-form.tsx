@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { useRouter } from 'next/navigation'
+import { getCsrfToken } from 'next-auth/react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -15,7 +16,6 @@ import { Input } from '@/components/ui/input'
 
 import { xhr } from '@/lib/http'
 import type { ForgotPasswordAPI } from '@/types/api'
-import { getCsrfToken } from 'next-auth/react'
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordFormSchema>
 
@@ -45,17 +45,17 @@ export function ForgotPasswordForm() {
       const csrfToken = await getCsrfToken()
       const {
         message,
-        data: { token_hash },
+        data: { token },
       } = await xhr.post<ForgotPasswordAPI>('/api/auth/forgot-password', {
         headers: { Authorization: `Bearer ${csrfToken}` },
         body: JSON.stringify(values),
       })
 
-      if (!token_hash) throw new Error(message)
+      if (!token) throw new Error(message)
 
       toast.success('Your email has been sent.')
 
-      router.push(`/auth/verify-request?token_hash=${token_hash}`)
+      router.push(`/auth/verify-request?token_hash=${token}`)
     } catch (e: unknown) {
       toast.error((e as Error)?.message)
     } finally {

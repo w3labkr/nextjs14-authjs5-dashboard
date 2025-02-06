@@ -12,12 +12,12 @@ CREATE TABLE "users" (
     "username_changed_at" TIMESTAMP(3),
     "password" TEXT,
     "password_changed_at" TIMESTAMP(3),
-    "code" TEXT,
     "role" TEXT DEFAULT 'guest',
     "plan" TEXT DEFAULT 'free',
     "access_token" TEXT,
     "expires_at" INTEGER,
     "refresh_token" TEXT,
+    "recovery_token" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );

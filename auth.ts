@@ -1,3 +1,6 @@
+import { type NextRequest } from 'next/server'
+import { redirect } from 'next/navigation'
+import qs from 'qs'
 import NextAuth from 'next-auth'
 import type { Adapter } from 'next-auth/adapters'
 import { PrismaAdapter } from '@auth/prisma-adapter'
@@ -26,3 +29,13 @@ export const {
   },
   ...authConfig,
 })
+
+export function logOut(options?: { redirectTo?: string; redirect?: true }) {
+  const search = qs.stringify(options, { encode: false, addQueryPrefix: true })
+  redirect(`/api/auth/logout${search}`)
+}
+
+export function verifyCsrfToken({ req, authorization }: { req: NextRequest; authorization: string | null }) {
+  const token = req.cookies.get('authjs.csrf-token')?.value?.split('|')[0]
+  return authorization && token ? authorization === `Bearer ${token}` : false
+}

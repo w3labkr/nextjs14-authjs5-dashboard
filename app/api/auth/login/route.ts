@@ -15,9 +15,7 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
-  const user = await prisma.user.findUnique({
-    where: { email: data?.email },
-  })
+  const user = await prisma.user.findUnique({ where: { email: data?.email } })
 
   if (!user) {
     return ApiResponse.json(
