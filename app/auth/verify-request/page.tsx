@@ -36,8 +36,7 @@ export default async function VerifyRequestPage({
       <CardContent>
         <VerifyCodeForm />
         <div className="mt-4 text-center text-sm">
-          Didn&apos;t receive the email?{' '}
-          <ResendCodeButton type="button" className="underline underline-offset-4" token_hash={token_hash} />
+          Didn&apos;t receive the email? <ResendCodeButton type="button" className="underline underline-offset-4" />
           <br />
           <br />
           <ArrowLeft className="-ml-4 inline size-4" />

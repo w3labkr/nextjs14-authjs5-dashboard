@@ -23,22 +23,18 @@ type NewPasswordFormValues = z.infer<typeof newPasswordFormSchema>
 const defaultValues: NewPasswordFormValues = {
   newPassword: '',
   confirmNewPassword: '',
-  code: '',
   token_hash: '',
 }
 
 export function NewPasswordForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const token_hash = searchParams.get('token_hash') ?? ''
 
   const form = useForm<NewPasswordFormValues>({
     resolver: zodResolver(newPasswordFormSchema),
     defaultValues,
-    values: {
-      ...defaultValues,
-      code: searchParams.get('code') ?? '',
-      token_hash: searchParams.get('token_hash') ?? '',
-    },
+    values: { ...defaultValues, token_hash },
   })
   const {
     control,
@@ -74,7 +70,6 @@ export function NewPasswordForm() {
     <Form {...form}>
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
-          <FormField control={control} name="code" render={({ field }) => <input type="hidden" {...field} />} />
           <FormField control={control} name="token_hash" render={({ field }) => <input type="hidden" {...field} />} />
           <FormField
             control={control}

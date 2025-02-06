@@ -7,7 +7,7 @@ import dayjs from '@/lib/dayjs'
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
 import { generateHash } from '@/lib/bcrypt'
-import { verifyJWT, type Token } from '@/lib/jose'
+import { verifyJwt, type Token } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const authorization = req.headers.get('authorization')
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST })
   }
 
-  const token = await verifyJWT<Token>(data?.token_hash)
+  const token = await verifyJwt<Token>(data?.token_hash)
 
   if (!token) {
     return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Token Expired' })

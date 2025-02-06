@@ -22,14 +22,13 @@ export default async function NewPasswordPage({
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
   const session = await auth()
-  const referer = (await headers()).get('referer')
+  const referer = headers().get('referer')
   const token_hash = searchParams?.token_hash?.toString()
-  const code = searchParams?.code?.toString()
 
   if (session) redirect('/dashboard')
-  else if (!referer) redirect('/auth/forgot-password')
-  else if (!referer.includes('/auth/verify-request')) redirect('/auth/forgot-password')
-  else if (!token_hash || !code) redirect('/auth/forgot-password')
+  else if (!referer) redirect('/auth/verify-request')
+  else if (!referer.includes('/auth/verify-request')) redirect('/auth/verify-request')
+  else if (!token_hash) redirect('/auth/verify-request')
 
   return (
     <Card>

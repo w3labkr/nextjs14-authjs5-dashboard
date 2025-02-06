@@ -123,8 +123,8 @@ export const authConfig: NextAuthConfig = {
         return { ...token, ...session?.user }
       }
 
-      // Check if access_token is expired
-      if (isTokenExpired(token.expires_at)) {
+      // If the token is 10 minutes before expiration time
+      if (isTokenExpired(token.expires_at, { expiresBefore: 60 * 10 })) {
         return { ...token, error: 'AccessTokenExpired' }
       }
 

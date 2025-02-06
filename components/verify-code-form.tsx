@@ -13,16 +13,14 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { Button } from '@/components/ui/button'
 
-import { xhr } from '@/lib/http'
-import type { VerifyRequestAPI } from '@/types/api'
-import { getCsrfToken } from 'next-auth/react'
+import { decodeJwt, isTokenExpired, type Token } from '@/lib/jose'
+import { compareHash } from '@/lib/bcrypt'
 
 type VerifyCodeFormValues = z.infer<typeof verifyCodeFormSchema>
 
 // This can come from your database or API.
 const defaultValues: VerifyCodeFormValues = {
   code: '',
-  token_hash: '',
 }
 
 export function VerifyCodeForm() {
@@ -34,7 +32,6 @@ export function VerifyCodeForm() {
     defaultValues,
     values: {
       ...defaultValues,
-      token_hash: searchParams.get('token_hash') ?? '',
     },
   })
   const {
@@ -49,15 +46,18 @@ export function VerifyCodeForm() {
     try {
       setIsSubmitting(true)
 
-      const csrfToken = await getCsrfToken()
-      const { success, message } = await xhr.post<VerifyRequestAPI>('/api/auth/verify-request', {
-        headers: { Authorization: `Bearer ${csrfToken}` },
-        body: JSON.stringify(values),
-      })
+      const token_hash = searchParams.get('token_hash')
 
-      if (!success) throw new Error(message)
+      if (!token_hash) throw new Error('Missing token_hash')
 
-      router.replace(`/auth/new-password?token_hash=${values?.token_hash}&code=${values?.code}`)
+      const token = decodeJwt<Token>(token_hash)
+
+      if (isTokenExpired(token?.exp)) throw new Error('Token Expired')
+      else if (!(await compareHash(values?.code, token.code))) {
+        throw new Error('Invalid code')
+      }
+
+      router.push(`/auth/new-password?token_hash=${token_hash}`)
     } catch (e: unknown) {
       const message = (e as Error)?.message
       if (message.includes('Invalid code')) setError('code', { message })
@@ -71,7 +71,6 @@ export function VerifyCodeForm() {
     <Form {...form}>
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
-          <FormField control={control} name="token_hash" render={({ field }) => <input type="hidden" {...field} />} />
           <FormField
             control={control}
             name="code"

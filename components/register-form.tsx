@@ -57,7 +57,7 @@ export function RegisterForm() {
 
       toast.success(message)
 
-      router.replace('/auth/login')
+      router.push('/auth/login')
     } catch (e: unknown) {
       const message = (e as Error)?.message
       if (message.includes('already exists')) setError('email', { message })

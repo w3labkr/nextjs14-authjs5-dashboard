@@ -4,9 +4,9 @@ const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
 
 export { decodeJwt } from 'jose'
 
-export type Token = { sub: string; iat: number; exp: number }
+export type Token = { sub: string; iat: number; exp: number; [key: string]: any } & JWTPayload
 
-export async function verifyJWT<JSON = JWTPayload>(jwt: string | Uint8Array, options?: JWTVerifyOptions) {
+export async function verifyJwt<JSON = JWTPayload>(jwt: string | Uint8Array, options?: JWTVerifyOptions) {
   return jwtVerify(jwt, secret, options)
     .then((res) => res.payload as JSON)
     .catch(() => null)
@@ -42,7 +42,10 @@ export async function generateAccessToken(sub: string) {
 export async function generateRefreshToken(sub: string, jwt?: string | null) {
   if (jwt) {
     const token = decodeJwt<Token>(jwt)
-    if (!isTokenExpired(token?.exp)) return jwt
+    // If the token is 10 minutes before expiration time
+    if (!isTokenExpired(token?.exp, { expiresBefore: 60 * 10 })) {
+      return jwt
+    }
   }
   return await new SignJWT()
     .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
@@ -55,7 +58,7 @@ export async function generateRefreshToken(sub: string, jwt?: string | null) {
 /**
  * generateTokenExpiresAt
  *
- * @param expiresIn (seconds) 3600 = 60 minutes
+ * @param expiresIn (seconds) The default value is 3600 (60 minutes)
  * @returns
  */
 export function generateTokenExpiresAt(expiresIn: number = 60 * 60) {
@@ -65,10 +68,18 @@ export function generateTokenExpiresAt(expiresIn: number = 60 * 60) {
 /**
  * isTokenExpired
  *
- * @param exp (milliseconds)
- * @param expiresBefore (seconds) 600 = 10 minutes
+ * @param expiresAt (Expiration Time) Claim value to set on the JWT Claims Set.
+ * @param options
  * @returns
  */
-export function isTokenExpired(exp: number, expiresBefore: number = 60 * 10) {
-  return Date.now() >= (exp - expiresBefore) * 1000
+export function isTokenExpired(
+  expiresAt: number, // (milliseconds)
+  options?: {
+    expiresIn?: number // (seconds) The default value is 0
+    expiresBefore?: number // (seconds) The default value is 0
+  }
+) {
+  const expiresIn = options?.expiresIn ?? 0
+  const expiresBefore = options?.expiresBefore ?? 0
+  return Date.now() >= (expiresAt + expiresIn - expiresBefore) * 1000
 }

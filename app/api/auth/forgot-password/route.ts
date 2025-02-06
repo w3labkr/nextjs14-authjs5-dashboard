@@ -8,6 +8,7 @@ import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
 import { getRandomIntInclusive } from '@/lib/math'
 import { generateRecoveryToken } from '@/lib/jose'
+import { generateHash } from '@/lib/bcrypt'
 
 export async function POST(req: NextRequest) {
   const authorization = req.headers.get('authorization')
@@ -25,7 +26,9 @@ export async function POST(req: NextRequest) {
   }
 
   const code = getRandomIntInclusive(100000, 999999).toString()
-  const token = await generateRecoveryToken(data?.email, { code })
+  const token = await generateRecoveryToken(data?.email, {
+    code: await generateHash(code),
+  })
 
   const user = await prisma.user.findUnique({ where: { email: data?.email } })
 
@@ -45,13 +48,14 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const info = await transporter.sendMail({
-      from: `"${sender?.name}" <${sender?.email}>`,
-      to: user?.email,
-      subject: `[${sender?.name}] Reset your password`,
-      text: text({ code }),
-      html: html({ code }),
-    })
+    console.log({ code })
+    // const info = await transporter.sendMail({
+    //   from: `"${sender?.name}" <${sender?.email}>`,
+    //   to: user?.email,
+    //   subject: `[${sender?.name}] Reset your password`,
+    //   text: text({ code }),
+    //   html: html({ code }),
+    // })
     return ApiResponse.json({ token }, { status: STATUS_CODES.OK })
   } catch (e: unknown) {
     return ApiResponse.json(
