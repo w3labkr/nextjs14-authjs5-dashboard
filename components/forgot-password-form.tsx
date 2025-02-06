@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { forgotPasswordFormSchema } from '@/schemas/auth'
+import { useCSRFToken } from '@/hooks/use-csrf-token'
 
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -36,6 +37,7 @@ export function ForgotPasswordForm() {
     formState: { errors },
   } = form
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
+  const { csrfToken } = useCSRFToken()
 
   async function onSubmit(values: ForgotPasswordFormValues) {
     try {
@@ -45,7 +47,7 @@ export function ForgotPasswordForm() {
         message,
         data: { token },
       } = await xhr.post<ForgotPasswordAPI>('/api/auth/forgot-password', {
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, csrfToken }),
       })
 
       if (!token) throw new Error(message)

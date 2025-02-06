@@ -16,6 +16,7 @@ export const {
   unstable_update: update,
 } = NextAuth({
   adapter: PrismaAdapter(prisma) as Adapter,
+  secret: process.env.AUTH_SECRET,
   jwt: {
     // The maximum age of the NextAuth.js issued JWT in seconds.
     // Defaults to `session.maxAge`.

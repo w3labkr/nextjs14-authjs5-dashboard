@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { newPasswordFormSchema } from '@/schemas/auth'
+import { useCSRFToken } from '@/hooks/use-csrf-token'
 
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -42,13 +43,14 @@ export function NewPasswordForm() {
     formState: { errors },
   } = form
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
+  const { csrfToken } = useCSRFToken()
 
   async function onSubmit(values: NewPasswordFormValues) {
     try {
       setIsSubmitting(true)
 
       const { success, message } = await xhr.post<NewPasswordAPI>('/api/auth/new-password', {
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, csrfToken }),
       })
 
       if (!success) throw new Error(message)

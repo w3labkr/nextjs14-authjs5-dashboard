@@ -232,6 +232,14 @@ A querystring parser with nesting support
 npm i qs @types/qs
 ```
 
+## CSRF
+
+Logic behind CSRF token creation and verification.
+
+```shell
+npm i csrf
+```
+
 ## ESLint
 
 ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code.

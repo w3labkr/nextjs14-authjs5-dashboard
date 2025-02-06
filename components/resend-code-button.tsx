@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { xhr } from '@/lib/http'
 import type { ForgotPasswordAPI } from '@/types/api'
 import { decodeJwt, isTokenExpired, type Token } from '@/lib/jose'
+import { useCSRFToken } from '@/hooks/use-csrf-token'
 
 const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
   (props, ref) => {
@@ -14,6 +15,7 @@ const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAtt
     const searchParams = useSearchParams()
     const token_hash = searchParams.get('token_hash')
     const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
+    const { csrfToken } = useCSRFToken()
 
     const handleSubmit = async () => {
       try {
@@ -31,7 +33,7 @@ const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAtt
           message,
           data: { token: newToken },
         } = await xhr.post<ForgotPasswordAPI>('/api/auth/forgot-password', {
-          body: JSON.stringify({ email: token.sub }),
+          body: JSON.stringify({ email: token.sub, csrfToken }),
         })
 
         if (!newToken) throw new Error(message)

@@ -8,15 +8,15 @@ import { ApiResponse } from '@/lib/http'
 import { getRandomIntInclusive } from '@/lib/math'
 import { generateRecoveryToken } from '@/lib/jose'
 import { generateHash } from '@/lib/bcrypt'
+import { verifyCSRFToken } from '@/lib/csrf'
 
 export async function POST(req: NextRequest) {
-  // const authorization = req.headers.get('authorization')
+  const { csrfToken, ...body } = await req.json()
 
-  // if (authorization !== `Bearer ${csrfToken}`) {
-  //   return ApiResponse.json({ token: null }, { status: STATUS_CODES.UNAUTHORIZED })
-  // }
+  if (!verifyCSRFToken(csrfToken)) {
+    return ApiResponse.json({ token: null }, { status: STATUS_CODES.UNAUTHORIZED, statusText: 'Invalid CSRF token' })
+  }
 
-  const body = await req.json()
   const { data, success } = forgotPasswordFormSchema.safeParse(body)
 
   if (!success) {

@@ -15,3 +15,5 @@ export type ForgotPasswordAPI = { data: { token: string | null } } & API
 export type NewPasswordAPI = { data: null } & API
 
 export type VerifyRequestAPI = { data: { user: User | null } } & API
+
+export type CSRFTokenAPI = { data: { token: string } } & API
