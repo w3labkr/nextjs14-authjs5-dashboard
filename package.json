@@ -1,7 +1,7 @@
 {
     "name": "nextjs14-authjs5-dashboard",
     "description": "This is a dashboard starter template for the NextJS 14 app router based on Auth.js v5.",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "private": true,
     "browserslist": [
         "defaults and fully supports es6-module",
