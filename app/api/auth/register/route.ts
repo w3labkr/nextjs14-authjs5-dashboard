@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
-import { verifyCsrfToken } from '@/auth'
 import { registerFormSchema } from '@/schemas/auth'
 
 import dayjs from '@/lib/dayjs'
@@ -9,11 +8,10 @@ import { ApiResponse } from '@/lib/http'
 import { generateHash } from '@/lib/bcrypt'
 
 export async function POST(req: NextRequest) {
-  const authorization = req.headers.get('authorization')
-  // const authorized = verifyCsrfToken({ req, authorization })
+  // const authorization = req.headers.get('authorization')
 
-  // if (!authorized) {
-  //   return ApiResponse.json({ user: null }, { status: STATUS_CODES.UNAUTHORIZED })
+  // if (authorization !== `Bearer ${csrfToken}`) {
+  //   return ApiResponse.json({ token: null }, { status: STATUS_CODES.UNAUTHORIZED })
   // }
 
   const body = await req.json()

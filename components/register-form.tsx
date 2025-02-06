@@ -15,7 +15,6 @@ import { Input } from '@/components/ui/input'
 
 import { xhr } from '@/lib/http'
 import type { RegisterAPI } from '@/types/api'
-import { getCsrfToken } from 'next-auth/react'
 
 type RegisterFormValues = z.infer<typeof registerFormSchema>
 
@@ -44,12 +43,10 @@ export function RegisterForm() {
     try {
       setIsSubmitting(true)
 
-      const csrfToken = await getCsrfToken()
       const {
         message,
         data: { user },
       } = await xhr.post<RegisterAPI>('/api/auth/register', {
-        headers: { Authorization: `Bearer ${csrfToken}` },
         body: JSON.stringify(values),
       })
 

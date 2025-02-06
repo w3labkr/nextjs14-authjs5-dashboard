@@ -15,7 +15,6 @@ import { Input } from '@/components/ui/input'
 
 import { xhr } from '@/lib/http'
 import type { NewPasswordAPI } from '@/types/api'
-import { getCsrfToken } from 'next-auth/react'
 
 type NewPasswordFormValues = z.infer<typeof newPasswordFormSchema>
 
@@ -48,9 +47,7 @@ export function NewPasswordForm() {
     try {
       setIsSubmitting(true)
 
-      const csrfToken = await getCsrfToken()
       const { success, message } = await xhr.post<NewPasswordAPI>('/api/auth/new-password', {
-        headers: { Authorization: `Bearer ${csrfToken}` },
         body: JSON.stringify(values),
       })
 

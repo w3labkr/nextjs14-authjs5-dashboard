@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { useRouter } from 'next/navigation'
-import { getCsrfToken } from 'next-auth/react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -42,12 +41,10 @@ export function ForgotPasswordForm() {
     try {
       setIsSubmitting(true)
 
-      const csrfToken = await getCsrfToken()
       const {
         message,
         data: { token },
       } = await xhr.post<ForgotPasswordAPI>('/api/auth/forgot-password', {
-        headers: { Authorization: `Bearer ${csrfToken}` },
         body: JSON.stringify(values),
       })
 

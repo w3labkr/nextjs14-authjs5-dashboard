@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { getCsrfToken } from 'next-auth/react'
 import { toast } from 'sonner'
 
 import { xhr } from '@/lib/http'
@@ -28,12 +27,10 @@ const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAtt
         if (!token?.iat) throw new Error('Invalid Token')
         else if (!isTokenExpired(token.iat, { expiresIn: 60 })) throw new Error('Please try again in 1 minute.')
 
-        const csrfToken = await getCsrfToken()
         const {
           message,
           data: { token: newToken },
         } = await xhr.post<ForgotPasswordAPI>('/api/auth/forgot-password', {
-          headers: { Authorization: `Bearer ${csrfToken}` },
           body: JSON.stringify({ email: token.sub }),
         })
 

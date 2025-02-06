@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
-import { verifyCsrfToken } from '@/auth'
 import { forgotPasswordFormSchema } from '@/schemas/auth'
 import { transporter, sender } from '@/lib/nodemailer'
 
@@ -11,10 +10,9 @@ import { generateRecoveryToken } from '@/lib/jose'
 import { generateHash } from '@/lib/bcrypt'
 
 export async function POST(req: NextRequest) {
-  const authorization = req.headers.get('authorization')
-  // const authorized = verifyCsrfToken({ req, authorization })
+  // const authorization = req.headers.get('authorization')
 
-  // if (!authorized) {
+  // if (authorization !== `Bearer ${csrfToken}`) {
   //   return ApiResponse.json({ token: null }, { status: STATUS_CODES.UNAUTHORIZED })
   // }
 
