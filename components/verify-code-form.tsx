@@ -47,12 +47,10 @@ export function VerifyCodeForm() {
       setIsSubmitting(true)
 
       const token_hash = searchParams.get('token_hash')
-
-      if (!token_hash) throw new Error('Missing token_hash')
-
+      if (!token_hash) throw new Error('token_hash missing or incorrect')
       const token = decodeJwt<Token>(token_hash)
 
-      if (isTokenExpired(token?.exp)) throw new Error('Token Expired')
+      if (isTokenExpired(token?.exp)) throw new Error('Invalid or expired token')
       else if (!(await compareHash(values?.code, token.code))) {
         throw new Error('Invalid code')
       }

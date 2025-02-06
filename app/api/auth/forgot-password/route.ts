@@ -14,7 +14,10 @@ export async function POST(req: NextRequest) {
   const { csrfToken, ...body } = await req.json()
 
   if (!verifyCSRFToken(csrfToken)) {
-    return ApiResponse.json({ token: null }, { status: STATUS_CODES.UNAUTHORIZED, statusText: 'Invalid CSRF token' })
+    return ApiResponse.json(
+      { token: null },
+      { status: STATUS_CODES.UNAUTHORIZED, statusText: 'CSRF Token missing or incorrect' }
+    )
   }
 
   const { data, success } = forgotPasswordFormSchema.safeParse(body)

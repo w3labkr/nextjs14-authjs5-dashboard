@@ -12,7 +12,10 @@ export async function POST(req: NextRequest) {
   const { csrfToken, ...body } = await req.json()
 
   if (!verifyCSRFToken(csrfToken)) {
-    return ApiResponse.json({ token: null }, { status: STATUS_CODES.UNAUTHORIZED, statusText: 'Invalid CSRF token' })
+    return ApiResponse.json(
+      { token: null },
+      { status: STATUS_CODES.UNAUTHORIZED, statusText: 'CSRF Token missing or incorrect' }
+    )
   }
 
   const { data, success } = registerFormSchema.safeParse(body)
@@ -24,7 +27,7 @@ export async function POST(req: NextRequest) {
   const user = await prisma.user.findUnique({ where: { email: data?.email } })
 
   if (user) {
-    return ApiResponse.json({ user: null }, { status: STATUS_CODES.CONFLICT, statusText: 'User already exists.' })
+    return ApiResponse.json({ user: null }, { status: STATUS_CODES.CONFLICT, statusText: 'User already exists' })
   }
 
   try {
@@ -40,7 +43,7 @@ export async function POST(req: NextRequest) {
     })
     return ApiResponse.json(
       { user: newUser },
-      { status: STATUS_CODES.OK, statusText: 'You have registered successfully.' }
+      { status: STATUS_CODES.OK, statusText: 'You have registered successfully' }
     )
   } catch (e: unknown) {
     return ApiResponse.json(

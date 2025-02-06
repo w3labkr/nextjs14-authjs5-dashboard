@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
   const user = await prisma.user.findUnique({ where: { id: token.sub } })
 
   if (!user) {
-    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid User' })
+    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid user' })
   }
 
   if (user?.refresh_token !== data?.refresh_token) {

@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       })
       return ApiResponse.json(
         { user: newUser },
-        { status: STATUS_CODES.OK, statusText: 'You have successfully logged in.' }
+        { status: STATUS_CODES.OK, statusText: 'You have successfully logged in' }
       )
     } catch (e: unknown) {
       return ApiResponse.json(

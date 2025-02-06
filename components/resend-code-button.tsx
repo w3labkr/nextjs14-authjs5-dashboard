@@ -13,7 +13,6 @@ const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAtt
   (props, ref) => {
     const router = useRouter()
     const searchParams = useSearchParams()
-    const token_hash = searchParams.get('token_hash')
     const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
     const { csrfToken } = useCSRFToken()
 
@@ -21,13 +20,15 @@ const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAtt
       try {
         setIsSubmitting(true)
 
-        if (!token_hash) throw new Error('Missing token_hash')
-
+        const token_hash = searchParams.get('token_hash')
+        if (!token_hash) throw new Error('token_hash missing or incorrect')
         const token = decodeJwt<Token>(token_hash)
 
         // Tokens can be reissued 1 minute after issuance.
-        if (!token?.iat) throw new Error('Invalid Token')
-        else if (!isTokenExpired(token.iat, { expiresIn: 60 })) throw new Error('Please try again in 1 minute.')
+        if (!token?.iat) throw new Error('token_hash missing or incorrect')
+        else if (!isTokenExpired(token.iat, { expiresIn: 60 })) {
+          throw new Error('Please try again in 1 minute.')
+        }
 
         const {
           message,

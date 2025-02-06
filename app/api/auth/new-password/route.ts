@@ -13,7 +13,10 @@ export async function POST(req: NextRequest) {
   const { csrfToken, ...body } = await req.json()
 
   if (!verifyCSRFToken(csrfToken)) {
-    return ApiResponse.json({ token: null }, { status: STATUS_CODES.UNAUTHORIZED, statusText: 'Invalid CSRF token' })
+    return ApiResponse.json(
+      { token: null },
+      { status: STATUS_CODES.UNAUTHORIZED, statusText: 'CSRF Token missing or incorrect' }
+    )
   }
 
   const { data, success } = newPasswordFormSchema.safeParse(body)
@@ -25,17 +28,17 @@ export async function POST(req: NextRequest) {
   const token = await verifyJwt<Token>(data?.token_hash)
 
   if (!token) {
-    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Token Expired' })
+    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid or expired token' })
   }
 
   const user = await prisma.user.findUnique({ where: { email: token?.sub } })
 
   if (!user) {
-    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid User' })
+    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid user' })
   }
 
   if (user?.recovery_token !== data?.token_hash) {
-    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid Token' })
+    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid or expired token' })
   }
 
   try {
