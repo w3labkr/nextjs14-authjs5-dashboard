@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
         },
       })
     })
-    return ApiResponse.json(null, { status: STATUS_CODES.OK })
+    return ApiResponse.json(null)
   } catch (e: unknown) {
     return ApiResponse.json(null, { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message })
   }

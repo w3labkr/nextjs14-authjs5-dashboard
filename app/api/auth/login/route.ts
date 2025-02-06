@@ -35,10 +35,7 @@ export async function POST(req: NextRequest) {
       const newUser = await prisma.$transaction(async (tx) => {
         return await tx.user.update({ where: { id: user.id }, data: newTokens })
       })
-      return ApiResponse.json(
-        { user: newUser },
-        { status: STATUS_CODES.OK, statusText: 'You have successfully logged in' }
-      )
+      return ApiResponse.json({ user: newUser }, { statusText: 'You have successfully logged in' })
     } catch (e: unknown) {
       return ApiResponse.json(
         { user: null },

@@ -39,16 +39,13 @@ export async function POST(req: NextRequest) {
     const newUser = await prisma.$transaction(async (tx) => {
       return await tx.user.update({ where: { id: user.id }, data: newTokens })
     })
-    return ApiResponse.json(
-      {
-        tokens: {
-          access_token: newUser.access_token,
-          expires_at: newUser.expires_at,
-          refresh_token: newUser.refresh_token,
-        },
+    return ApiResponse.json({
+      tokens: {
+        access_token: newUser.access_token,
+        expires_at: newUser.expires_at,
+        refresh_token: newUser.refresh_token,
       },
-      { status: STATUS_CODES.OK }
-    )
+    })
   } catch (e: unknown) {
     return ApiResponse.json(
       { token_hash: null },

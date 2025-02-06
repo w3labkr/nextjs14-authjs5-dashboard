@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   const user = await prisma.user.findUnique({ where: { email: data?.email } })
 
   if (!user) {
-    return ApiResponse.json({ token }, { status: STATUS_CODES.OK })
+    return ApiResponse.json({ token })
   }
 
   try {
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
       text: text({ code }),
       html: html({ code }),
     })
-    return ApiResponse.json({ token }, { status: STATUS_CODES.OK })
+    return ApiResponse.json({ token })
   } catch (e: unknown) {
     return ApiResponse.json(
       { token: null },

@@ -41,10 +41,7 @@ export async function POST(req: NextRequest) {
         },
       })
     })
-    return ApiResponse.json(
-      { user: newUser },
-      { status: STATUS_CODES.OK, statusText: 'You have registered successfully' }
-    )
+    return ApiResponse.json({ user: newUser }, { statusText: 'You have registered successfully' })
   } catch (e: unknown) {
     return ApiResponse.json(
       { token_hash: null },
