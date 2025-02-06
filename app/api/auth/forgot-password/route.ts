@@ -48,14 +48,13 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    console.log({ code })
-    // const info = await transporter.sendMail({
-    //   from: `"${sender?.name}" <${sender?.email}>`,
-    //   to: user?.email,
-    //   subject: `[${sender?.name}] Reset your password`,
-    //   text: text({ code }),
-    //   html: html({ code }),
-    // })
+    const info = await transporter.sendMail({
+      from: `"${sender?.name}" <${sender?.email}>`,
+      to: user?.email,
+      subject: `[${sender?.name}] Reset your password`,
+      text: text({ code }),
+      html: html({ code }),
+    })
     return ApiResponse.json({ token }, { status: STATUS_CODES.OK })
   } catch (e: unknown) {
     return ApiResponse.json(
