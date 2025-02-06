@@ -11,7 +11,7 @@ export async function main() {
         data: {
           name: 'me',
           email: 'me@example.com',
-          password: await generateHash('123123'),
+          password: await generateHash('qweqwe'),
           passwordChangedAt: dayjs().toISOString(),
         },
       })

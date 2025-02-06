@@ -4,7 +4,7 @@ import { refreshTokenApiSchema } from '@/schemas/auth'
 
 import { STATUS_CODES } from '@/lib/http-status-codes/en'
 import { ApiResponse } from '@/lib/http'
-import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken, verifyJWT, type Token } from '@/lib/jose'
+import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken, decodeJwt, type Token } from '@/lib/jose'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
@@ -18,15 +18,10 @@ export async function POST(req: NextRequest) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid grant_type' })
   }
 
-  const token = await verifyJWT<Token>(data?.refresh_token)
-
-  if (!token) {
-    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid refresh_token' })
-  }
-
+  const token = decodeJwt<Token>(data?.refresh_token)
   const user = await prisma.user.findUnique({ where: { id: token.sub } })
 
-  if (!user || !user?.refresh_token) {
+  if (!user) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid User' })
   }
 

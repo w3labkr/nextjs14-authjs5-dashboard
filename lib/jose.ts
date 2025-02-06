@@ -39,10 +39,10 @@ export async function generateAccessToken(sub: string) {
     .sign(secret)
 }
 
-export async function generateRefreshToken(sub: string, token?: string | null) {
-  if (token) {
-    const decoded = decodeJwt<Token>(token)
-    if (!isTokenExpired(decoded?.exp)) return token
+export async function generateRefreshToken(sub: string, jwt?: string | null) {
+  if (jwt) {
+    const token = decodeJwt<Token>(jwt)
+    if (!isTokenExpired(token?.exp)) return jwt
   }
   return await new SignJWT()
     .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
