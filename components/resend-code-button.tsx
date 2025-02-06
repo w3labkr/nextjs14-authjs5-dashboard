@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 
 import { xhr } from '@/lib/http'
 import type { ForgotPasswordAPI } from '@/types/api'
-import { decodeJwt, isTokenExpired } from '@/lib/jose'
+import { decodeJwt, isTokenExpired, type Token } from '@/lib/jose'
 
 const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
   (props, ref) => {
@@ -22,7 +22,7 @@ const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAtt
 
         if (!token_hash) throw new Error('Missing token_hash')
 
-        const token = decodeJwt(token_hash)
+        const token = decodeJwt<Token>(token_hash)
 
         // Tokens can be reissued 1 minute after issuance.
         if (!token?.iat) throw new Error('Invalid Token')
