@@ -4,8 +4,8 @@ import './globals.css'
 
 import { AuthProvider } from '@/context/next-auth-provider'
 import { Toaster } from '@/components/ui/sonner'
-import { CookieConsent } from '@/components/cookie-consent'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
+import { CookieConsent } from '@/components/cookie-consent'
 import { VercelAnalytics } from '@/components/vercel-analytics'
 
 export const metadata: Metadata = {

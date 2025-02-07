@@ -7,6 +7,9 @@
         "defaults and fully supports es6-module",
         "maintained node versions"
     ],
+    "prisma": {
+        "seed": "tsx prisma/seed.ts"
+    },
     "scripts": {
         "dev": "next dev --turbo",
         "build": "prisma generate && next build",
@@ -18,9 +21,6 @@
         "upgrade:latest": "npm run clean && npx npm-check-updates -u && npm install",
         "reinstall": "npm run clean && npm install",
         "serve": "serve -l 4000 build/"
-    },
-    "prisma": {
-        "seed": "tsx prisma/seed.ts"
     },
     "dependencies": {
         "@auth/prisma-adapter": "^2.7.4",

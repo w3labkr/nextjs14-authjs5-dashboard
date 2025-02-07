@@ -19,6 +19,20 @@ $ npx create-next-app@14.2.20 .
 node -v > .nvmrc
 ```
 
+## Tailwindcss
+
+Install Tailwind CSS with Next.js
+
+```shell
+npm install -D tailwindcss@3 postcss autoprefixer
+```
+
+Beautiful typographic defaults for HTML you don't control.
+
+```shell
+npm install -D @tailwindcss/typography
+```
+
 ## Shadcn
 
 Run the init command to create a new Next.js project or to setup an existing one:
@@ -48,6 +62,8 @@ npm install @tanstack/react-table
 Add the Toaster component. Edit `app/layout.tsx`:
 
 ```javascript
+import { Toaster } from '@/components/ui/sonner'
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -62,20 +78,6 @@ export default function RootLayout({
     </html>
   );
 }
-```
-
-## Tailwindcss
-
-Install Tailwind CSS with Next.js
-
-```shell
-npm install -D tailwindcss@3 postcss autoprefixer
-```
-
-Beautiful typographic defaults for HTML you don't control.
-
-```shell
-npm install -D @tailwindcss/typography
 ```
 
 ## Auth.js
