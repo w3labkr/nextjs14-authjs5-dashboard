@@ -21,7 +21,6 @@ const user = {
   name: 'shadcn',
   email: 'me@example.com',
   avatar: '#',
-  // avatar: "/avatars/shadcn.jpg",
 }
 
 export function NavUser() {
@@ -30,7 +29,7 @@ export function NavUser() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button type="button" className="p-2">
+        <button type="button">
           <Avatar className="h-8 w-8 rounded-full">
             <AvatarImage src={user.avatar} alt={user.name} />
             <AvatarFallback className="rounded-full">CN</AvatarFallback>
