@@ -4,7 +4,7 @@ import * as React from 'react'
 import Link from 'next/link'
 
 import { Command } from 'lucide-react'
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/custom-ui/sidebar'
 
 import { site } from '@/config/site'
 

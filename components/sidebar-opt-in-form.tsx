@@ -12,7 +12,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { useSidebar } from '@/components/ui/sidebar'
+import { useSidebar } from '@/components/custom-ui/sidebar'
 import { cn } from '@/lib/utils'
 
 type SidebarOptInFormValues = z.infer<typeof sidebarOptInFormSchema>
