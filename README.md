@@ -17,8 +17,7 @@ This is a dashboard starter template for the [NextJS](https://nextjs.org) 14 app
   - [Documents](#documents)
   - [Examples](#examples)
     - [ApiResponse](#apiresponse)
-    - [xhr](#xhr)
-    - [http-status-codes](#http-status-codes)
+    - [http](#http)
     - [bcrypt](#bcrypt)
     - [JWT](#jwt)
     - [CSRF](#csrf)
@@ -119,7 +118,7 @@ export async function POST(req) {
 }
 
 // output
-// { status: 'success', message: 'OK', success: true, data: { user: null } }
+// { status: 'success', success: true, message: 'OK', data: { user: null } }
 ```
 
 fail
@@ -132,25 +131,10 @@ export async function POST(req) {
 }
 
 // output
-// { status: 'fail', message: 'Bad Request', success: false, data: { user: null } }
+// { status: 'fail', success: false, message: 'Bad Request', data: { user: null } }
 ```
 
-### xhr
-
-Change URL address to absolute address and return as json response.
-
-```javascript
-import { xhr } from '@/lib/http'
-
-const res = await xhr.get('/api', init)
-const res = await xhr.head('/api', init)
-const res = await xhr.post('/api', init)
-const res = await xhr.put('/api', init)
-const res = await xhr.delete('/api', init)
-const res = await xhr.patch('/api', init)
-```
-
-### http-status-codes
+### http
 
 ```javascript
 import { 
@@ -158,7 +142,7 @@ import {
   STATUS_TEXTS,
   STATUS_CODE_TO_TEXT,
   STATUS_TEXT_TO_CODE
-} from '@/lib/http-status-codes/en'
+} from '@/lib/http'
 
 STATUS_CODES.OK // 200
 STATUS_TEXTS.OK // "OK"

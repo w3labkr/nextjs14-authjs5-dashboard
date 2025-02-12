@@ -3,8 +3,7 @@ import { prisma } from '@/prisma'
 import { forgotPasswordFormSchema } from '@/schemas/auth'
 import { transporter, sender } from '@/lib/nodemailer'
 
-import { STATUS_CODES } from '@/lib/http-status-codes/en'
-import { ApiResponse } from '@/lib/http'
+import { ApiResponse, STATUS_CODES } from '@/lib/http'
 import { getRandomIntInclusive } from '@/lib/math'
 import { generateRecoveryToken } from '@/lib/jose'
 import { generateHash } from '@/lib/bcrypt'
@@ -16,7 +15,7 @@ export async function POST(req: NextRequest) {
   if (!verifyCSRFToken(csrfToken)) {
     return ApiResponse.json(
       { token: null },
-      { status: STATUS_CODES.UNAUTHORIZED, message: 'CSRF Token missing or incorrect' }
+      { status: STATUS_CODES.UNAUTHORIZED, statusText: 'CSRF Token missing or incorrect' }
     )
   }
 
@@ -34,7 +33,7 @@ export async function POST(req: NextRequest) {
   const user = await prisma.user.findUnique({ where: { email: data?.email } })
 
   if (!user) {
-    return ApiResponse.json({ token })
+    return ApiResponse.json({ token, message: 'Your email has been sent.' })
   }
 
   try {
@@ -44,7 +43,7 @@ export async function POST(req: NextRequest) {
   } catch (e: unknown) {
     return ApiResponse.json(
       { token: null },
-      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, message: (e as Error)?.message }
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
     )
   }
 
@@ -56,11 +55,11 @@ export async function POST(req: NextRequest) {
       text: text({ code }),
       html: html({ code }),
     })
-    return ApiResponse.json({ token })
+    return ApiResponse.json({ token, message: 'Your email has been sent.' })
   } catch (e: unknown) {
     return ApiResponse.json(
       { token: null },
-      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, message: (e as Error)?.message }
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
     )
   }
 }

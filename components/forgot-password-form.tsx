@@ -14,8 +14,8 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { xhr } from '@/lib/http'
 import type { ForgotPasswordAPI } from '@/types/api'
+import { absoluteUrl } from '@/lib/utils'
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordFormSchema>
 
@@ -43,18 +43,19 @@ export function ForgotPasswordForm() {
     try {
       setIsSubmitting(true)
 
-      const {
-        message,
-        data: { token },
-      } = await xhr.post<ForgotPasswordAPI>('/api/auth/forgot-password', {
+      const res = await fetch(absoluteUrl('/api/auth/forgot-password'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...values, csrfToken }),
       })
+      const result: ForgotPasswordAPI = await res.json()
 
-      if (!token) throw new Error(message)
+      if (!res.ok) throw new Error(res.statusText)
+      if (!result.data.token) throw new Error(result.message)
 
-      toast.success('Your email has been sent.')
+      toast.success(result.message)
 
-      router.push(`/auth/verify-request?token_hash=${token}`)
+      router.push(`/auth/verify-request?token_hash=${result.data.token}`)
     } catch (e: unknown) {
       toast.error((e as Error)?.message)
     } finally {

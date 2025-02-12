@@ -14,8 +14,8 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { xhr } from '@/lib/http'
 import type { RegisterAPI } from '@/types/api'
+import { absoluteUrl } from '@/lib/utils'
 
 type RegisterFormValues = z.infer<typeof registerFormSchema>
 
@@ -45,16 +45,17 @@ export function RegisterForm() {
     try {
       setIsSubmitting(true)
 
-      const {
-        message,
-        data: { user },
-      } = await xhr.post<RegisterAPI>('/api/auth/register', {
+      const res = await fetch(absoluteUrl('/api/auth/register'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...values, csrfToken }),
       })
+      const result: RegisterAPI = await res.json()
 
-      if (!user) throw new Error(message)
+      if (!res.ok) throw new Error(res.statusText)
+      if (!result.success) throw new Error(result.message)
 
-      toast.success(message)
+      toast.success(result.message)
 
       router.push('/auth/login')
     } catch (e: unknown) {

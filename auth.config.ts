@@ -8,10 +8,10 @@ import Google from 'next-auth/providers/google'
 import { z } from 'zod'
 import { loginFormSchema } from '@/schemas/auth'
 
-import { xhr } from '@/lib/http'
-import { STATUS_TEXTS } from '@/lib/http-status-codes/en'
+import { STATUS_TEXTS } from '@/lib/http'
 import type { LoginAPI, AuthTokenAPI } from '@/types/api'
 import { isTokenExpired } from '@/lib/jose'
+import { absoluteUrl } from './lib/utils'
 
 class CustomError extends CredentialsSignin {
   constructor(code: string) {
@@ -64,16 +64,20 @@ export const authConfig: NextAuthConfig = {
         }
 
         try {
-          const {
-            message,
-            data: { user },
-          } = await xhr.post<LoginAPI>('/api/auth/login', {
+          const res = await fetch(absoluteUrl('/api/auth/login'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
           })
+          const result: LoginAPI = await res.json()
+
+          if (!res.ok) throw new Error(res.statusText)
 
           // No user found, so this is their first attempt to login
           // Optionally, this is also the place you could do a user registration
-          if (!user) throw new CustomError(message)
+          if (!result.data.user) throw new CustomError(result.message)
+
+          const user = result.data.user
 
           // return user object with their profile data
           return {
@@ -168,19 +172,20 @@ async function credentialsToken(token: JWT): Promise<JWT> {
   }
 
   try {
-    const {
-      message,
-      data: { tokens },
-    } = await xhr.post<AuthTokenAPI>('/api/auth/token', {
+    const res = await fetch(absoluteUrl('/api/auth/token'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         grant_type: 'refresh_token',
         refresh_token: token.refresh_token,
       }),
     })
+    const result: AuthTokenAPI = await res.json()
 
-    if (!tokens) throw new Error(message)
+    if (!res.ok) throw new Error(res.statusText)
+    if (!result.data.tokens) throw new Error(result.message)
 
-    return { ...token, ...tokens }
+    return { ...token, ...result.data.tokens }
   } catch (e: unknown) {
     // If we fail to refresh the token, return an error so we can handle it on the page
     return { ...token, error: 'RefreshTokenError' }
@@ -206,7 +211,6 @@ async function googleToken(token: JWT): Promise<JWT> {
         refresh_token: token.refresh_token,
       }),
     })
-
     const tokensOrError = await res.json()
 
     if (!res.ok) throw tokensOrError

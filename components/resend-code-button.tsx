@@ -4,10 +4,10 @@ import * as React from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 
-import { xhr } from '@/lib/http'
 import type { ForgotPasswordAPI } from '@/types/api'
 import { decodeJwt, isTokenExpired, type Token } from '@/lib/jose'
 import { useCSRFToken } from '@/hooks/use-csrf-token'
+import { absoluteUrl } from '@/lib/utils'
 
 const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
   (props, ref) => {
@@ -30,18 +30,19 @@ const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAtt
           throw new Error('Please try again in 1 minute.')
         }
 
-        const {
-          message,
-          data: { token: newToken },
-        } = await xhr.post<ForgotPasswordAPI>('/api/auth/forgot-password', {
+        const res = await fetch(absoluteUrl('/api/auth/forgot-password'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: token.sub, csrfToken }),
         })
+        const result: ForgotPasswordAPI = await res.json()
 
-        if (!newToken) throw new Error(message)
+        if (!res.ok) throw new Error(res.statusText)
+        if (!result.data.token) throw new Error(result.message)
 
-        toast.success('Your email has been sent.')
+        toast.success(result.message)
 
-        router.push(`/auth/verify-request?token_hash=${newToken}`)
+        router.push(`/auth/verify-request?token_hash=${result.data.token}`)
       } catch (e: unknown) {
         toast.error((e as Error)?.message)
       } finally {

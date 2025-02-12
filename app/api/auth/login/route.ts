@@ -2,8 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { prisma } from '@/prisma'
 import { loginFormSchema } from '@/schemas/auth'
 
-import { STATUS_CODES } from '@/lib/http-status-codes/en'
-import { ApiResponse } from '@/lib/http'
+import { ApiResponse, STATUS_CODES } from '@/lib/http'
 import { compareHash } from '@/lib/bcrypt'
 import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken } from '@/lib/jose'
 
@@ -18,7 +17,10 @@ export async function POST(req: NextRequest) {
   const user = await prisma.user.findUnique({ where: { email: data?.email } })
 
   if (!user) {
-    return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST, message: 'Invalid email or password' })
+    return ApiResponse.json(
+      { user: null },
+      { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid email or password' }
+    )
   }
 
   const newTokens = {
@@ -32,14 +34,14 @@ export async function POST(req: NextRequest) {
       const newUser = await prisma.$transaction(async (tx) => {
         return await tx.user.update({ where: { id: user.id }, data: newTokens })
       })
-      return ApiResponse.json({ user: newUser }, { message: 'You have successfully logged in' })
+      return ApiResponse.json({ user: newUser, message: 'You have successfully logged in' })
     } catch (e: unknown) {
       return ApiResponse.json(
         { user: null },
-        { status: STATUS_CODES.INTERNAL_SERVER_ERROR, message: (e as Error)?.message }
+        { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
       )
     }
   }
 
-  return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST, message: 'Invalid email or password' })
+  return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid email or password' })
 }

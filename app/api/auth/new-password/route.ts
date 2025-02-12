@@ -3,8 +3,7 @@ import { prisma } from '@/prisma'
 import { newPasswordFormSchema } from '@/schemas/auth'
 import dayjs from '@/lib/dayjs'
 
-import { STATUS_CODES } from '@/lib/http-status-codes/en'
-import { ApiResponse } from '@/lib/http'
+import { ApiResponse, STATUS_CODES } from '@/lib/http'
 import { generateHash } from '@/lib/bcrypt'
 import { verifyJwt, type Token } from '@/lib/jose'
 import { verifyCSRFToken } from '@/lib/csrf'
@@ -13,10 +12,7 @@ export async function POST(req: NextRequest) {
   const { csrfToken, ...body } = await req.json()
 
   if (!verifyCSRFToken(csrfToken)) {
-    return ApiResponse.json(
-      { token: null },
-      { status: STATUS_CODES.UNAUTHORIZED, message: 'CSRF Token missing or incorrect' }
-    )
+    return ApiResponse.json(null, { status: STATUS_CODES.UNAUTHORIZED, statusText: 'CSRF Token missing or incorrect' })
   }
 
   const { data, success } = newPasswordFormSchema.safeParse(body)
@@ -28,17 +24,17 @@ export async function POST(req: NextRequest) {
   const token = await verifyJwt<Token>(data?.token_hash)
 
   if (!token) {
-    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, message: 'Invalid or expired token' })
+    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid or expired token' })
   }
 
   const user = await prisma.user.findUnique({ where: { email: token?.sub } })
 
   if (!user) {
-    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, message: 'Invalid user' })
+    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid user' })
   }
 
   if (user?.recovery_token !== data?.token_hash) {
-    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, message: 'Invalid or expired token' })
+    return ApiResponse.json(null, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid or expired token' })
   }
 
   try {
@@ -51,8 +47,8 @@ export async function POST(req: NextRequest) {
         },
       })
     })
-    return ApiResponse.json(null)
+    return ApiResponse.json({ message: 'Your password has been changed.' })
   } catch (e: unknown) {
-    return ApiResponse.json(null, { status: STATUS_CODES.INTERNAL_SERVER_ERROR, message: (e as Error)?.message })
+    return ApiResponse.json(null, { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message })
   }
 }

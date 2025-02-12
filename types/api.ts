@@ -2,8 +2,8 @@ import type { User } from '@prisma/client'
 
 export interface API {
   status: string
-  message: string
   success: boolean
+  message: string
   data: any
 }
 

@@ -14,8 +14,8 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import { xhr } from '@/lib/http'
 import type { NewPasswordAPI } from '@/types/api'
+import { absoluteUrl } from '@/lib/utils'
 
 type NewPasswordFormValues = z.infer<typeof newPasswordFormSchema>
 
@@ -49,13 +49,16 @@ export function NewPasswordForm() {
     try {
       setIsSubmitting(true)
 
-      const { success, message } = await xhr.post<NewPasswordAPI>('/api/auth/new-password', {
+      const res = await fetch(absoluteUrl('/api/auth/new-password'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...values, csrfToken }),
       })
+      const result: NewPasswordAPI = await res.json()
 
-      if (!success) throw new Error(message)
+      if (!res.ok) throw new Error(res.statusText)
 
-      toast.success('Your password has been changed.')
+      toast.success(result.message)
 
       router.replace('/auth/login')
     } catch (e: unknown) {

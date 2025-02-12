@@ -1,3 +1,21 @@
+import { NextResponse } from 'next/server'
+
+class ApiResponse extends NextResponse {
+  constructor(body?: BodyInit | null, init?: ResponseInit) {
+    super(body, init)
+  }
+  static json(body: any, init?: ResponseInit) {
+    const code = init?.status ?? STATUS_CODES.OK
+    const success = body?.success ?? (code >= 200 && code <= 299)
+    const status = success ? 'success' : 'fail'
+    const message = body?.message ?? init?.statusText ?? STATUS_CODE_TO_TEXT[code?.toString()]
+    const data = body ?? null
+    if (data?.success) delete data.success
+    if (data?.message) delete data.message
+    return super.json({ success, status, message, data } as any, init)
+  }
+}
+
 /**
  * http-status-codes
  *
@@ -8,7 +26,7 @@
  */
 
 // prettier-ignore
-export const STATUS_CODES = {
+const STATUS_CODES = {
   CONTINUE: 100,
   SWITCHING_PROTOCOLS: 101,
   PROCESSING: 102,
@@ -74,7 +92,7 @@ export const STATUS_CODES = {
 }
 
 // prettier-ignore
-export const STATUS_TEXTS = {
+const STATUS_TEXTS = {
   CONTINUE: "Continue",
   SWITCHING_PROTOCOLS: "Switching Protocols",
   PROCESSING: "Processing",
@@ -140,7 +158,7 @@ export const STATUS_TEXTS = {
 }
 
 // prettier-ignore
-export const STATUS_CODE_TO_TEXT: Record<string, string> = {
+const STATUS_CODE_TO_TEXT: Record<string, string> = {
   "100": "Continue",
   "101": "Switching Protocols",
   "102": "Processing",
@@ -206,7 +224,7 @@ export const STATUS_CODE_TO_TEXT: Record<string, string> = {
 }
 
 // prettier-ignore
-export const STATUS_TEXT_TO_CODE: Record<string, string> = {
+const STATUS_TEXT_TO_CODE: Record<string, string> = {
   "Continue": "100",
   "Switching Protocols": "101",
   "Processing": "102",
@@ -270,3 +288,5 @@ export const STATUS_TEXT_TO_CODE: Record<string, string> = {
   "Insufficient Storage": "507",
   "Network Authentication Required": "511",
 }
+
+export { ApiResponse, STATUS_CODES, STATUS_TEXTS, STATUS_CODE_TO_TEXT, STATUS_TEXT_TO_CODE }
