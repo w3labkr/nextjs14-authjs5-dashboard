@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   const user = await prisma.user.findUnique({ where: { email: data?.email } })
 
   if (!user) {
-    return ApiResponse.json({ token, message: 'Your email has been sent.' })
+    return ApiResponse.json({ token, message: 'An email has been sent to reset your password.' })
   }
 
   try {
@@ -51,11 +51,11 @@ export async function POST(req: NextRequest) {
     const info = await transporter.sendMail({
       from: `"${sender?.name}" <${sender?.email}>`,
       to: user?.email,
-      subject: `[${sender?.name}] Reset your password`,
+      subject: `[${sender?.name}] Reset Password`,
       text: text({ code }),
       html: html({ code }),
     })
-    return ApiResponse.json({ token, message: 'Your email has been sent.' })
+    return ApiResponse.json({ token, message: 'An email has been sent to reset your password.' })
   } catch (e: unknown) {
     return ApiResponse.json(
       { token: null },
@@ -67,13 +67,12 @@ export async function POST(req: NextRequest) {
 function html({ code }: { code: string }) {
   return `
   <div>
-    <h2>Hello,</h2>
+    <h2>Reset Password</h2>
     <br />
-    <p>Your account verification code is:</p>
+    <p>Your verification code is:</p>
     <p>${code}</p>
     <br />
     <p>This code expires in 15 minutes. Please do not share this code with anyone.</p>
-    <br />
     <p>If you did not request a code, you can ignore this email.</p>
   </div>
 `
@@ -81,5 +80,5 @@ function html({ code }: { code: string }) {
 
 // Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
 function text({ code }: { code: string }) {
-  return `Your account verification code is ${code}.`
+  return `Your verification code is ${code}.`
 }

@@ -237,7 +237,7 @@ try {
   const info = await transporter.sendMail({
     from: `"${sender?.name}" <${sender?.email}>`,
     to: 'me@example.com',
-    subject: `[${sender?.name}] Reset your password`,
+    subject: `[${sender?.name}] Reset Password`,
     text: 'Hello World!',
     html: '<h2>Hello World!<h2>',
   })

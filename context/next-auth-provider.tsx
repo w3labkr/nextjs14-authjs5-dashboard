@@ -24,13 +24,7 @@ export function ClientAuthProvider({ children }: { children: React.ReactNode }) 
 export function NotAuthenticated() {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <Alert>
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>Not authenticated</AlertDescription>
-        </Alert>
-      </div>
+      <div className="w-full max-w-sm text-center">Not authenticated</div>
     </div>
   )
 }

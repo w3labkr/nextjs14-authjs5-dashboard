@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: '',
 }
 
-export default function AuthErrorPage({
+export default function ErrorPage({
   params,
   searchParams,
 }: {
