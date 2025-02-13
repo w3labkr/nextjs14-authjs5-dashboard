@@ -1,11 +1,5 @@
 import type { User } from '@prisma/client'
-
-export interface API {
-  status: string
-  success: boolean
-  message: string
-  data: any
-}
+import type { API } from '@/lib/http'
 
 export interface AuthTokenAPI extends API {
   data: { tokens: { access_token: string; expires_in: number; refresh_token?: string } | null }
