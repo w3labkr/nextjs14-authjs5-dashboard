@@ -7,7 +7,6 @@ declare global {
       NEXT_PUBLIC_APP_URL: string
 
       CRON_SECRET: string
-      CSRF_SECRET: string
       JWT_SECRET: string
 
       AUTH_SECRET: string
