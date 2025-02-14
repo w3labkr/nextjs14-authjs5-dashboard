@@ -1,15 +1,12 @@
-import { NextResponse } from 'next/server'
-import csrf from 'csrf'
+import { NextResponse, type NextRequest } from 'next/server'
+import { generateCsrfToken } from '@/lib/jwt'
 
-const tokens = new csrf()
-const secret = process.env.CSRF_SECRET || tokens.secretSync()
-
-export async function GET() {
-  const token = tokens.create(secret)
+export async function GET(req: NextRequest) {
+  const token = await generateCsrfToken()
 
   // Set CSRF token as an HTTP-only cookie
-  const response = NextResponse.json({ status: 'success', message: 'OK', success: true, data: { token } })
-  response.cookies.set('XSRF-TOKEN', token, { httpOnly: true })
+  const response = new NextResponse(token)
+  response.cookies.set('_self.csrf-token', token, { path: '/', httpOnly: true, secure: true, sameSite: 'strict' })
 
   return response
 }

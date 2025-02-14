@@ -3,7 +3,7 @@ import { prisma } from '@/prisma'
 import { refreshTokenApiSchema } from '@/schemas/auth'
 
 import { ApiResponse, STATUS_CODES } from '@/lib/http'
-import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken, decodeJwt, type Token } from '@/lib/jose'
+import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken, decodeJwt, type Token } from '@/lib/jwt'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()

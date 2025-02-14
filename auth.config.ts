@@ -10,7 +10,7 @@ import { loginFormSchema } from '@/schemas/auth'
 
 import { STATUS_TEXTS } from '@/lib/http'
 import type { LoginAPI, AuthTokenAPI } from '@/types/api'
-import { isTokenExpired } from '@/lib/jose'
+import { isTokenExpired } from '@/lib/jwt'
 import { absoluteUrl } from './lib/utils'
 
 class CustomError extends CredentialsSignin {

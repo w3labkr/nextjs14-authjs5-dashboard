@@ -13,7 +13,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { Button } from '@/components/ui/button'
 
-import { decodeJwt, isTokenExpired, type Token } from '@/lib/jose'
+import { decodeJwt, isTokenExpired, type Token } from '@/lib/jwt'
 import { compareHash } from '@/lib/bcrypt'
 
 type VerifyCodeFormValues = z.infer<typeof verifyCodeFormSchema>

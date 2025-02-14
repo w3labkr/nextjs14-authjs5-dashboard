@@ -14,8 +14,8 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import type { RegisterAPI } from '@/types/api'
 import { absoluteUrl } from '@/lib/utils'
+import type { RegisterAPI } from '@/types/api'
 
 type RegisterFormValues = z.infer<typeof registerFormSchema>
 
@@ -39,7 +39,7 @@ export function RegisterForm() {
     formState: { errors },
   } = form
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
-  const { csrfToken } = useCSRFToken()
+  const csrfToken = useCSRFToken()
 
   async function onSubmit(values: RegisterFormValues) {
     try {
@@ -47,8 +47,11 @@ export function RegisterForm() {
 
       const res = await fetch(absoluteUrl('/api/auth/register'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...values, csrfToken }),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
+        },
+        body: JSON.stringify(values),
       })
       const result: RegisterAPI = await res.json()
 

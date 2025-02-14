@@ -18,13 +18,9 @@ export interface ForgotPasswordAPI extends API {
 }
 
 export interface NewPasswordAPI extends API {
-  data: null
+  data: {}
 }
 
 export interface VerifyRequestAPI extends API {
   data: { user: User | null }
-}
-
-export interface CSRFTokenAPI extends API {
-  data: { token: string }
 }

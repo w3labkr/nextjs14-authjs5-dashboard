@@ -1,3 +1,4 @@
+import { type NextRequest } from 'next/server'
 import { SignJWT, decodeJwt, jwtVerify, type JWTPayload, type JWTVerifyOptions } from 'jose'
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET!)
@@ -22,6 +23,17 @@ export async function jwtSign(sub: string, exp: number | string | Date = '1h', p
     .setIssuedAt()
     .setExpirationTime(exp)
     .sign(secret)
+}
+
+export async function generateCsrfToken() {
+  return await new SignJWT().setProtectedHeader({ alg: 'HS256', typ: 'JWT' }).setIssuedAt().sign(secret)
+}
+
+export async function verifyCsrfToken(req: NextRequest) {
+  const privateToken = req.cookies.get('_self.csrf-token')?.value
+  const publicToken = req.headers.get('X-CSRF-Token')
+  if (!privateToken || !publicToken) return false
+  return privateToken === publicToken
 }
 
 export async function generateRecoveryToken(sub: string, payload?: JWTPayload) {

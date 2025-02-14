@@ -5,16 +5,13 @@ import { registerFormSchema } from '@/schemas/auth'
 import dayjs from '@/lib/dayjs'
 import { ApiResponse, STATUS_CODES } from '@/lib/http'
 import { generateHash } from '@/lib/bcrypt'
-import { verifyCSRFToken } from '@/lib/csrf'
+import { verifyCsrfToken } from '@/lib/jwt'
 
 export async function POST(req: NextRequest) {
-  const { csrfToken, ...body } = await req.json()
+  const body = await req.json()
 
-  if (!verifyCSRFToken(csrfToken)) {
-    return ApiResponse.json(
-      { user: null },
-      { status: STATUS_CODES.UNAUTHORIZED, statusText: 'CSRF Token missing or incorrect' }
-    )
+  if (!(await verifyCsrfToken(req))) {
+    return ApiResponse.json({ user: null, message: 'Invalid csrf token' }, { status: STATUS_CODES.UNAUTHORIZED })
   }
 
   const { data, success } = registerFormSchema.safeParse(body)

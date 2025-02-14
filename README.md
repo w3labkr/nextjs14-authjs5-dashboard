@@ -194,12 +194,12 @@ isTokenExpired(
 Route Handlers
 
 ```javascript
-import { verifyCSRFToken } from '@/lib/csrf'
+import { verifyCsrfToken } from '@/lib/jose'
 
 export async function POST(req) {
-  const { csrfToken, ...body } = await req.json()
+  const body = await req.json()
 
-  if (!verifyCSRFToken(csrfToken)) {
+  if (!(await verifyCSRFToken(req))) {
     return new Response('Unauthorized', { status: 401 })
   }
 }
@@ -213,12 +213,13 @@ Client Side
 import { useCSRFToken } from '@/hooks/use-csrf-token'
 
 export function Component() {
-  const { csrfToken } = useCSRFToken()
+  const csrfToken = useCSRFToken()
 
   async function onSubmit() {
     const res = await fetch('/api', {
       method: 'POST',
-      body: JSON.stringify({ csrfToken }),
+      headers: { 'X-CSRF-Token': csrfToken },
+      body: JSON.stringify(values),
     })
   }
 
