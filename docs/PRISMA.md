@@ -1,5 +1,15 @@
 # PRISMA
 
+## Table of Contents
+
+- [PRISMA](#prisma)
+  - [Table of Contents](#table-of-contents)
+  - [Development environments](#development-environments)
+  - [Production and testing environments](#production-and-testing-environments)
+  - [Seeding your database](#seeding-your-database)
+  - [Format](#format)
+  - [Troubleshooting](#troubleshooting)
+
 ## Development environments
 
 (DANGER) `migrate dev` is a development command and should never be used in a production environment.
@@ -94,4 +104,5 @@ ALTER DEFAULT privileges FOR role postgres IN schema public GRANT ALL ON sequenc
 ALTER USER "postgres" WITH password 'new_password';
 ```
 
-<https://supabase.com/docs/guides/database/prisma>
+- [Prisma](https://supabase.com/docs/guides/database/prisma)
+- [Troubleshooting prisma errors](https://supabase.com/docs/guides/database/prisma/prisma-troubleshooting)
