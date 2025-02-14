@@ -53,12 +53,11 @@ export function RegisterForm() {
         },
         body: JSON.stringify(values),
       })
-      const result: RegisterAPI = await res.json()
+      const { success, message }: RegisterAPI = await res.json()
 
-      if (!res.ok) throw new Error(res.statusText)
-      if (!result.success) throw new Error(result.message)
+      if (!success) throw new Error(message)
 
-      toast.success(result.message)
+      toast.success(message)
 
       router.push('/auth/login')
     } catch (e: unknown) {

@@ -53,13 +53,13 @@ export const authConfig: NextAuthConfig = {
         rememberMe: {},
       },
       async authorize(credentials, req) {
-        const { data, success } = loginFormSchema.safeParse({
+        const form = loginFormSchema.safeParse({
           email: credentials?.email,
           password: credentials?.password,
           rememberMe: credentials?.rememberMe === 'true',
         })
 
-        if (!success) {
+        if (!form.success) {
           throw new CustomError(STATUS_TEXTS.BAD_REQUEST)
         }
 
@@ -67,26 +67,22 @@ export const authConfig: NextAuthConfig = {
           const res = await fetch(absoluteUrl('/api/auth/login'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: JSON.stringify(form.data),
           })
-          const result: LoginAPI = await res.json()
-
-          if (!res.ok) throw new Error(res.statusText)
+          const { success, message, data }: LoginAPI = await res.json()
 
           // No user found, so this is their first attempt to login
           // Optionally, this is also the place you could do a user registration
-          if (!result.data.user) throw new CustomError(result.message)
-
-          const user = result.data.user
+          if (!success || !data.user) throw new CustomError(message)
 
           // return user object with their profile data
           return {
-            id: user.id,
-            role: user.role,
-            plan: user.plan,
-            access_token: user.access_token,
-            expires_at: user.expires_at,
-            refresh_token: user.refresh_token,
+            id: data.user.id,
+            role: data.user.role,
+            plan: data.user.plan,
+            access_token: data.user.access_token,
+            expires_at: data.user.expires_at,
+            refresh_token: data.user.refresh_token,
           } as User
         } catch (e: unknown) {
           throw new CustomError((e as Error)?.message)
@@ -180,12 +176,11 @@ async function credentialsToken(token: JWT): Promise<JWT> {
         refresh_token: token.refresh_token,
       }),
     })
-    const result: AuthTokenAPI = await res.json()
+    const { success, message, data }: AuthTokenAPI = await res.json()
 
-    if (!res.ok) throw new Error(res.statusText)
-    if (!result.data.tokens) throw new Error(result.message)
+    if (!success || !data.tokens) throw new Error(message)
 
-    return { ...token, ...result.data.tokens }
+    return { ...token, ...data.tokens }
   } catch (e: unknown) {
     // If we fail to refresh the token, return an error so we can handle it on the page
     return { ...token, error: 'RefreshTokenError' }

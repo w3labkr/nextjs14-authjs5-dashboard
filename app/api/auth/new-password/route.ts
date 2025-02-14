@@ -10,31 +10,30 @@ import { verifyCsrfToken } from '@/lib/jwt'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
+  const form = newPasswordFormSchema.safeParse(body)
 
   if (!(await verifyCsrfToken(req))) {
     return ApiResponse.json({ message: 'Invalid csrf token' }, { status: STATUS_CODES.UNAUTHORIZED })
   }
 
-  const { data, success } = newPasswordFormSchema.safeParse(body)
-
-  if (!success) {
+  if (!form.success) {
     return ApiResponse.json({}, { status: STATUS_CODES.BAD_REQUEST })
   }
 
-  const token = await verifyJwt<Token>(data?.token_hash)
+  const token = await verifyJwt<Token>(form.data?.token_hash)
 
   if (!token) {
-    return ApiResponse.json({}, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid or expired token' })
+    return ApiResponse.json({ message: 'Invalid or expired token' }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
   const user = await prisma.user.findUnique({ where: { email: token?.sub } })
 
   if (!user) {
-    return ApiResponse.json({}, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid user' })
+    return ApiResponse.json({ message: 'Invalid user' }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
-  if (user?.recovery_token !== data?.token_hash) {
-    return ApiResponse.json({}, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid or expired token' })
+  if (user?.recovery_token !== form.data?.token_hash) {
+    return ApiResponse.json({ message: 'Invalid or expired token' }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
   try {
@@ -42,13 +41,13 @@ export async function POST(req: NextRequest) {
       return await tx.user.update({
         where: { id: user?.id },
         data: {
-          password: await generateHash(data?.newPassword),
+          password: await generateHash(form.data?.newPassword),
           passwordChangedAt: dayjs().toISOString(),
         },
       })
     })
     return ApiResponse.json({ message: 'Your password has been changed.' })
   } catch (e: unknown) {
-    return ApiResponse.json({}, { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message })
+    return ApiResponse.json({ message: (e as Error)?.message }, { status: STATUS_CODES.INTERNAL_SERVER_ERROR })
   }
 }

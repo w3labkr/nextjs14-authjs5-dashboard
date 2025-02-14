@@ -4,20 +4,18 @@ type API = { success: boolean; status: string; message: string; data: any }
 
 class ApiResponse extends Response {
   static json(body: any, init?: ResponseInit): NextResponse<API> {
-    const { message, data, ...rest } = body ?? {}
+    const { message, ...data } = body ?? {}
     const code = init?.status ?? STATUS_CODES.OK
     const statusText = init?.statusText ?? STATUS_CODE_TO_TEXT[code?.toString()]
     const ok = code >= 200 && code <= 299
-    const response = Response.json(
-      {
-        success: ok,
-        status: ok ? 'success' : 'fail',
-        message: message ?? statusText,
-        data: body === null ? null : data === null ? null : { ...data, ...rest },
-      },
-      init
-    )
-    return new NextResponse(response.body, { ...response, statusText })
+    const newBody = {
+      success: ok,
+      status: ok ? 'success' : 'fail',
+      message: message ?? statusText,
+      data: body === null || body === undefined ? null : data,
+    }
+    const response = Response.json(newBody, init)
+    return new NextResponse(response.body, response)
   }
 }
 

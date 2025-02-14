@@ -57,11 +57,11 @@ export function NewPasswordForm() {
         },
         body: JSON.stringify(values),
       })
-      const result: NewPasswordAPI = await res.json()
+      const { success, message }: NewPasswordAPI = await res.json()
 
-      if (!res.ok) throw new Error(res.statusText)
+      if (!success) throw new Error(message)
 
-      toast.success(result.message)
+      toast.success(message)
 
       router.replace('/auth/login')
     } catch (e: unknown) {

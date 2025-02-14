@@ -11,23 +11,22 @@ import { verifyCsrfToken } from '@/lib/jwt'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
+  const form = forgotPasswordFormSchema.safeParse(body)
 
   if (!(await verifyCsrfToken(req))) {
     return ApiResponse.json({ token: null, message: 'Invalid csrf token' }, { status: STATUS_CODES.UNAUTHORIZED })
   }
 
-  const { data, success } = forgotPasswordFormSchema.safeParse(body)
-
-  if (!success) {
+  if (!form.success) {
     return ApiResponse.json({ token: null }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
   const code = getRandomIntInclusive(100000, 999999).toString()
-  const token = await generateRecoveryToken(data?.email, {
+  const token = await generateRecoveryToken(form.data?.email, {
     code: await generateHash(code),
   })
 
-  const user = await prisma.user.findUnique({ where: { email: data?.email } })
+  const user = await prisma.user.findUnique({ where: { email: form.data?.email } })
 
   if (!user) {
     return ApiResponse.json({ token, message: 'An email has been sent to reset your password.' })
@@ -39,8 +38,8 @@ export async function POST(req: NextRequest) {
     })
   } catch (e: unknown) {
     return ApiResponse.json(
-      { token: null },
-      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+      { token: null, message: (e as Error)?.message },
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR }
     )
   }
 
@@ -48,15 +47,15 @@ export async function POST(req: NextRequest) {
     const info = await transporter.sendMail({
       from: `"${sender?.name}" <${sender?.email}>`,
       to: user?.email,
-      subject: `[${sender?.name}] Reset Password`,
+      subject: `[${sender?.name}] Reset Your Password`,
       text: text({ code }),
       html: html({ code }),
     })
     return ApiResponse.json({ token, message: 'An email has been sent to reset your password.' })
   } catch (e: unknown) {
     return ApiResponse.json(
-      { token: null },
-      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+      { token: null, message: (e as Error)?.message },
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR }
     )
   }
 }

@@ -7,25 +7,25 @@ import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken, deco
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { data, success } = refreshTokenApiSchema.safeParse(body)
+  const form = refreshTokenApiSchema.safeParse(body)
 
-  if (!success) {
+  if (!form.success) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
-  if (data?.grant_type !== 'refresh_token') {
-    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid grant_type' })
+  if (form.data?.grant_type !== 'refresh_token') {
+    return ApiResponse.json({ tokens: null, message: 'Invalid grant_type' }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
-  const token = decodeJwt<Token>(data?.refresh_token)
+  const token = decodeJwt<Token>(form.data?.refresh_token)
   const user = await prisma.user.findUnique({ where: { id: token.sub } })
 
   if (!user) {
-    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid user' })
+    return ApiResponse.json({ tokens: null, message: 'Invalid user' }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
-  if (user?.refresh_token !== data?.refresh_token) {
-    return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid refresh_token' })
+  if (user?.refresh_token !== form.data?.refresh_token) {
+    return ApiResponse.json({ tokens: null, message: 'Invalid refresh_token' }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
   const newTokens = {
@@ -47,8 +47,8 @@ export async function POST(req: NextRequest) {
     })
   } catch (e: unknown) {
     return ApiResponse.json(
-      { tokens: null },
-      { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+      { tokens: null, message: (e as Error)?.message },
+      { status: STATUS_CODES.INTERNAL_SERVER_ERROR }
     )
   }
 }

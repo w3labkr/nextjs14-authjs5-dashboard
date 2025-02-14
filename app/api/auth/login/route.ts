@@ -8,19 +8,16 @@ import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken } fro
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { data, success } = loginFormSchema.safeParse(body)
+  const form = loginFormSchema.safeParse(body)
 
-  if (!success) {
+  if (!form.success) {
     return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
-  const user = await prisma.user.findUnique({ where: { email: data?.email } })
+  const user = await prisma.user.findUnique({ where: { email: form.data?.email } })
 
   if (!user) {
-    return ApiResponse.json(
-      { user: null },
-      { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid email or password' }
-    )
+    return ApiResponse.json({ user: null, message: 'Invalid email or password' }, { status: STATUS_CODES.BAD_REQUEST })
   }
 
   const newTokens = {
@@ -29,7 +26,7 @@ export async function POST(req: NextRequest) {
     refresh_token: await generateRefreshToken(user.id, user.refresh_token),
   }
 
-  if (user?.password && (await compareHash(data?.password, user?.password))) {
+  if (user?.password && (await compareHash(form.data?.password, user?.password))) {
     try {
       const newUser = await prisma.$transaction(async (tx) => {
         return await tx.user.update({ where: { id: user.id }, data: newTokens })
@@ -37,11 +34,11 @@ export async function POST(req: NextRequest) {
       return ApiResponse.json({ user: newUser, message: 'You have successfully logged in' })
     } catch (e: unknown) {
       return ApiResponse.json(
-        { user: null },
-        { status: STATUS_CODES.INTERNAL_SERVER_ERROR, statusText: (e as Error)?.message }
+        { user: null, message: (e as Error)?.message },
+        { status: STATUS_CODES.INTERNAL_SERVER_ERROR }
       )
     }
   }
 
-  return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST, statusText: 'Invalid email or password' })
+  return ApiResponse.json({ user: null, message: 'Invalid email or password' }, { status: STATUS_CODES.BAD_REQUEST })
 }

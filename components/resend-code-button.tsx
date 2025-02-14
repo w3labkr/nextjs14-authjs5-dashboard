@@ -38,14 +38,13 @@ const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAtt
           },
           body: JSON.stringify({ email: token.sub }),
         })
-        const result: ForgotPasswordAPI = await res.json()
+        const { success, message, data }: ForgotPasswordAPI = await res.json()
 
-        if (!res.ok) throw new Error(res.statusText)
-        if (!result.data.token) throw new Error(result.message)
+        if (!success || !data.token) throw new Error(message)
 
-        toast.success(result.message)
+        toast.success(message)
 
-        router.push(`/auth/verify-request?token_hash=${result.data.token}`)
+        router.push(`/auth/verify-request?token_hash=${data.token}`)
       } catch (e: unknown) {
         toast.error((e as Error)?.message)
       } finally {
