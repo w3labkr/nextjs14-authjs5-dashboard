@@ -50,6 +50,9 @@ export function LoginForm() {
 
       if (res?.error) throw new Error(res?.code)
 
+      toast.success('You have successfully logged in')
+
+      router.refresh()
       router.replace('/dashboard')
     } catch (e: unknown) {
       const message = (e as Error)?.message
