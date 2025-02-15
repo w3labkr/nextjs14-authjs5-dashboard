@@ -6,16 +6,22 @@ Bump a package version
 npm version [major | minor | patch]
 ```
 
-Changing a remote repository's URL
+View existing remotes
 
 ```shell
 $ git remote -v
 > origin git@github.com:OWNER/REPOSITORY.git (fetch)
 > origin git@github.com:OWNER/REPOSITORY.git (push)
+```
 
-$ git remote set-url origin https://github.com/OWNER/REPOSITORY.git
+Changing a remote repository's URL
 
-$ git remote -v
-> origin https://github.com/OWNER/REPOSITORY.git (fetch)
-> origin https://github.com/OWNER/REPOSITORY.git (push)
+```shell
+git remote set-url origin https://github.com/OWNER/REPOSITORY.git
+```
+
+Commit Template
+
+```shell
+git config commit.template .gitmessage.txt
 ```
