@@ -7,30 +7,14 @@ Automatic Installation
 ```shell
 $ npx create-next-app@14.2.20 .
 
-✔ Would you like to use TypeScript? … Yes
-✔ Would you like to use ESLint? … Yes
-✔ Would you like to use Tailwind CSS? … Yes
-✔ Would you like to use `src/` directory? … No
-✔ Would you like to use App Router? (recommended) … Yes
-✔ Would you like to customize the default import alias (@/*)? … No
-```
+✔ Would you like to use TypeScript? Yes
+✔ Would you like to use ESLint? Yes
+✔ Would you like to use Tailwind CSS? Yes
+✔ Would you like to use `src/` directory? No
+✔ Would you like to use App Router? (recommended) Yes
+✔ Would you like to customize the default import alias (@/*)? No
 
-```shell
-node -v > .nvmrc
-```
-
-## Tailwindcss
-
-Install Tailwind CSS with Next.js
-
-```shell
-npm install -D tailwindcss@3 postcss autoprefixer
-```
-
-Beautiful typographic defaults for HTML you don't control.
-
-```shell
-npm install -D @tailwindcss/typography
+$ node -v > .nvmrc
 ```
 
 ## Shadcn
@@ -79,6 +63,27 @@ export default function RootLayout({
   );
 }
 ```
+
+## Tailwindcss
+
+Install Tailwind CSS
+
+```shell
+npm install -D tailwindcss@3 postcss autoprefixer
+```
+
+Add Tailwind to your PostCSS configuration. `postcss.config.js`:
+
+```javascript
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  }
+}
+```
+
+[Get started with Tailwind CSS](https://tailwindcss.com/docs/installation/using-postcss)
 
 ## Auth.js
 
