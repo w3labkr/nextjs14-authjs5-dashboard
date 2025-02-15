@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { uuidv4 } from '@/lib/utils'
+import { uuidv4 } from '@/lib/crypto'
 
 interface FAQ {
   question: string
