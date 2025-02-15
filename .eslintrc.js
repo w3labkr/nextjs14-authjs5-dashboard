@@ -18,7 +18,7 @@ module.exports = {
   plugins: ['import', 'react', 'react-hooks', '@typescript-eslint'],
   // Ignore Files in v9 (Deprecated)
   // https://eslint.org/docs/latest/use/configure/ignore-deprecated
-  ignorePatterns: ['/build/', '/dist/', '/out/', '/components/ui/'],
+  ignorePatterns: ['/build/', '/dist/', '/out/', '/components/ui/', '/components/custom-ui/', '/*.config.*'],
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
@@ -30,12 +30,10 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: './tsconfig.json',
-    tsconfigRootDir: __dirname,
-    ecmaFeatures: {
-      jsx: true,
-    },
+    ecmaFeatures: { jsx: true },
     ecmaVersion: 12,
     sourceType: 'module',
+    tsconfigRootDir: __dirname,
   },
   rules: {
     // ... is defined but never used.
