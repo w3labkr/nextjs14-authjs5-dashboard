@@ -125,28 +125,6 @@ The easiest way to explore and manipulate your data in all of your Prisma projec
 npx prisma studio
 ```
 
-## Serve
-
-Static file serving and directory listing
-
-```shell
-npm install --global serve
-```
-
-Edit `.package.json`
-
-```json
-"scripts": {
-  "serve": "serve -l 4000 build/"
-}
-```
-
-Run the script
-
-```shell
-npm run serve
-```
-
 ## Nodemailer
 
 Send e-mails with Node.JS.

@@ -1,6 +1,6 @@
 {
     "name": "nextjs14-authjs5-dashboard",
-    "description": "This is a dashboard starter template for the NextJS 14 app router based on Auth.js v5.",
+    "description": "This is a dashboard starter template for the NextJS 14 based on Auth.js v5.",
     "version": "1.2.16",
     "private": true,
     "browserslist": [
@@ -19,8 +19,7 @@
         "clean:cache": "npm cache clean --force && npm cache verify",
         "clean": "npm run clean:files && npm run clean:cache",
         "upgrade:latest": "npm run clean && npx npm-check-updates -u && npm install",
-        "reinstall": "npm run clean && npm install",
-        "serve": "serve -l 4000 build/"
+        "reinstall": "npm run clean && npm install"
     },
     "dependencies": {
         "@auth/prisma-adapter": "^2.7.4",
