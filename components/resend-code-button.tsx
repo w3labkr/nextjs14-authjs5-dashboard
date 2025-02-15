@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 
 import type { ForgotPasswordAPI } from '@/types/api'
 import { decodeJwt, isTokenExpired, type Token } from '@/lib/jwt'
-import { useCSRFToken } from '@/hooks/use-csrf-token'
+import { useCsrfToken } from '@/hooks/use-csrf-token'
 import { absoluteUrl } from '@/lib/utils'
 
 const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
@@ -14,7 +14,7 @@ const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAtt
     const router = useRouter()
     const searchParams = useSearchParams()
     const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
-    const csrfToken = useCSRFToken()
+    const csrfToken = useCsrfToken()
 
     const handleSubmit = async () => {
       try {
@@ -34,6 +34,7 @@ const ResendCodeButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAtt
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
             'X-CSRF-Token': csrfToken,
           },
           body: JSON.stringify({ email: token.sub }),

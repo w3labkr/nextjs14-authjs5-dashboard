@@ -3,12 +3,17 @@ import { prisma } from '@/prisma'
 import { loginFormSchema } from '@/schemas/auth'
 
 import { ApiResponse, STATUS_CODES } from '@/lib/http'
-import { compareHash } from '@/lib/bcrypt'
 import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken } from '@/lib/jwt'
+import { compareHash } from '@/lib/bcrypt'
+import { verifyAjax } from '@/lib/crypto'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const form = loginFormSchema.safeParse(body)
+
+  if (!verifyAjax(req)) {
+    return new NextResponse('Invalid or missing X-Requested-With header', { status: STATUS_CODES.UNAUTHORIZED })
+  }
 
   if (!form.success) {
     return ApiResponse.json({ user: null }, { status: STATUS_CODES.BAD_REQUEST })

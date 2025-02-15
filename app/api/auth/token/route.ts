@@ -4,10 +4,15 @@ import { refreshTokenApiSchema } from '@/schemas/auth'
 
 import { ApiResponse, STATUS_CODES } from '@/lib/http'
 import { generateAccessToken, generateTokenExpiresAt, generateRefreshToken, decodeJwt, type Token } from '@/lib/jwt'
+import { verifyAjax } from '@/lib/crypto'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const form = refreshTokenApiSchema.safeParse(body)
+
+  if (!verifyAjax(req)) {
+    return new NextResponse('Invalid or missing X-Requested-With header', { status: STATUS_CODES.UNAUTHORIZED })
+  }
 
   if (!form.success) {
     return ApiResponse.json({ tokens: null }, { status: STATUS_CODES.BAD_REQUEST })

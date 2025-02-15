@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { newPasswordFormSchema } from '@/schemas/auth'
-import { useCSRFToken } from '@/hooks/use-csrf-token'
+import { useCsrfToken } from '@/hooks/use-csrf-token'
 
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -43,7 +43,7 @@ export function NewPasswordForm() {
     formState: { errors },
   } = form
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false)
-  const csrfToken = useCSRFToken()
+  const csrfToken = useCsrfToken()
 
   async function onSubmit(values: NewPasswordFormValues) {
     try {
@@ -53,6 +53,7 @@ export function NewPasswordForm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
           'X-CSRF-Token': csrfToken,
         },
         body: JSON.stringify(values),

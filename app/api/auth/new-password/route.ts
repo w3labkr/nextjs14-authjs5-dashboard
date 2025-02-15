@@ -6,13 +6,13 @@ import dayjs from '@/lib/dayjs'
 import { ApiResponse, STATUS_CODES } from '@/lib/http'
 import { generateHash } from '@/lib/bcrypt'
 import { verifyJwt, type Token } from '@/lib/jwt'
-import { verifyCsrfToken } from '@/lib/jwt'
+import { verifyCsrfAndAjax } from '@/lib/crypto'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const form = newPasswordFormSchema.safeParse(body)
 
-  if (!(await verifyCsrfToken(req))) {
+  if (!verifyCsrfAndAjax(req)) {
     return ApiResponse.json({ message: 'Invalid csrf token' }, { status: STATUS_CODES.UNAUTHORIZED })
   }
 

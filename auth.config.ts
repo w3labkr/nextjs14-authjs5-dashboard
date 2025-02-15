@@ -66,7 +66,10 @@ export const authConfig: NextAuthConfig = {
         try {
           const res = await fetch(absoluteUrl('/api/auth/login'), {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest',
+            },
             body: JSON.stringify(form.data),
           })
           const { success, message, data }: LoginAPI = await res.json()
@@ -170,7 +173,10 @@ async function credentialsToken(token: JWT): Promise<JWT> {
   try {
     const res = await fetch(absoluteUrl('/api/auth/token'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
       body: JSON.stringify({
         grant_type: 'refresh_token',
         refresh_token: token.refresh_token,

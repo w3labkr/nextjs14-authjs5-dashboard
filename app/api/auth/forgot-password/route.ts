@@ -7,13 +7,13 @@ import { ApiResponse, STATUS_CODES } from '@/lib/http'
 import { getRandomIntInclusive } from '@/lib/math'
 import { generateRecoveryToken } from '@/lib/jwt'
 import { generateHash } from '@/lib/bcrypt'
-import { verifyCsrfToken } from '@/lib/jwt'
+import { verifyCsrfAndAjax } from '@/lib/crypto'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const form = forgotPasswordFormSchema.safeParse(body)
 
-  if (!(await verifyCsrfToken(req))) {
+  if (!verifyCsrfAndAjax(req)) {
     return ApiResponse.json({ token: null, message: 'Invalid csrf token' }, { status: STATUS_CODES.UNAUTHORIZED })
   }
 
