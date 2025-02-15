@@ -16,16 +16,7 @@ This is a dashboard starter template for the [NextJS](https://nextjs.org) 14 app
   - [Getting Started](#getting-started)
   - [Documents](#documents)
   - [Examples](#examples)
-    - [ApiResponse](#apiresponse)
-    - [http](#http)
-    - [bcrypt](#bcrypt)
-    - [JWT](#jwt)
-    - [CSRF](#csrf)
-    - [Nodemailer](#nodemailer)
-    - [dayjs](#dayjs)
-    - [LucideIcon](#lucideicon)
-    - [Math](#math)
-    - [Utils](#utils)
+  - [Type Definition](#type-definition)
   - [License](#license)
 
 ## Denpendencies
@@ -37,6 +28,14 @@ This is a dashboard starter template for the [NextJS](https://nextjs.org) 14 app
 - Prisma
 - Zustand
 - React Query
+- Nodemailer
+- Browserslist
+- bcrypt.js
+- Jose (JSONWebToken)
+- Day.js
+- qs
+- cookies-next
+- React Icons
 
 ## Folder and file Structure
 
@@ -106,35 +105,36 @@ npm run dev
 
 ## Examples
 
-### ApiResponse
-
-success
+ApiResponse
 
 ```javascript
 import { ApiResponse } from '@/lib/http'
 
 export async function POST(req) {
+  return ApiResponse.json(null)
+  // { status: 'success', success: true, message: 'OK', data: null }
+
+  return ApiResponse.json({})
+  // { status: 'success', success: true, message: 'OK', data: {} }
+
+  return ApiResponse.json({ message: 'hi' })
+  // { status: 'success', success: true, message: 'hi', data: {} }
+
   return ApiResponse.json({ user: null })
-}
+  // { status: 'success', success: true, message: 'OK', data: { user: null } }
 
-// output
-// { status: 'success', success: true, message: 'OK', data: { user: null } }
-```
+  return ApiResponse.json({ user: null, message: 'hi' })
+  // { status: 'success', success: true, message: 'hi', data: { user: null } }
 
-fail
-
-```javascript
-import { ApiResponse } from '@/lib/http'
-
-export async function POST(req) {
   return ApiResponse.json({ user: null }, { status: 400 })
-}
+  // { status: 'fail', success: false, message: 'Bad Request', data: { user: null } }
 
-// output
-// { status: 'fail', success: false, message: 'Bad Request', data: { user: null } }
+  return ApiResponse.json({ user: null, message: 'hi' }, { status: 400 })
+  // { status: 'fail', success: false, message: 'hi', data: { user: null } }
+}
 ```
 
-### http
+http status codes and text
 
 ```javascript
 import { 
@@ -150,7 +150,7 @@ STATUS_CODE_TO_TEXT["200"] // "OK"
 STATUS_TEXT_TO_CODE["OK"] // "200"
 ```
 
-### bcrypt
+Password encryption and verification
 
 ```javascript
 import { generateHash, compareHash } from '@/lib/bcrypt'
@@ -162,7 +162,75 @@ if (await compareHash('hash', hashed)) {
 }
 ```
 
-### JWT
+Client-side CSRF protection
+
+```javascript
+'use client'
+
+import { useCsrfToken } from '@/hooks/use-csrf-token'
+
+export function Component() {
+  const csrfToken = useCsrfToken()
+
+  async function onSubmit() {
+    const res = await fetch('/api', { 
+      headers: { 'X-CSRF-Token': csrfToken } 
+    })
+  }
+
+  return <button onClick={onSubmit}>Submit</button>
+}
+```
+
+Server-side CSRF protection
+
+```javascript
+import { verifyCsrfToken } from '@/lib/crypto'
+
+export async function POST(req) {
+  if (!verifyCsrfToken(req)) {
+    return new Response('Unauthorized', { status: 401 })
+  }
+}
+```
+
+Sending mail
+
+```javascript
+import { transporter, sender } from '@/lib/nodemailer'
+
+try {
+  const info = await transporter.sendMail({
+    from: `"${sender?.name}" <${sender?.email}>`,
+    to: "receiver@sender.com",
+    subject: "Message title",
+    text: "Plaintext version of the message",
+    html: "<p>HTML version of the message</p>",
+  })
+} catch (e) {
+  console.log(e)
+}
+```
+
+The time zone and localized format are set.
+
+```javascript
+import dayjs from '@/lib/dayjs'
+
+dayjs().toISOString()
+```
+
+LucideIcon
+
+```javascript
+import { LucideIcon } from '@/components/lucide-icon'
+
+<LucideIcon name="Heart"/>
+```
+
+## Type Definition
+
+JWT
 
 ```typescript
 import { 
@@ -174,98 +242,49 @@ import {
   generateRefreshToken,
   generateTokenExpiresAt,
   isTokenExpired
-} from '@/lib/jose'
+} from '@/lib/jwt'
 
-decodeJwt(jwt: string)
-verifyJwt(jwt: string | Uint8Array, options?: JWTVerifyOptions)
-jwtSign(sub: string, exp: number | string | Date = '1h', payload?: JWTPayload)
-generateRecoveryToken(sub: string, payload?: JWTPayload)
-generateAccessToken(sub: string)
-generateRefreshToken(sub: string, jwt?: string | null)
-generateTokenExpiresAt(expiresIn: number = 60 * 60)
-isTokenExpired(
-  expiresAt: number, 
-  options?: { expiresIn?: number; expiresBefore?: number }
-)
+decodeJwt(jwt: string): PayloadType & JWTPayload
+verifyJwt(jwt: string | Uint8Array, options?: JWTVerifyOptions): Promise<JSON | null>
+jwtSign(sub: string, exp: number | string | Date = '1h', payload?: JWTPayload): Promise<string>
+generateRecoveryToken(sub: string, payload?: JWTPayload): Promise<string>
+generateAccessToken(sub: string): Promise<string>
+generateRefreshToken(sub: string, jwt?: string | null): Promise<string>
+generateTokenExpiresAt(expiresIn: number = 60 * 60): number
+isTokenExpired(expiresAt: number, options?: { expiresIn?: number; expiresBefore?: number}): boolean
 ```
 
-### CSRF
+bcrypt
 
-Route Handlers
+```typescript
+import {
+  generateHash,
+  compareHash
+} from '@/lib/bcrypt'
 
-```javascript
-import { verifyCsrfToken } from '@/lib/jose'
-
-export async function POST(req) {
-  const body = await req.json()
-
-  if (!(await verifyCSRFToken(req))) {
-    return new Response('Unauthorized', { status: 401 })
-  }
-}
+generateHash(s: string): Promise<string>
+compareHash(s: string, hash: string): Promise<boolean>
 ```
 
-Client Side
+crypto
 
-```javascript
-'use client'
+```typescript
+import {
+  uuidv4,
+  generateCsrfToken,
+  verifyCsrfToken,
+  verifyAjax,
+  verifyCsrfAndAjax,
+} from '@/lib/crypto'
 
-import { useCSRFToken } from '@/hooks/use-csrf-token'
-
-export function Component() {
-  const csrfToken = useCSRFToken()
-
-  async function onSubmit() {
-    const res = await fetch('/api', {
-      method: 'POST',
-      headers: { 'X-CSRF-Token': csrfToken },
-      body: JSON.stringify(values),
-    })
-  }
-
-  return <button onClick={onSubmit}>Submit</button>
-}
+uuidv4(): `${string}-${string}-${string}-${string}-${string}`
+generateCsrfToken(size: number = 32): string
+verifyCsrfToken(req: NextRequest): boolean
+verifyAjax(req: NextRequest): boolean
+verifyCsrfAndAjax(req: NextRequest): boolean
 ```
 
-### Nodemailer
-
-Sendmail
-
-```javascript
-import { transporter, sender } from '@/lib/nodemailer'
-
-try {
-  const info = await transporter.sendMail({
-    from: `"${sender?.name}" <${sender?.email}>`,
-    to: 'me@example.com',
-    subject: `[${sender?.name}] Reset Password`,
-    text: 'Hello World!',
-    html: '<h2>Hello World!<h2>',
-  })
-} catch (e) {
-  console.log(e)
-}
-```
-
-### dayjs
-
-The time zone and localized format are set.
-
-```javascript
-import dayjs from '@/lib/dayjs'
-
-dayjs().toISOString()
-```
-
-### LucideIcon
-
-```javascript
-import { LucideIcon } from '@/lib/lucide-icon'
-
-<LucideIcon name="Heart"/>
-```
-
-### Math
+math
 
 ```typescript
 import {
@@ -281,24 +300,22 @@ getRandomInt(min: number, max: number)
 getRandomIntInclusive(min: number, max: number)
 ```
 
-### Utils
+utils
 
 ```typescript
 import {
   cn,
-  uuidv4,
-  sleep,
+  wait,
   fetcher,
   absoluteUrl,
   relativeUrl
 } from '@/lib/utils'
 
-cn(...inputs: ClassValue[])
-uuidv4()
-sleep(ms: number)
-fetcher(input: RequestInfo | URL, init?: RequestInit)
-absoluteUrl(url: string | URL, base?: string | URL)
-relativeUrl(url: string | URL, base?: string | URL)
+cn(...inputs: ClassValue[]): string
+wait(milliseconds: number): Promise<void>
+fetcher(input: RequestInfo | URL, init?: RequestInit): Promise<JSON>
+absoluteUrl(url: string | URL, base?: string | URL): string
+relativeUrl(url: string | URL, base?: string | URL): string
 ```
 
 ## License

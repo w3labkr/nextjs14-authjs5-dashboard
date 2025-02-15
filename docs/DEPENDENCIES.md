@@ -1,5 +1,26 @@
 # DEPENDENCIES
 
+## Table of Contents
+
+- [DEPENDENCIES](#dependencies)
+  - [Table of Contents](#table-of-contents)
+  - [Next.js](#nextjs)
+  - [Shadcn](#shadcn)
+  - [Tailwindcss](#tailwindcss)
+  - [Auth.js](#authjs)
+  - [Zustand](#zustand)
+  - [React Query](#react-query)
+  - [Nodemailer](#nodemailer)
+  - [Browserslist](#browserslist)
+  - [bcrypt.js](#bcryptjs)
+  - [Jose (JSONWebToken)](#jose-jsonwebtoken)
+  - [Day.js](#dayjs)
+  - [qs](#qs)
+  - [cookies-next](#cookies-next)
+  - [React Icons](#react-icons)
+  - [ESLint](#eslint)
+  - [Prettier](#prettier)
+
 ## Next.js
 
 Automatic Installation
@@ -125,21 +146,12 @@ The easiest way to explore and manipulate your data in all of your Prisma projec
 npx prisma studio
 ```
 
-## Nodemailer
-
-Send e-mails with Node.JS.
-
-```shell
-npm install nodemailer
-npm install --save-dev @types/nodemailer
-```
-
 ## Zustand
 
 Bear necessities for state management in React
 
 ```shell
-npm i zustand
+npm install zustand
 ```
 
 ## React Query
@@ -147,7 +159,16 @@ npm i zustand
 Powerful asynchronous state management, server-state utilities and data fetching for the web. TS/JS, React Query, Solid Query, Svelte Query and Vue Query.
 
 ```shell
-npm i @tanstack/react-query
+npm install @tanstack/react-query
+```
+
+## Nodemailer
+
+Send e-mails with Node.JS.
+
+```shell
+npm install nodemailer
+npm install --save-dev @types/nodemailer
 ```
 
 ## Browserslist
@@ -174,15 +195,15 @@ Edit `package.json`:
 Optimized bcrypt in plain JavaScript with zero dependencies.
 
 ```shell
-npm i bcryptjs @types/bcryptjs
+npm install bcryptjs @types/bcryptjs
 ```
 
-## jose (JSON Web Token)
+## Jose (JSONWebToken)
 
 JWA, JWS, JWE, JWT, JWK, JWKS for Node.js, Browser, Cloudflare Workers, Deno, Bun, and other Web-interoperable runtimes.
 
 ```shell
-npm i jose
+npm install jose
 ```
 
 ## Day.js
@@ -190,23 +211,7 @@ npm i jose
 Day.js 2kB immutable date-time library alternative to Moment.js with the same modern API.
 
 ```shell
-npm i dayjs
-```
-
-## cookies-next
-
-Getting, setting and removing cookies on both client and server with next.js
-
-```shell
-npm i cookies-next@4.3.0
-```
-
-## React Icons
-
-svg react icons of popular icon packs
-
-```shell
-npm i react-icons
+npm install dayjs
 ```
 
 ## qs
@@ -214,7 +219,23 @@ npm i react-icons
 A querystring parser with nesting support
 
 ```shell
-npm i qs @types/qs
+npm install qs @types/qs
+```
+
+## cookies-next
+
+Getting, setting and removing cookies on both client and server with next.js
+
+```shell
+npm install cookies-next@4
+```
+
+## React Icons
+
+svg react icons of popular icon packs
+
+```shell
+npm install react-icons
 ```
 
 ## ESLint
