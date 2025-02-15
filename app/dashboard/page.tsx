@@ -1,5 +1,4 @@
 import * as React from 'react'
-import type { Metadata } from 'next'
 
 import { Activity, CreditCard, DollarSign, Users } from 'lucide-react'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from '@/components/ui/breadcrumb'
@@ -13,11 +12,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Overview } from '@/components/overview'
 import { RecentSales } from '@/components/recent-sales'
-
-export const metadata: Metadata = {
-  title: 'Dashboard',
-  description: '',
-}
 
 export default function DashboardPage() {
   return (

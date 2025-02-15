@@ -1,15 +1,9 @@
 import * as React from 'react'
-import type { Metadata } from 'next'
 import { auth } from '@/auth'
 import { NotAuthenticated, TokenExpired } from '@/context/next-auth-provider'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LogoutButton } from '@/components/logout-button'
-
-export const metadata: Metadata = {
-  title: 'Logout',
-  description: '',
-}
 
 export default async function LogoutPage() {
   const session = await auth()

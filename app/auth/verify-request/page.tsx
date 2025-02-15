@@ -1,5 +1,4 @@
 import * as React from 'react'
-import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import Link from 'next/link'
@@ -8,11 +7,6 @@ import { ArrowLeft } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { VerifyCodeForm } from '@/components/verify-code-form'
 import { ResendCodeButton } from '@/components/resend-code-button'
-
-export const metadata: Metadata = {
-  title: 'Verify Request',
-  description: '',
-}
 
 export default async function VerifyRequestPage({
   params,

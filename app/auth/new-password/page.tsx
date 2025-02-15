@@ -1,5 +1,4 @@
 import * as React from 'react'
-import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
@@ -8,11 +7,6 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { NewPasswordForm } from '@/components/new-password-form'
-
-export const metadata: Metadata = {
-  title: 'New Password',
-  description: '',
-}
 
 export default async function NewPasswordPage({
   params,

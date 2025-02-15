@@ -1,10 +1,4 @@
 import * as React from 'react'
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Auth',
-  description: '',
-}
 
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -1,13 +1,7 @@
 import * as React from 'react'
-import type { Metadata } from 'next'
 
 import { AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-
-export const metadata: Metadata = {
-  title: 'Auth Error',
-  description: '',
-}
 
 export default function ErrorPage({
   params,

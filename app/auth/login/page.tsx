@@ -1,5 +1,4 @@
 import * as React from 'react'
-import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import Link from 'next/link'
@@ -7,11 +6,6 @@ import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LoginForm } from '@/components/login-form'
 import { LoginWithGoogle } from '@/components/login-with-google'
-
-export const metadata: Metadata = {
-  title: 'Login',
-  description: '',
-}
 
 export default async function LoginPage() {
   const session = await auth()

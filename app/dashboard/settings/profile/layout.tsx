@@ -1,6 +1,4 @@
 import * as React from 'react'
-import type { Metadata } from 'next'
-import { cookies } from 'next/headers'
 
 import {
   Breadcrumb,
@@ -15,11 +13,6 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/cust
 import { AppSidebar } from '@/components/app-sidebar'
 import { NavUser } from '@/components/nav-user'
 import { NavNotify } from '@/components/nav-notify'
-
-export const metadata: Metadata = {
-  title: 'Profile',
-  description: '',
-}
 
 export default async function ProfileLayout({ children }: { children: React.ReactNode }) {
   return (
