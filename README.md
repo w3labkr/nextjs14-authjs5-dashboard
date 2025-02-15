@@ -15,6 +15,7 @@ This is a dashboard starter template for the [NextJS](https://nextjs.org) 14 app
   - [Folder and file Structure](#folder-and-file-structure)
   - [Getting Started](#getting-started)
   - [Documents](#documents)
+  - [CSRF](#csrf)
   - [Examples](#examples)
   - [Type Definition](#type-definition)
   - [License](#license)
@@ -102,6 +103,18 @@ npm run dev
 - [DEPENDENCIES](./docs/DEPENDENCIES.md)
 - [GIT](./docs/GIT.md)
 - [PRISMA](./docs/PRISMA.md)
+
+## CSRF
+
+> All Server Actions can be invoked by plain `<form>`, which could open them up to CSRF attacks. Behind the scenes, Server Actions are always implemented using POST and only this HTTP method is allowed to invoke them. This alone prevents most CSRF vulnerabilities in modern browsers, particularly due to Same-Site cookies being the default.
+>
+> As an additional protection Server Actions in Next.js 14 also compares the Origin header to the Host header (or X-Forwarded-Host). If they don't match, the Action will be rejected. In other words, Server Actions can only be invoked on the same host as the page that hosts it. Very old unsupported and outdated browsers that don't support the Origin header could be at risk.
+>
+> Server Actions doesn't use CSRF tokens, therefore HTML sanitization is crucial.
+>
+> When Custom Route Handlers (route.tsx) are used instead, extra auditing can be necessary since CSRF protection has to be done manually there. The traditional rules apply there.
+
+[How to Think About Security in Next.js](https://nextjs.org/blog/security-nextjs-server-components-actions)
 
 ## Examples
 
