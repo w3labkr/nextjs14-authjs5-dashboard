@@ -1,9 +1,9 @@
 import pkg from '@/package.json'
 
-const config = {
+const app = {
   title: 'Acme Inc',
   description: pkg.description,
   version: `v${pkg.version}`,
 }
 
-export default config
+export default app
