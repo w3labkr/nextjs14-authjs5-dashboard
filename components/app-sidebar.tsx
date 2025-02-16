@@ -8,7 +8,7 @@ import { NavSecondary } from '@/components/nav-secondary'
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/custom-ui/sidebar'
 import { SidebarOptInForm } from '@/components/sidebar-opt-in-form'
 
-import { dashboard } from '@/config/dashboard'
+import dashboard from '@/config/dashboard'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
