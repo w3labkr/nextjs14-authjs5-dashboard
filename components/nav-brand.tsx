@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { Command } from 'lucide-react'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/custom-ui/sidebar'
 
-import { site } from '@/config/site'
+import app from '@/config/app'
 
 export function NavBrand() {
   return (
@@ -18,8 +18,8 @@ export function NavBrand() {
               <Command className="size-4" />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">{site.title}</span>
-              <span className="truncate text-xs">{site.version}</span>
+              <span className="truncate font-semibold">{app.title}</span>
+              <span className="truncate text-xs">{app.version}</span>
             </div>
           </Link>
         </SidebarMenuButton>
